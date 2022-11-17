@@ -12,7 +12,7 @@
 
     "run:server": "cd laravel-server && php artisan serve",
     "run:client": "cd react-client && npm run dev",
-    "run:docker": "docker-compose up --build"
+    "run:docker": "docker compose up --build"
   },
   "author": "Nicholas Johansan",
   "license": "Unlicense"

@@ -1,5 +1,8 @@
 version: '3.8'
 
+networks:
+  coohoot-network:
+
 services:
   frontend:
     build: ./react-client
@@ -8,4 +11,15 @@ services:
       - ./react-client:/home/node/app
     ports:
       - 3000:3000
-  
+    networks:
+      - coohoot-network
+  backend:
+    build: ./laravel-server
+    volumes:
+      - ./laravel-server:/var/www/html
+    ports:
+      - 8000:80
+    env_file:
+      - ./laravel-server/.env
+    networks:
+      - coohoot-network
