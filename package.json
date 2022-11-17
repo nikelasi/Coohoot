@@ -7,7 +7,8 @@
     "c-rm-build": "cd coohoot-server/public && rmdir /s /q client && mkdir client && cd ../../",
     "c-cp-build": "xcopy \"coohoot-client/dist\" \"coohoot-server/public/client\" /s /e /y /i",
     "c-rm-dist": "cd coohoot-client && rmdir /s /q dist && cd ../",
-    "bc": "npm run c-build && npm run c-rm-build && npm run c-cp-build && npm run c-rm-dist"
+    "bc": "npm run c-build && npm run c-rm-build && npm run c-cp-build && npm run c-rm-dist",
+    "docker": "docker-compose up --build"
   },
   "author": "Nicholas Johansan"
 }
