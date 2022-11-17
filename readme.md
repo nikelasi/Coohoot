@@ -7,3 +7,6 @@ The READMEs for the [frontend](react-client/readme.md) and [backend](laravel-ser
 
 ## Background
 This project was created as an assignment with an alternative project specifications (due to my involvement in WorldSkills Singapore Training) for the modules Coding and Development Project (CDEV) and Database Application Development (DBAV) in Temasek Polytechnic. Which required me to create a Full Stack Web Application using [Laravel](https://laravel.com/) as the backend, [React](https://reactjs.org/) as the frontend and a relational database of my choice as the database.
+
+## License [![Unlicense](https://img.shields.io/github/license/NicholasJohansan/Coohoot)](LICENSE)
+Coohoot is [Unlicense](https://unlicense.org/) Licensed (file [license](license.md)).
