@@ -10,9 +10,15 @@
     "server:cp-client-build": "xcopy \"react-client/dist\" \"laravel-server/public/client\" /s /e /y /i",
     "server:build-client": "npm run client:build && npm run server:rm-client-build && npm run server:cp-client-build && npm run client:rm-dist",
 
+    "env:copy": "copy \".\\laravel-server\\.env\" \".env.server\"",
+    "env:delete": "del \".env.server\"",
+
     "run:server": "cd laravel-server && php artisan serve",
     "run:client": "cd react-client && npm run dev",
-    "run:docker": "docker compose up --build"
+    "run:docker": "docker compose up",
+    "run:docker:fresh": "docker compose up --build",
+
+    "deploy:railway": "npm run env:copy && railway up && npm run env:delete"
   },
   "author": "Nicholas Johansan",
   "license": "Unlicense"

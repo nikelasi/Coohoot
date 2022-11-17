@@ -1,0 +1,8 @@
+# Laravel Server
+laravel-server/vendor
+laravel-server/.env
+laravel-server/public/client
+
+# React Client
+react-client/node_modules
+react-client/.env
