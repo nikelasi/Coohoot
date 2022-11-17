@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./react-client
+    command: "npm run dev"
+    volumes:
+      - ./react-client:/home/node/app
+    ports:
+      - 3000:3000
+  
