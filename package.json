@@ -3,12 +3,17 @@
   "description": "A Kahoot-like quiz app",
   "private": true,
   "scripts": {
-    "c-build": "cd coohoot-client && npm run build && cd ../",
-    "c-rm-build": "cd coohoot-server/public && rmdir /s /q client && mkdir client && cd ../../",
-    "c-cp-build": "xcopy \"coohoot-client/dist\" \"coohoot-server/public/client\" /s /e /y /i",
-    "c-rm-dist": "cd coohoot-client && rmdir /s /q dist && cd ../",
-    "bc": "npm run c-build && npm run c-rm-build && npm run c-cp-build && npm run c-rm-dist",
-    "docker": "docker-compose up --build"
+    "client:build": "cd react-client && npm run build && cd ../",
+    "client:rm-dist": "cd react-client && rmdir /s /q dist && cd ../",
+
+    "server:rm-client-build": "cd laravel-server/public && rmdir /s /q client && mkdir client && cd ../../",
+    "server:cp-client-build": "xcopy \"react-client/dist\" \"laravel-server/public/client\" /s /e /y /i",
+    "server:build-client": "npm run client:build && npm run server:rm-client-build && npm run server:cp-client-build && npm run client:rm-dist",
+
+    "run:server": "cd laravel-server && php artisan serve",
+    "run:client": "cd react-client && npm run dev",
+    "run:docker": "docker-compose up --build"
   },
-  "author": "Nicholas Johansan"
+  "author": "Nicholas Johansan",
+  "license": "Unlicense"
 }
