@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\GoogleDriveServiceProvider::class, // Google Drive as Cloud Storage
 
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class // JWT Auth
     ],
 
     /*
