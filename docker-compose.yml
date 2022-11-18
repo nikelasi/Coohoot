@@ -16,7 +16,11 @@ services:
   backend:
     build: ./laravel-server
     volumes:
-      - ./laravel-server:/var/www/html
+      - ./laravel-server/routes:/var/www/html/routes
+      - ./laravel-server/app:/var/www/html/app
+      - ./laravel-server/database:/var/www/html/database
+      - ./laravel-server/public:/var/www/html/public
+      - ./laravel-server/config:/var/www/html/config
     ports:
       - 8000:80
     env_file:
