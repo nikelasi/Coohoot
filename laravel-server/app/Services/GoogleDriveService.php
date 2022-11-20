@@ -14,16 +14,28 @@ class GoogleDriveService {
   }
 
   /**
-   * Upload an image to Google Drive
+   * Upload profile picture to Google Drive
    * 
-   * @param string $img The base64 encoded image
+   * @param string $base64image
    * @return string The image URL
    */
-  public function uploadImage(string $img) {
-    $info = Helpers::getB64ImageInfo($img);
-    $img_id = Str::uuid()->toString();
-    $path = "images/{$img_id}.{$info['ext']}";
-    $this->disk->put($path, $info['contents']);
+  public function uploadPfp($base64image) {
+    ['ext' => $ext] = Helpers::getB64ImageInfo($img);
+    $id = Str::uuid()->toString();
+    $path = "pfp/{$id}.{$ext}";
+    return $this->uploadImage($path, $base64image);
+  }
+
+  /**
+   * Upload an image to Google Drive
+   * 
+   * @param string $path The path to upload the image to
+   * @param string $base64image The base64 encoded image
+   * @return string The image URL
+   */
+  protected function uploadImage(string $path, string $base64image) {
+    ['contents' => $contents] = Helpers::getB64ImageInfo($base64image);
+    $this->disk->put($path, $contents);
     return $this->getMediaUrl($path);
   }
 
