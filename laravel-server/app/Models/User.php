@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use HasUuids;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,6 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements JWTSubject
 {
+    use HasUuids;
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
