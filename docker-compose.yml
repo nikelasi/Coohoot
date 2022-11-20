@@ -21,6 +21,7 @@ services:
       - ./laravel-server/database:/var/www/html/database
       - ./laravel-server/public:/var/www/html/public
       - ./laravel-server/config:/var/www/html/config
+      - ./laravel-server/resources:/var/www/html/resources
     ports:
       - 8000:80
     env_file:
