@@ -4,12 +4,12 @@ namespace App\Models;
 
 use HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Database\Eloquent\MassPrunable;
 
 class UserToken extends Model
 {
     use HasUuids;
-    use Prunable;
+    use MassPrunable;
 
     protected $table = 'user_tokens';
 
