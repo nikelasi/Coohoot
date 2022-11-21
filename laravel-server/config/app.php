@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -221,7 +221,7 @@ return [
 
         // Traits
         'HasUuids' => Illuminate\Database\Eloquent\Concerns\HasUuids::class,
-        
+
     ])->toArray(),
 
 ];
