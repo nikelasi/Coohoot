@@ -20,7 +20,7 @@ class GoogleDriveService {
    * @return string The image URL
    */
   public function uploadPfp($base64image) {
-    ['ext' => $ext] = Helpers::getB64ImageInfo($img);
+    ['ext' => $ext] = Helpers::getB64ImageInfo($base64image);
     $id = Str::uuid()->toString();
     $path = "pfp/{$id}.{$ext}";
     return $this->uploadImage($path, $base64image);

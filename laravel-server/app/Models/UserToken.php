@@ -11,7 +11,14 @@ class UserToken extends Model
     use HasUuids;
     use MassPrunable;
 
+    public $timestamps = false;
+
     protected $table = 'user_tokens';
+
+    protected $fillable = [
+        'user_id',
+        'type'
+    ];
 
     protected static function boot() {
         parent::boot();

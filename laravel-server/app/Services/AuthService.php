@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Mail;
 
 class AuthService {
 
-  public function __construct() {}
+  public function __construct(GoogleDriveService $drive) {
+    $this->drive = $drive;
+  }
 
   /**
    * Registers a new user.
@@ -30,7 +32,7 @@ class AuthService {
       'username' => $user['username'],
       'email' => $user['email'],
       'password' => Hash::make($user['password']),
-      'pfp_url' => GoogleDriveService::uploadImage($pfp)
+      'pfp_url' => $this->drive->uploadPfp($pfp)
     ]);
 
     $this->createVerificationToken($user->id, 'email_verification');
@@ -50,7 +52,7 @@ class AuthService {
     }
     
     $token = UserToken::create([
-      'user_id' => $id,
+      'user_id' => $uuid,
       'type' => 'email_verification'
     ]);
 
