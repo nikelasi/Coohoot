@@ -211,10 +211,17 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'ExampleClass' => App\Example\ExampleClass::class,
+
+        // Extras
         'Helpers' => App\Helpers::class,
+        
+        // Services
         'GoogleDriveService' => App\Services\GoogleDriveService::class,
+        'AuthService' => App\Services\AuthService::class,
+
+        // Traits
         'HasUuids' => Illuminate\Database\Eloquent\Concerns\HasUuids::class,
+        
     ])->toArray(),
 
 ];
