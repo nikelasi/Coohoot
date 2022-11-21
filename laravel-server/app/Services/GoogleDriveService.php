@@ -49,4 +49,9 @@ class GoogleDriveService {
     return $this->disk->getAdapter()->getUrl($path);
   }
 
+  // Debug functions
+  public function getUrl($path) {
+    return $this->getMediaUrl($path);
+  }
+
 }
