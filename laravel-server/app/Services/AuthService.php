@@ -10,6 +10,8 @@ use App\Models\UserToken;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
+use App\Mail\EmailVerificationMail;
+
 class AuthService {
 
   public function __construct(GoogleDriveService $drive) {
@@ -56,7 +58,7 @@ class AuthService {
       'type' => 'email_verification'
     ]);
 
-    // Mail::to($user->email)->send(new EmailVerificationMail($user, $token));
+    Mail::to($user->email)->send(new EmailVerificationMail($user, $token));
   }
 
   /**
