@@ -28,6 +28,26 @@ class AuthController extends Controller {
         ], 200);
     }
 
+    public function verifyEmail(Request $request) {
+        // TODO: Validation
+
+        // Verifying
+        $verified = $this->authService->verifyUser($request->token);
+
+        if (!$verified) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid token.'
+            ], 401);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Email verified successfully.'
+        ]);
+
+    }
+
     public function login(Request $request) {
 
     }

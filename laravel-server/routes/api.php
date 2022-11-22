@@ -29,6 +29,7 @@ Route::group([
         'prefix' => 'auth'
     ], function() {
         Route::post('register', 'AuthController@register');
+        Route::post('verify-email', 'AuthController@verifyEmail');
     });
 
     Route::group([
