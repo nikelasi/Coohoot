@@ -21,11 +21,12 @@ const Main: React.FC = () => {
           >
           <Circle
             size="80vw"
-            bgColor="#C9E2FF"
+            bgColor="brand.highlight"
             position="absolute"
             top="-20vw"
             left="-40vw"
-            border="1rem solid #1059B1"
+            border="1rem solid"
+            borderColor="brand.accent"
             />
           <OwlOnBranch
             boxSize="35vw"
