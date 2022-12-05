@@ -1,14 +1,13 @@
+import { Box } from '@chakra-ui/react'
 import { Link, Route, Routes } from 'react-router-dom'
+import Header from './features/layout/Header.component'
 import { Main, NotFound, Verify } from './pages'
 
 function App() {
   return (
-    <div>
+    <Box>
+      <Header />
 
-      {/* Placeholder Nav */}
-      <nav>
-        <Link to="/">Main</Link>
-      </nav>
 
       {/* Routes */}
       <Routes>
@@ -17,7 +16,7 @@ function App() {
         <Route path='*' element={<NotFound />} />
       </Routes>
 
-    </div>
+    </Box>
   )
 }
 
