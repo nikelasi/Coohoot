@@ -15,7 +15,7 @@ const Main: React.FC = () => {
           h="100vh"
           w="100vw"
           position="absolute"
-          top="-3rem"
+          top="-16"
           overflow="hidden"
           zIndex="-1"
           >

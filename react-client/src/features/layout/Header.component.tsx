@@ -1,12 +1,16 @@
-import { Box, Flex, Image, Link } from "@chakra-ui/react"
+import { Box, Button, Flex, Icon, Image, Link, useColorMode } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom"
 
 import HeaderLogo from '../../assets/svg/HeaderLogo.svg'
+import { IoMdSunny, IoMdMoon } from 'react-icons/io'
 
 const Header: React.FC = () => {
+
+  const { colorMode, toggleColorMode } = useColorMode()
+
   return (
     <Flex
-      h="12"
+      h="16"
       px="4"
       alignItems="center"
       justifyContent="space-between"
@@ -21,8 +25,17 @@ const Header: React.FC = () => {
         </Link>
       </Box>
 
-      {/* Links */}
-      <Box />
+      {/* Right */}
+      <Box>
+        {/* Links */}
+        {/* Buttons */}
+        <Button
+          onClick={toggleColorMode}
+          variant="ghost"
+          >
+          <Icon as={colorMode === 'light' ? IoMdMoon : IoMdSunny} />
+        </Button>
+      </Box>
     </Flex>
   )
 }
