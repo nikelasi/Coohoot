@@ -17,6 +17,7 @@ const Main: React.FC = () => {
           position="absolute"
           top="-3rem"
           overflow="hidden"
+          zIndex="-1"
           >
           <Circle
             size="80vw"
@@ -24,7 +25,6 @@ const Main: React.FC = () => {
             position="absolute"
             top="-20vw"
             left="-40vw"
-            zIndex="-1"
             border="1rem solid #1059B1"
             />
           <OwlOnBranch
@@ -38,7 +38,7 @@ const Main: React.FC = () => {
 
       {/* Content */}
       <Box w="58%">
-        
+
       </Box>
 
     </Flex>
