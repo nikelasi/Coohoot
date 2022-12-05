@@ -5,8 +5,10 @@ import OwlOnBranch from '../assets/svg/OwlOnBranch.svg'
 const Main: React.FC = () => {
   return (
     <Flex>
+
+      {/* Graphic */}
       <Box
-        w="50%"
+        w="42%"
         position="relative"
         >
         <Box
@@ -21,7 +23,7 @@ const Main: React.FC = () => {
             bgColor="#C9E2FF"
             position="absolute"
             top="-20vw"
-            left="-35vw"
+            left="-40vw"
             zIndex="-1"
             border="1rem solid #1059B1"
             />
@@ -34,9 +36,11 @@ const Main: React.FC = () => {
         </Box>
       </Box>
 
-      <Box w="50%">
-        Content
+      {/* Content */}
+      <Box w="58%">
+        
       </Box>
+
     </Flex>
   )
 }
