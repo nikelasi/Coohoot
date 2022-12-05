@@ -8,9 +8,10 @@ const Header: React.FC = () => {
     <Flex
       h="12"
       px="4"
-      borderBottom="2px solid #e2e8f0"
       alignItems="center"
       justifyContent="space-between"
+      backdropFilter="blur(8px)"
+      boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
       >
 
       {/* Logo */}
