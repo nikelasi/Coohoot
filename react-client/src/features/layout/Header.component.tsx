@@ -1,5 +1,7 @@
-import { Box, Flex, Link } from "@chakra-ui/react"
+import { Box, Flex, Image, Link } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom"
+
+import HeaderLogo from '../../assets/svg/HeaderLogo.svg'
 
 const Header: React.FC = () => {
   return (
@@ -14,7 +16,7 @@ const Header: React.FC = () => {
       {/* Logo */}
       <Box fontSize="2xl" fontWeight="bold">
         <Link as={RouterLink} to="/">
-          coohoot
+          <HeaderLogo boxSize="24" />
         </Link>
       </Box>
 
