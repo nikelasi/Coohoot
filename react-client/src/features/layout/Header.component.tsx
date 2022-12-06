@@ -11,12 +11,13 @@ const Header: React.FC = () => {
   return (
     <Flex
       h="16"
+      position="sticky"
+      zIndex="1"
       px="4"
       alignItems="center"
       justifyContent="space-between"
       backdropFilter="blur(8px)"
-      boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
-      >
+      boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)">
 
       {/* Logo */}
       <Box fontSize="2xl" fontWeight="bold">
