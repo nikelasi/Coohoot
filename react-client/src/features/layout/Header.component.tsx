@@ -32,6 +32,7 @@ const Header: React.FC = () => {
         <Button
           onClick={toggleColorMode}
           variant="ghost"
+          colorScheme="brand"
           >
           <Icon as={colorMode === 'light' ? IoMdMoon : IoMdSunny} />
         </Button>
