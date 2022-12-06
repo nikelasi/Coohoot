@@ -5,13 +5,15 @@ import semanticTokens from "./foundations/semanticTokens"
 import config from "./config"
 
 import Button from "./components/button"
+import Link from "./components/link"
 
 const theme = extendTheme({
   config,
   semanticTokens,
   colors,
   components: {
-    Button
+    Button,
+    Link
   }
 })
 
