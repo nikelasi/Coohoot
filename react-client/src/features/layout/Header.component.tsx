@@ -26,17 +26,27 @@ const Header: React.FC = () => {
       </Box>
 
       {/* Right */}
-      <Box>
+      <Flex
+        gap="4">
         {/* Links */}
+        <Button variant="link">
+          <Link as={RouterLink} to="/register">
+            Register
+          </Link>
+        </Button>
+        <Button>
+          <Link as={RouterLink} to="/login" variant="no-underline">
+            Login
+          </Link>
+        </Button>
+
         {/* Buttons */}
         <Button
           onClick={toggleColorMode}
-          variant="ghost"
-          colorScheme="brand"
-          >
+          variant="ghost">
           <Icon as={colorMode === 'light' ? IoMdMoon : IoMdSunny} />
         </Button>
-      </Box>
+      </Flex>
     </Flex>
   )
 }
