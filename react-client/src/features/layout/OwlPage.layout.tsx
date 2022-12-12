@@ -61,7 +61,7 @@ const OwlPage: React.FC<PropsWithChildren<FlexProps>> = (props: PropsWithChildre
       {/* Mobile */}
 
       <Flex
-        h="calc(100vh - 4rem)"
+        w="100%"
         direction="column"
         overflow="auto"
         display={{
