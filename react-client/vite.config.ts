@@ -14,7 +14,7 @@ export default defineConfig({
       usePolling: true
     },
     proxy: {
-      '/api': 'http://localhost:8000'
+      '/api': 'http://172.23.0.3:80'
     }
   }
 })
