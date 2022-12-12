@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 
+use GoogleDriveService;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,7 +30,7 @@ const MIME_TYPES = [
 // Serve the build for any routes that aren't the following: /assets, /api
 Route::get('/{any}', function() {
     return File::get(public_path() . '/client/index.html');
-})->where('any', '(?!(assets|api)).*');
+})->where('any', '(?!(assets|api|cloud)).*');
 
 // Serve the assets from build
 Route::get('/assets/{path}', function($path) {
@@ -38,3 +40,16 @@ Route::get('/assets/{path}', function($path) {
         "Content-Type" => $mime_type
     ]);
 });
+
+// Serve the cloud files
+Route::get('/cloud/{path}', function($path, GoogleDriveService $drive) {
+    try {
+        $url = $drive->getUrl($path);
+    } catch (Exception $e) {
+        return response()->json([
+            "success" => false,
+            "message" => "File not found."
+        ], 404);
+    }
+    return redirect($url);
+})->where('path', '.*');
