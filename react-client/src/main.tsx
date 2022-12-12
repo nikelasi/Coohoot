@@ -8,6 +8,8 @@ import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 
 import theme from './theme'
 
+import '@fontsource/fira-sans'
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
