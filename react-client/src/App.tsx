@@ -1,6 +1,6 @@
 import { Box, Fade } from '@chakra-ui/react'
 import { Route, Routes, useLocation } from 'react-router-dom'
-import Header from './features/layout/Header.component'
+import Header from './features/layout/Header'
 import { Main, NotFound, Verify } from './pages'
 import Forms from './pages/auth/Forms';
 import NotImplemented from './pages/NotImplemented';
