@@ -40,7 +40,7 @@ const OwlPage: React.FC<PropsWithChildren<FlexProps>> = (props: PropsWithChildre
       </Box>
 
       {/* Content */}
-      <Flex w="58%" {...flexProps}>
+      <Flex w="58%" h="calc(100vh - 4rem)" direction="column" {...flexProps}>
         { children }
       </Flex>
 
