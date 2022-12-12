@@ -8,7 +8,10 @@ import { IoMdArrowRoundForward } from "react-icons/io"
 const Main: React.FC = () => {
   return (
     <OwlPage
-      ml="32"
+      ml={{
+        base: "12",
+        md: "32"
+      }}
       gap="8"
       justifyContent="center">
         <Box>
