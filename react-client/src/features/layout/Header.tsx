@@ -61,7 +61,10 @@ const Header: React.FC = () => {
 
         {/* Buttons */}
         <Button
-          p="0"
+          p={{
+            base: "0",
+            sm: "3"
+          }}
           minW="unset"
           onClick={toggleColorMode}
           variant={{
