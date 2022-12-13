@@ -10,6 +10,11 @@ class AuthApi extends BaseApi {
     const result = await this.post('/verify-email', { token })
     return result.success
   }
+
+  public register = async (username: string, email: string, password: string): Promise<boolean> => {
+    const result = await this.post('/register', { username, email, password })
+    return result.success
+  }
 }
 
 export default AuthApi
