@@ -1,4 +1,4 @@
-import { Flex, Heading, Link, Text } from '@chakra-ui/react'
+import { Fade, Flex, Heading, Link, Spinner, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useParams, Link as RouterLink } from 'react-router-dom'
 import api from '../../api'
@@ -53,14 +53,23 @@ const Verify: React.FC = () => {
             md: 'flex-start'
           }}>
           <Heading>Email Verification</Heading>
-          <Text fontSize="l" color="brand.accent">{ message }</Text>
-          { verified !== null && (verified === true
-          ? <Text fontSize="l">
-            You may now <Link as={RouterLink} to="/login" color="brand.accent">login</Link>!
-          </Text>
-          : <Text fontSize="l">
-            Return to <Link as={RouterLink} to="/" color="brand.accent">home</Link>.
-          </Text>) }
+          <Fade
+            in={true}
+            key={JSON.stringify(verified)}>
+            <Text fontSize="l" color="brand.accent">
+              { verified === null && <>
+                <Spinner size="xs" />&nbsp;
+              </> }
+              { message }
+            </Text>
+            { verified !== null && (verified === true
+            ? <Text fontSize="l">
+              You may now <Link as={RouterLink} to="/login" color="brand.accent">login</Link>!
+            </Text>
+            : <Text fontSize="l">
+              Return to <Link as={RouterLink} to="/" color="brand.accent">home</Link>.
+            </Text>) }
+          </Fade>
         </Flex>
       </Flex>
     </Flex>
