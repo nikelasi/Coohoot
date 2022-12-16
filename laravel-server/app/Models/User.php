@@ -34,6 +34,13 @@ class User extends Authenticatable implements JWTSubject
         'password'
     ];
 
+    public $rules = [
+        'username' => 'required|string|min:3|max:20|unique:users',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|string|min:8|max:20',
+        'pfp' => 'mimes:jpeg,jpg,png|max:10240'
+    ];
+
     // JWT
     public function getJWTIdentifier() {
         return $this->getKey();
