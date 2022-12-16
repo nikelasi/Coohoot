@@ -3,8 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use GoogleDriveService;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,17 +30,11 @@ Route::group([
         Route::post('verify-email', 'AuthController@verifyEmail');
     });
 
+    // Debug routes
     Route::group([
         'prefix' => 'debug'
     ], function() {
-        Route::get('getimageurl', function(Request $request, GoogleDriveService $drive) {
-            $path = $request->query('path');
-            $url = $drive->getUrl($path);
-            return response()->json([
-                'path' => $path,
-                'url' => $url
-            ], 200);
-        });
+        Route::get('getimageurl', 'ImageController@imageUrl');
     });
 
 });

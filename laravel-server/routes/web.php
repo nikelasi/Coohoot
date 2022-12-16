@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 
-use GoogleDriveService;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,15 +39,12 @@ Route::get('/assets/{path}', function($path) {
     ]);
 });
 
-// Serve the cloud files
-Route::get('/cloud/{path}', function($path, GoogleDriveService $drive) {
-    try {
-        $url = $drive->getUrl($path);
-    } catch (Exception $e) {
-        return response()->json([
-            "success" => false,
-            "message" => "File not found."
-        ], 404);
-    }
-    return redirect($url);
-})->where('path', '.*');
+// Controller based routes
+Route::group([
+    'namespace' => 'App\Http\Controllers'
+], function() {
+
+    // Image routes
+    Route::get('/cloud/{path}', 'ImageController@serve')->where('path', '.*');
+
+});
