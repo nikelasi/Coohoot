@@ -49,7 +49,27 @@ class AuthController extends Controller {
     }
 
     public function login(Request $request) {
+        // TODO: Validation
 
+        // Logging in
+        $token = $this->authService->login($request->only([
+            'username',
+            'email',
+            'password'
+        ]));
+
+        if (!$token) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid credentials.'
+            ], 401);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logged in successfully.',
+            'token' => $token
+        ], 200);
     }
 
     public function logout(Request $request) {
