@@ -29,6 +29,7 @@ Route::group([
         Route::post('register', 'AuthController@register');
         Route::post('login', 'AuthController@login');
         Route::post('verify-email', 'AuthController@verifyEmail');
+        Route::post('logout', 'AuthController@logout');
     });
 
     // Debug routes

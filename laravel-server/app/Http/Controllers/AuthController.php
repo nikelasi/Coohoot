@@ -9,7 +9,10 @@ class AuthController extends Controller {
 
     public function __construct(AuthService $authService) {
         $this->authService = $authService;
-        // $this->middleware(...)->only(['logout']);   
+
+        $this->middleware('auth.jwt')->only([
+            'logout'
+        ]);
     }
 
     public function register(Request $request) {
@@ -73,6 +76,10 @@ class AuthController extends Controller {
     }
 
     public function logout(Request $request) {
-
+        auth()->logout();
+        return response()->json([
+            'success' => true,
+            'message' => 'Logged out successfully.'
+        ], 200);
     }
 }
