@@ -1,5 +1,5 @@
 
-import BaseApi from './base'
+import BaseApi, { PostBody } from './base'
 
 class AuthApi extends BaseApi {
   constructor(baseUrl: string) {
@@ -13,6 +13,23 @@ class AuthApi extends BaseApi {
 
   public register = async (username: string, email: string, password: string): Promise<boolean> => {
     const result = await this.post('/register', { username, email, password })
+    return result.success
+  }
+
+  public login = async (userIdentification: string, password: string): Promise<boolean> => {
+    const body: PostBody = { password }
+    const isEmail = userIdentification.includes('@')
+    if (isEmail) {
+      body.email = userIdentification
+    } else {
+      body.username = userIdentification
+    }
+    const result = await this.post('/login', body)
+    return result.success
+  }
+
+  public logout = async (): Promise<boolean> => {
+    const result = await this.post('/logout', {})
     return result.success
   }
 }
