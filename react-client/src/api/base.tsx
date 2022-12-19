@@ -43,3 +43,7 @@ class BaseApi {
 }
 
 export default BaseApi
+
+export type PostBody = {
+  [key: string]: any
+}
