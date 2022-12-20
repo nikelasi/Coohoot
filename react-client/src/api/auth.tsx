@@ -16,7 +16,7 @@ class AuthApi extends BaseApi {
     return result.success
   }
 
-  public login = async (userIdentification: string, password: string): Promise<boolean> => {
+  public login = async (userIdentification: string, password: string): Promise<any> => {
     const body: PostBody = { password }
     const isEmail = userIdentification.includes('@')
     if (isEmail) {
@@ -25,7 +25,7 @@ class AuthApi extends BaseApi {
       body.username = userIdentification
     }
     const result = await this.post('/login', body)
-    return result.success
+    return result
   }
 
   public logout = async (): Promise<boolean> => {

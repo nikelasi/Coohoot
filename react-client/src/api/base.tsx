@@ -2,13 +2,22 @@
 class BaseApi {
 
   private url: string
+  private static token: string|null = null
 
   constructor(url: string) {
     this.url = url
   }
 
+  public static setToken = (token: string|null) => {
+    BaseApi.token = token
+  }
+
   public get = async (path: string) => {
-    const response = await fetch(`${this.url}${path}`)
+    const response = await fetch(`${this.url}${path}`, {
+      headers: {
+        'Authorization': `Bearer ${BaseApi.token}`
+      }
+    })
     return await response.json()
   }
 
@@ -16,7 +25,8 @@ class BaseApi {
     const response = await fetch(`${this.url}${path}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${BaseApi.token}`
       },
       body: JSON.stringify(body)
     })
@@ -27,7 +37,8 @@ class BaseApi {
     const response = await fetch(`${this.url}${path}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${BaseApi.token}`
       },
       body: JSON.stringify(body)
     })
@@ -36,7 +47,10 @@ class BaseApi {
 
   public delete = async (path: string) => {
     const response = await fetch(`${this.url}${path}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${BaseApi.token}`
+      }
     })
     return await response.json()
   }
