@@ -5,6 +5,7 @@ import './index.css'
 
 import { BrowserRouter } from 'react-router-dom'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
+import { AuthProvider } from './features/auth/AuthContext'
 
 import theme from './theme'
 
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>

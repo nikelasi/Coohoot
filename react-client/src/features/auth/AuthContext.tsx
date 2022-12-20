@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import api from '../../api'
 
 interface AuthContextObject {
   user: any
@@ -18,13 +19,23 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
+    api.setToken(token)
     if (token) {
-      // TODO: Fetch user data, and ensure token is valid
-      localStorage.setItem('token', token)
+      login(token)
     } else {
       localStorage.removeItem('token')
     }
   }, [token])
+
+  const login = async (token: string) => {
+    const result = await api.auth.me()
+    if (result.success) {
+      setUser(result.user)
+      localStorage.setItem('token', token)
+    } else {
+      setToken(null)
+    }
+  }
 
   return (
     <AuthContext.Provider value={{ user, token, setToken }}>
