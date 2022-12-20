@@ -32,6 +32,11 @@ class AuthApi extends BaseApi {
     const result = await this.post('/logout', {})
     return result.success
   }
+
+  public me = async (): Promise<any> => {
+    const result = await this.get('/me')
+    return result
+  }
 }
 
 export default AuthApi

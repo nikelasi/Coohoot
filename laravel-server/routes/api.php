@@ -30,6 +30,7 @@ Route::group([
         Route::post('login', 'AuthController@login');
         Route::post('verify-email', 'AuthController@verifyEmail');
         Route::post('logout', 'AuthController@logout');
+        Route::get('me', 'AuthController@me');
     });
 
     // Debug routes
