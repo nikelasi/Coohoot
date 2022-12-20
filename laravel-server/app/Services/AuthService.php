@@ -95,6 +95,7 @@ class AuthService {
    */
   public function login($credentials) {
 
+    $user = null;
     if (isset($credentials['username'])) {
       $user = User::where('username', $credentials['username'])->first();
     } else if (isset($credentials['email'])) {
