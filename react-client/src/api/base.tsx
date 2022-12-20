@@ -12,7 +12,7 @@ class BaseApi {
     BaseApi.token = token
   }
 
-  public get = async (path: string) => {
+  protected get = async (path: string) => {
     const response = await fetch(`${this.url}${path}`, {
       headers: {
         'Authorization': `Bearer ${BaseApi.token}`
@@ -21,7 +21,7 @@ class BaseApi {
     return await response.json()
   }
 
-  public post = async (path: string, body: any) => {
+  protected post = async (path: string, body: any) => {
     const response = await fetch(`${this.url}${path}`, {
       method: 'POST',
       headers: {
@@ -33,7 +33,7 @@ class BaseApi {
     return await response.json()
   }
 
-  public put = async (path: string, body: any) => {
+  protected put = async (path: string, body: any) => {
     const response = await fetch(`${this.url}${path}`, {
       method: 'PUT',
       headers: {
@@ -45,7 +45,7 @@ class BaseApi {
     return await response.json()
   }
 
-  public delete = async (path: string) => {
+  protected delete = async (path: string) => {
     const response = await fetch(`${this.url}${path}`, {
       method: 'DELETE',
       headers: {
