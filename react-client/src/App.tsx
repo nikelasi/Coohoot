@@ -30,6 +30,7 @@ function App() {
         <Routes>
           {/* Main */}
           <Route path='/' element={<Landing />} />
+          <Route path='/dashboard' element={<NotImplemented />} />
 
           {/* Auth */}
           <Route path="/authwall" element={<AuthWall />} />
@@ -39,6 +40,9 @@ function App() {
 
           {/* Quizzes */}
           <Route path='/quizzes' element={<NotImplemented />} />
+
+          {/* Users */}
+          <Route path='/user/:username' element={<NotImplemented />} />
 
           {/* 404 */}
           <Route path='*' element={<NotFound />} />
