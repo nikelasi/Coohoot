@@ -1,6 +1,7 @@
 import { Tab, Tabs, TabList, TabPanel, TabPanels } from "@chakra-ui/react"
 import LoginForm from "../../features/auth/LoginForm";
 import RegisterForm from "../../features/auth/RegisterForm";
+import useGuestOnly from "../../features/auth/useGuestOnly";
 import OwlPage from "../../features/layout/OwlPage.layout"
 
 interface FormsProps {
@@ -8,6 +9,8 @@ interface FormsProps {
 }
 
 const Forms: React.FC<FormsProps> = ({ isLogin = false }: FormsProps) => {
+
+  useGuestOnly()
 
   const defaultTabIndex = isLogin ? 1 : 0;
 

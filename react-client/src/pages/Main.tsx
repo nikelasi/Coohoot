@@ -4,8 +4,12 @@ import OwlPage from "../features/layout/OwlPage.layout"
 import { Link as RouterLink } from "react-router-dom"
 
 import { IoMdArrowRoundForward } from "react-icons/io"
+import useGuestOnly from "../features/auth/useGuestOnly"
 
 const Main: React.FC = () => {
+
+  useGuestOnly()
+
   return (
     <OwlPage
       ml={{
