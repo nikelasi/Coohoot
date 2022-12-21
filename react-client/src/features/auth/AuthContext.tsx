@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
     } else {
       localStorage.removeItem(USER_KEY)
       localStorage.removeItem(TOKEN_KEY)
+      setUser(null)
     }
     setLoading(false)
   }
