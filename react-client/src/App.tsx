@@ -1,10 +1,19 @@
 import { Box, Fade } from '@chakra-ui/react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Header from './features/layout/Header'
-import { Main, NotFound, Verify } from './pages'
-import AuthWall from './pages/auth/AuthWall';
-import Forms from './pages/auth/Forms';
-import NotImplemented from './pages/NotImplemented';
+import {
+
+  Landing,
+  Dashboard,
+  
+  NotFound,
+  NotImplemented,
+
+  Verify,
+  Forms,
+  AuthWall,
+
+} from './pages'
 
 function App() {
 
@@ -20,7 +29,7 @@ function App() {
         {/* Routes */}
         <Routes>
           {/* Main */}
-          <Route path='/' element={<Main />} />
+          <Route path='/' element={<Landing />} />
 
           {/* Auth */}
           <Route path="/authwall" element={<AuthWall />} />

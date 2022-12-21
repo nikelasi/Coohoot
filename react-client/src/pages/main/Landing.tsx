@@ -1,12 +1,12 @@
 import { Box, Heading, Text, Link, Button } from "@chakra-ui/react"
-import OwlPage from "../features/layout/OwlPage.layout"
+import OwlPage from "../../features/layout/OwlPage.layout"
 
 import { Link as RouterLink } from "react-router-dom"
 
 import { IoMdArrowRoundForward } from "react-icons/io"
-import useGuestOnly from "../features/auth/useGuestOnly"
+import useGuestOnly from "../../features/auth/useGuestOnly"
 
-const Main: React.FC = () => {
+const Landing: React.FC = () => {
 
   useGuestOnly()
 
@@ -47,4 +47,4 @@ const Main: React.FC = () => {
   )
 }
 
-export default Main
+export default Landing

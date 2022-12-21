@@ -1,6 +1,6 @@
 import { Flex, Heading, Text, VStack } from "@chakra-ui/react"
 
-import CoohootOwl from '../assets/svg/CoohootOwl.svg'
+import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 
 const NotFound: React.FC = () => {
   return (
