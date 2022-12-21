@@ -1,44 +1,53 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import api from '../../api'
 
+const TOKEN_KEY = 'token'
+const USER_KEY = 'loggedUser'
+
 interface AuthContextObject {
   user: any
   token: string | null
   setToken: (token: string | null) => void
+  loading: boolean
 }
 
 const AuthContext = createContext<AuthContextObject>({
   user: null,
   token: null,
   setToken: () => {},
+  loading: true
 })
 
 export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
   
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'))
-  const [user, setUser] = useState<any>(null)
+  const [token, setToken] = useState<string | null>(localStorage.getItem(TOKEN_KEY))
+  const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem(USER_KEY) || 'null'))
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    api.setToken(token)
-    if (token) {
-      login(token)
-    } else {
-      localStorage.removeItem('token')
-    }
+    setLoading(true)
+    updateToken(token)
   }, [token])
 
-  const login = async (token: string) => {
-    const result = await api.auth.me()
-    if (result.success) {
-      setUser(result.user)
-      localStorage.setItem('token', token)
+  const updateToken = async (token: string | null) => {
+    api.setToken(token)
+    if (token) {
+      const result = await api.auth.me()
+      if (result.success) {
+        setUser(result.user)
+        localStorage.setItem(USER_KEY, JSON.stringify(result.user))
+        localStorage.setItem(TOKEN_KEY, token)
+      } else {
+        setToken(null)
+      }
     } else {
-      setToken(null)
+      localStorage.removeItem(TOKEN_KEY)
     }
+    setLoading(false)
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, setToken }}>
+    <AuthContext.Provider value={{ user, token, setToken, loading }}>
       {children}
     </AuthContext.Provider>
   )
