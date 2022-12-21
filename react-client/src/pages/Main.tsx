@@ -28,9 +28,11 @@ const Main: React.FC = () => {
         </Box>
         <Box fontSize="2xl">
           Want to take a quiz?<br/>
-          <Button rightIcon={<IoMdArrowRoundForward />}>
-            <Link as={RouterLink} to="/quizzes" variant="no-underline">Browse Now</Link>
-          </Button>
+          <Link as={RouterLink} to="/quizzes" variant="no-underline">
+            <Button rightIcon={<IoMdArrowRoundForward />}>
+              Browse Now
+            </Button>
+          </Link>
         </Box>
         <Box>
           Want to create quizzes instead?<br/>

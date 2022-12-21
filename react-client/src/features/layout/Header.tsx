@@ -47,16 +47,13 @@ const Header: React.FC = () => {
             base: "none",
             sm: "flex"
           }}>
-          <Button variant="link">
-            <Link as={RouterLink} to="/register">
-              Register
-            </Link>
-          </Button>
-          <Button>
-            <Link as={RouterLink} to="/login" variant="no-underline">
-              Login
-            </Link>
-          </Button>
+          
+          <Link as={RouterLink} to="/register" display="flex" alignItems="center">
+            <Button variant="link">Register</Button>
+          </Link>
+          <Link as={RouterLink} to="/login" variant="no-underline">
+            <Button>Login</Button>
+          </Link>
         </Flex>
 
         {/* Buttons */}
@@ -102,16 +99,12 @@ const Header: React.FC = () => {
             gap="4"
             direction="column"
             textAlign="left">
-            <Button>
-              <Link as={RouterLink} onClick={() => onClose()} to="/register" variant="no-underline">
-                Register
-              </Link>
-            </Button>
-            <Button>
-              <Link as={RouterLink} onClick={() => onClose()} to="/login" variant="no-underline">
-                Login
-              </Link>
-            </Button>
+            <Link as={RouterLink} onClick={() => onClose()} to="/register" variant="no-underline">
+              <Button w="full">Register</Button>
+            </Link>
+            <Link as={RouterLink} onClick={() => onClose()} to="/login" variant="no-underline">
+              <Button w="full">Login</Button>
+            </Link>
           </Flex>
           </DrawerBody>
         </DrawerContent>
