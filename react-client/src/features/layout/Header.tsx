@@ -79,8 +79,7 @@ const Header: React.FC = () => {
 
         {/* Buttons */}
         
-        <Link
-          hidden={user === null}
+        {user !== null && <Link
           as={RouterLink}
           to={`/user/${user.username}`}
           variant="no-underline">
@@ -90,7 +89,7 @@ const Header: React.FC = () => {
               w="full"
               src={user.pfp_url} />
           </Circle>
-        </Link>
+        </Link>}
         <Button
           p={{
             base: "0",
