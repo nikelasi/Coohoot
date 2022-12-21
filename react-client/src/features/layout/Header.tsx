@@ -1,11 +1,14 @@
-import { Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, Icon, Image, Link, useColorMode, useDisclosure } from "@chakra-ui/react"
+import { Box, Button, Circle, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, Icon, Image, Link, useColorMode, useDisclosure } from "@chakra-ui/react"
 import { Link as RouterLink, useLocation, useResolvedPath } from "react-router-dom"
 
 import HeaderLogo from '../../assets/svg/HeaderLogo.svg'
 import { IoMdSunny, IoMdMoon, IoMdMenu } from 'react-icons/io'
 import { createRef, useEffect } from "react"
+import { useAuth } from "../auth/AuthContext"
 
 const Header: React.FC = () => {
+
+  const { user } = useAuth()
 
   const { colorMode, toggleColorMode } = useColorMode()
 
@@ -31,11 +34,26 @@ const Header: React.FC = () => {
       boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)">
 
       {/* Logo */}
-      <Box fontSize="2xl" fontWeight="bold">
+      <Flex
+        gap="8"
+        alignItems="center"
+        fontWeight="bold">
         <Link as={RouterLink} to="/">
           <HeaderLogo boxSize="24" />
         </Link>
-      </Box>
+        <Flex
+          h="7"
+          gap="4"
+          alignItems="end"
+          display={{
+            base: "none",
+            sm: "flex"
+          }}>
+          <Link hidden={user === null} as={RouterLink} to="/dashboard" variant="no-underline">
+            <Button variant="link">Dashboard</Button>
+          </Link>
+        </Flex>
+      </Flex>
 
       {/* Right */}
       <Flex
@@ -43,20 +61,36 @@ const Header: React.FC = () => {
         {/* Links */}
         <Flex
           gap="4"
+          alignItems="center"
           display={{
             base: "none",
             sm: "flex"
           }}>
-          
-          <Link as={RouterLink} to="/register" display="flex" alignItems="center">
+          {/* Show when not logged in */}
+          <Link hidden={user !== null} as={RouterLink} to="/register" display="flex" alignItems="center">
             <Button variant="link">Register</Button>
           </Link>
-          <Link as={RouterLink} to="/login" variant="no-underline">
+          <Link hidden={user !== null} as={RouterLink} to="/login" variant="no-underline">
             <Button>Login</Button>
           </Link>
+          {/* Show when logged in */}
+
         </Flex>
 
         {/* Buttons */}
+        
+        <Link
+          hidden={user === null}
+          as={RouterLink}
+          to={`/user/${user.username}`}
+          variant="no-underline">
+          <Circle size="10" border="2px solid" borderColor="brand" overflow="hidden">
+            <Image
+              h="full"
+              w="full"
+              src={user.pfp_url} />
+          </Circle>
+        </Link>
         <Button
           p={{
             base: "0",
@@ -99,11 +133,16 @@ const Header: React.FC = () => {
             gap="4"
             direction="column"
             textAlign="left">
-            <Link as={RouterLink} onClick={() => onClose()} to="/register" variant="no-underline">
+            {/* Not logged in */}
+            <Link hidden={user !== null} as={RouterLink} onClick={() => onClose()} to="/register" variant="no-underline">
               <Button w="full">Register</Button>
             </Link>
-            <Link as={RouterLink} onClick={() => onClose()} to="/login" variant="no-underline">
+            <Link hidden={user !== null} as={RouterLink} onClick={() => onClose()} to="/login" variant="no-underline">
               <Button w="full">Login</Button>
+            </Link>
+            {/* Logged in */}
+            <Link hidden={user === null} as={RouterLink} onClick={() => onClose()} to="/dashboard" variant="no-underline">
+              <Button w="full">Dashboard</Button>
             </Link>
           </Flex>
           </DrawerBody>
