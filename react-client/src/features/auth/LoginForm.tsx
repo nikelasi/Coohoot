@@ -1,14 +1,20 @@
 import { Button, Flex, FormControl, FormLabel, Input } from "@chakra-ui/react"
 import { FormEvent, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import api from "../../api"
 import useToast from "../layout/useToast"
 import { useAuth } from "./AuthContext"
 import PasswordInput from "./PasswordInput.component"
 
-const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  redirect?: string
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
 
   const toast = useToast()
   const auth = useAuth()
+  const navigate = useNavigate()
 
   const [userIdentification, setUserIdentification] = useState<string>("")
   const [password, setPassword] = useState<string>("")
@@ -22,6 +28,7 @@ const LoginForm: React.FC = () => {
     setSubmitting(false)
     if (result.success) {
       auth.setToken(result.token)
+      if (redirect) navigate(redirect)
       toast.success(`Login successful`, `Welcome back, ${userIdentification}`)
     } else {
       toast.error("Login failed", "Invalid username or password")
