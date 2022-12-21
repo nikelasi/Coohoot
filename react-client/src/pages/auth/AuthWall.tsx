@@ -1,4 +1,4 @@
-import { Tab, Tabs, TabList, TabPanel, TabPanels } from "@chakra-ui/react"
+import { Tab, Tabs, TabList, TabPanel, TabPanels, Heading, Text } from "@chakra-ui/react"
 import { useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../features/auth/AuthContext";
@@ -29,6 +29,15 @@ const AuthWall: React.FC = () => {
     <OwlPage
       p="16"
       gap="8">
+      <Heading
+        fontSize="5xl"
+        mb="-6">
+        hoooold up!
+      </Heading>
+      <Text
+        fontSize="l">
+        please login to continue.
+      </Text>
       <Tabs
         size="lg"
         isFitted
