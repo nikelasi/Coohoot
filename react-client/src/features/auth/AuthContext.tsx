@@ -7,15 +7,17 @@ const USER_KEY = 'loggedUser'
 interface AuthContextObject {
   user: any
   token: string | null
-  setToken: (token: string | null) => void
   loading: boolean
+  login: (userIdentification: string, password: string) => Promise<boolean>
+  logout: () => Promise<boolean>
 }
 
 const AuthContext = createContext<AuthContextObject>({
   user: null,
   token: null,
-  setToken: () => {},
-  loading: true
+  loading: true,
+  login: async (userIdentification: string, password: string) => false,
+  logout: async () => false,
 })
 
 export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
@@ -25,15 +27,16 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setLoading(true)
     updateToken(token)
-  }, [token])
+  }, [])
 
   const updateToken = async (token: string | null) => {
+    setLoading(true)
     api.setToken(token)
     if (token) {
       const result = await api.auth.me()
       if (result.success) {
+        setToken(token)
         setUser(result.user)
         localStorage.setItem(USER_KEY, JSON.stringify(result.user))
         localStorage.setItem(TOKEN_KEY, token)
@@ -44,12 +47,29 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
       localStorage.removeItem(USER_KEY)
       localStorage.removeItem(TOKEN_KEY)
       setUser(null)
+      setToken(null)
     }
     setLoading(false)
   }
 
+  const login = async (userIdentification: string, password: string): Promise<boolean> => {
+    const result = await api.auth.login(userIdentification, password)
+    if (result.success) {
+      await updateToken(result.token)
+    }
+    return result.success
+  }
+
+  const logout = async (): Promise<boolean> => {
+    const success = await api.auth.logout()
+    if (success) {
+      await updateToken(null)
+    }
+    return success
+  }
+
   return (
-    <AuthContext.Provider value={{ user, token, setToken, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   )

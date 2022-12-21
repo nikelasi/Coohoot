@@ -24,10 +24,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (e: FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
-    const result = await api.auth.login(userIdentification, password)
+    const success = await auth.login(userIdentification, password)
     setSubmitting(false)
-    if (result.success) {
-      auth.setToken(result.token)
+    if (success) {
       if (redirect) navigate(redirect)
       toast.success(`Login successful`, `Welcome back, ${userIdentification}`)
     } else {

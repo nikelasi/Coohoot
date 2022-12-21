@@ -10,7 +10,7 @@ import useToast from "./useToast"
 
 const Header: React.FC = () => {
 
-  const { user, setToken } = useAuth()
+  const { user, logout: authLogout } = useAuth()
 
   const toast = useToast()
 
@@ -26,8 +26,7 @@ const Header: React.FC = () => {
   }, [pathname])
 
   const logout = async () => {
-    const success = await api.auth.logout()
-    setToken(null)
+    const success = await authLogout()
     if (success) {
       toast.success("Logout successful", "See you next time!")
     } else {
