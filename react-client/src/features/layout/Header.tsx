@@ -5,10 +5,14 @@ import HeaderLogo from '../../assets/svg/HeaderLogo.svg'
 import { IoMdSunny, IoMdMoon, IoMdMenu } from 'react-icons/io'
 import { createRef, useEffect } from "react"
 import { useAuth } from "../auth/AuthContext"
+import api from "../../api"
+import useToast from "./useToast"
 
 const Header: React.FC = () => {
 
-  const { user } = useAuth()
+  const { user, setToken } = useAuth()
+
+  const toast = useToast()
 
   const { colorMode, toggleColorMode } = useColorMode()
 
@@ -20,6 +24,16 @@ const Header: React.FC = () => {
   useEffect(() => {
     onClose()
   }, [pathname])
+
+  const logout = async () => {
+    const success = await api.auth.logout()
+    setToken(null)
+    if (success) {
+      toast.success("Logout successful", "See you next time!")
+    } else {
+      toast.error("Logout failed", "Something went wrong")
+    }
+  }
 
   return (
     <Flex
@@ -74,7 +88,6 @@ const Header: React.FC = () => {
             <Button>Login</Button>
           </Link>
           {/* Show when logged in */}
-
         </Flex>
 
         {/* Buttons */}
@@ -90,6 +103,15 @@ const Header: React.FC = () => {
               src={user.pfp_url} />
           </Circle>
         </Link>}
+        { user !== null &&
+        <Button
+          onClick={logout}
+          display={{
+          base: "none",
+          sm: "flex"
+          }}>
+          Logout
+        </Button>}
         <Button
           p={{
             base: "0",
@@ -140,6 +162,7 @@ const Header: React.FC = () => {
               <Button w="full">Login</Button>
             </Link>
             {/* Logged in */}
+            <Button hidden={user === null} w="full" onClick={logout}>Logout</Button>
             <Link hidden={user === null} as={RouterLink} onClick={() => onClose()} to="/dashboard" variant="no-underline">
               <Button w="full">Dashboard</Button>
             </Link>
