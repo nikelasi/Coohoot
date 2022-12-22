@@ -1,11 +1,10 @@
 import { Box, Button, Circle, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, Icon, Image, Link, useColorMode, useDisclosure } from "@chakra-ui/react"
-import { Link as RouterLink, useLocation, useResolvedPath } from "react-router-dom"
+import { Link as RouterLink, useLocation, useNavigate, useResolvedPath } from "react-router-dom"
 
 import HeaderLogo from '../../assets/svg/HeaderLogo.svg'
 import { IoMdSunny, IoMdMoon, IoMdMenu } from 'react-icons/io'
-import { createRef, useEffect } from "react"
+import { createRef, useEffect, useState } from "react"
 import { useAuth } from "../auth/AuthContext"
-import api from "../../api"
 import useToast from "./useToast"
 
 const Header: React.FC = () => {
@@ -14,6 +13,8 @@ const Header: React.FC = () => {
 
   const toast = useToast()
 
+  const navigate = useNavigate()
+
   const { colorMode, toggleColorMode } = useColorMode()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -21,13 +22,18 @@ const Header: React.FC = () => {
 
   const { pathname } = useLocation()
 
+  const [loggingOut, setLoggingOut] = useState<boolean>(false)
+
   useEffect(() => {
     onClose()
   }, [pathname])
 
   const logout = async () => {
+    setLoggingOut(true)
     const success = await authLogout()
+    setLoggingOut(false)
     if (success) {
+      navigate("/")
       toast.success("Logout successful", "See you next time!")
     } else {
       toast.error("Logout failed", "Something went wrong")
@@ -108,7 +114,8 @@ const Header: React.FC = () => {
           display={{
           base: "none",
           sm: "flex"
-          }}>
+          }}
+          isLoading={loggingOut}>
           Logout
         </Button>}
         <Button
@@ -161,7 +168,7 @@ const Header: React.FC = () => {
               <Button w="full">Login</Button>
             </Link>
             {/* Logged in */}
-            <Button hidden={user === null} w="full" onClick={logout}>Logout</Button>
+            <Button hidden={user === null} w="full" onClick={logout} isLoading={loggingOut} loadingText="Logging out...">Logout</Button>
             <Link hidden={user === null} as={RouterLink} onClick={() => onClose()} to="/dashboard" variant="no-underline">
               <Button w="full">Dashboard</Button>
             </Link>
