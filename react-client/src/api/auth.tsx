@@ -11,9 +11,9 @@ class AuthApi extends BaseApi {
     return result.success
   }
 
-  public register = async (username: string, email: string, password: string): Promise<boolean> => {
+  public register = async (username: string, email: string, password: string): Promise<any> => {
     const result = await this.post('/register', { username, email, password })
-    return result.success
+    return result
   }
 
   public login = async (userIdentification: string, password: string): Promise<any> => {

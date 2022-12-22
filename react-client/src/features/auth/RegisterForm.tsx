@@ -40,12 +40,16 @@ const RegisterForm: React.FC = () => {
       onSubmit={async (values, formikHelpers) => {
         const { username, email, password } = values
         setSubmitting(true)
-        const success = await api.auth.register(username, email, password)
+        let { success, errors } = await api.auth.register(username, email, password)
         setSubmitting(false)
         if (success) {
           toast.success("Registration successful", "Please check your email to verify your account")
         } else {
-          toast.error("Registration failed", "An account with that email already exists")
+          errors = errors as Record<string, Array<string>>
+          Object.keys(errors).forEach(key => {
+            errors[key] = errors[key][0]
+          })
+          formikHelpers.setErrors(errors)
         }
       }}>
       {({ handleSubmit, errors, touched }) => (
