@@ -1,14 +1,18 @@
 import { Text } from '@chakra-ui/react'
+import { useParams } from 'react-router-dom'
 import Page from "../../features/layout/Page.layout"
 import NotImplemented from '../common/NotImplemented'
 
-const Dashboard: React.FC = () => {
+const Profile: React.FC = () => {
+
+  const { username } = useParams()
+
   return (
     <Page>
-      <Text>Dashboard</Text>
+      <Text>{username}'s Profile</Text>
       <NotImplemented />
     </Page>
   )
 }
 
-export default Dashboard
+export default Profile

@@ -7,6 +7,7 @@ const Page: React.FC<PropsWithChildren<FlexProps>> = (props: PropsWithChildren<F
     <Flex
       h="calc(100vh - 4rem)"
       w="100vw"
+      direction="column"
       {...flexProps}>
       { children }
     </Flex>

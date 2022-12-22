@@ -13,6 +13,10 @@ import {
   Forms,
   AuthWall,
 
+  Quizzes,
+
+  Profile,
+
 } from './pages'
 
 function App() {
@@ -30,7 +34,7 @@ function App() {
         <Routes>
           {/* Main */}
           <Route path='/' element={<Landing />} />
-          <Route path='/dashboard' element={<NotImplemented />} />
+          <Route path='/dashboard' element={<Dashboard />} />
 
           {/* Auth */}
           <Route path="/authwall" element={<AuthWall />} />
@@ -39,10 +43,10 @@ function App() {
           <Route path='/register' element={<Forms />} />
 
           {/* Quizzes */}
-          <Route path='/quizzes' element={<NotImplemented />} />
+          <Route path='/quizzes' element={<Quizzes />} />
 
           {/* Users */}
-          <Route path='/user/:username' element={<NotImplemented />} />
+          <Route path='/user/:username' element={<Profile />} />
 
           {/* 404 */}
           <Route path='*' element={<NotFound />} />
