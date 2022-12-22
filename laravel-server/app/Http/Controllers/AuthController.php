@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use AuthService;
 
+use App\Models\User;
+
 class AuthController extends Controller {
 
     public function __construct(AuthService $authService) {
@@ -17,7 +19,11 @@ class AuthController extends Controller {
     }
 
     public function register(Request $request) {
-        // TODO: Validation
+
+        // Validation
+        if ($errors = $this->validate($request, User::$rules)) {
+            return $errors;
+        }
 
         // Registering
         $this->authService->registerUser($request->only([
@@ -33,7 +39,6 @@ class AuthController extends Controller {
     }
 
     public function verifyEmail(Request $request) {
-        // TODO: Validation
 
         // Verifying
         $verified = $this->authService->verifyUser($request->token);
@@ -53,7 +58,6 @@ class AuthController extends Controller {
     }
 
     public function login(Request $request) {
-        // TODO: Validation
 
         // Logging in
         try {
