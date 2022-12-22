@@ -57,7 +57,7 @@ const Header: React.FC = () => {
         gap="8"
         alignItems="center"
         fontWeight="bold">
-        <Link as={RouterLink} to="/">
+        <Link as={RouterLink} to={user ? "/dashboard" : "/"}>
           <HeaderLogo boxSize="24" />
         </Link>
         <Flex
