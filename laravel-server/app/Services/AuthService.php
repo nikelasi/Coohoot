@@ -102,12 +102,14 @@ class AuthService {
       $user = User::where('email', $credentials['email'])->first();
     }
 
-    if (!$user->verified) {
-      throw new \Exception('Account not verified yet');
-    }
-
     if ($user && Hash::check($credentials['password'], $user->password)) {
       $token = auth()->login($user);
+
+      if (!$user->verified) {
+        $this->createVerificationToken($user->id, 'email_verification');
+        throw new \Exception('Account not verified yet, check your email to verify.');
+      }
+      
       return $token;
     }
 
