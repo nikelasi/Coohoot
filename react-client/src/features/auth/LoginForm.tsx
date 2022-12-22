@@ -36,13 +36,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
       onSubmit={async (values, formikHelpers) => {
         const { userIdentification, password } = values
         setSubmitting(true)
-        const success = await auth.login(userIdentification, password)
+        const { success, message } = await auth.login(userIdentification, password)
         setSubmitting(false)
         if (success) {
           if (redirect) navigate(redirect)
           toast.success(`Login successful`, `Welcome back, ${userIdentification}`)
         } else {
-          toast.error("Login failed", "Invalid username or password")
+          toast.error("Login failed", message)
         }
       }}>
       {({ handleSubmit, errors, touched }) => (

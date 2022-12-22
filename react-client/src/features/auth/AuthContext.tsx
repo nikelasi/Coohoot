@@ -8,7 +8,7 @@ interface AuthContextObject {
   user: any
   token: string | null
   loading: boolean
-  login: (userIdentification: string, password: string) => Promise<boolean>
+  login: (userIdentification: string, password: string) => Promise<any>
   logout: () => Promise<boolean>
 }
 
@@ -50,12 +50,12 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
     setLoading(false)
   }
 
-  const login = async (userIdentification: string, password: string): Promise<boolean> => {
+  const login = async (userIdentification: string, password: string): Promise<any> => {
     const result = await api.auth.login(userIdentification, password)
     if (result.success) {
       await updateToken(result.token)
     }
-    return result.success
+    return result
   }
 
   const logout = async (): Promise<boolean> => {
