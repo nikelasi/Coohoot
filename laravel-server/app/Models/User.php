@@ -34,10 +34,10 @@ class User extends Authenticatable implements JWTSubject
         'password'
     ];
 
-    public $rules = [
-        'username' => 'required|string|min:3|max:20|unique:users',
+    public static $rules = [
+        'username' => 'required|string|min:2|max:50|unique:users',
         'email' => 'required|email|unique:users',
-        'password' => 'required|string|min:8|max:20',
+        'password' => 'required|string|min:8|max:50',
         'pfp' => 'mimes:jpeg,jpg,png|max:10240'
     ];
 
