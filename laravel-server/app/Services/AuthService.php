@@ -77,6 +77,10 @@ class AuthService {
 
       $token->delete();
 
+      UserToken::where('user_id', $user->id)->delete(
+        UserToken::where('type', 'email_verification')->get()
+      );
+
       return true;
     }
 
