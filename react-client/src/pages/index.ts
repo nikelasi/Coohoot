@@ -9,7 +9,7 @@ import Verify from './auth/Verify'
 import Forms from './auth/Forms'
 import AuthWall from './auth/AuthWall'
 
-import Quizzes from './quizzes/Quizzes'
+import Discover from './quizzes/Discover'
 
 import Profile from './users/Profile'
 
@@ -25,7 +25,7 @@ export {
   Forms,
   AuthWall,
 
-  Quizzes,
+  Discover,
 
   Profile
   

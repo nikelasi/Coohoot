@@ -32,7 +32,7 @@ const Landing: React.FC = () => {
         </Box>
         <Box fontSize="2xl">
           Want to take a quiz?<br/>
-          <Link as={RouterLink} to="/quizzes" variant="no-underline">
+          <Link as={RouterLink} to="/discover" variant="no-underline">
             <Button rightIcon={<IoMdArrowRoundForward />}>
               Browse Now
             </Button>

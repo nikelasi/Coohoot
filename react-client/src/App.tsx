@@ -13,7 +13,7 @@ import {
   Forms,
   AuthWall,
 
-  Quizzes,
+  Discover,
 
   Profile,
 
@@ -43,7 +43,7 @@ function App() {
           <Route path='/register' element={<Forms />} />
 
           {/* Quizzes */}
-          <Route path='/quizzes' element={<Quizzes />} />
+          <Route path='/discover' element={<Discover />} />
 
           {/* Users */}
           <Route path='/user/:username' element={<Profile />} />

@@ -1,7 +1,7 @@
 import { Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import Page from "../../features/layout/Page.layout"
 
-const Quizzes: React.FC = () => {
+const Discover: React.FC = () => {
 
   return (
     <Page
@@ -33,4 +33,4 @@ const Quizzes: React.FC = () => {
   )
 }
 
-export default Quizzes
+export default Discover
