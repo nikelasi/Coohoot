@@ -1,6 +1,6 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link, Text } from "@chakra-ui/react"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link as RouterLink } from "react-router-dom"
 import useToast from "../layout/useToast"
 import { useAuth } from "./AuthContext"
 import PasswordInput from "./PasswordInput.component"
@@ -72,6 +72,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
               type="submit">
               Login
             </Button>
+            <Text>
+              forgot password? click&nbsp;
+              <Link onClick={() => alert("Forgot password modal WIP")} color="brand.accent">here</Link>.
+            </Text>
           </Flex>
         </form>
       )}
