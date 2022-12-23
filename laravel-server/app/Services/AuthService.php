@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 use App\Mail\EmailVerificationMail;
+use App\Mail\PasswordResetMail;
 
 class AuthService {
 
@@ -46,19 +47,48 @@ class AuthService {
    * @param string $uuid The user's UUID
    * @return void
    */
-  public function createVerificationToken($uuid) {
+  public function createVerificationToken($uuid, $token_type = 'email_verification') {
     $user = User::find($uuid);
 
-    if ($user->verified) {
+    if ($token_type === 'email_verification' && $user->verified) {
       return;
     }
     
     $token = UserToken::create([
       'user_id' => $uuid,
-      'type' => 'email_verification'
+      'type' => $token_type
     ]);
 
-    Mail::to($user->email)->send(new EmailVerificationMail($user, $token));
+    if ($token_type === 'email_verification') {
+      Mail::to($user->email)->send(new EmailVerificationMail($user, $token));
+    } else if ($token_type === 'password_reset') {
+      Mail::to($user->email)->send(new PasswordResetMail($user, $token));
+    }
+  }
+
+  /**
+   * Request a password reset for the given user.
+   * 
+   * @param array[
+   *  'username' => string,
+   *  'email' => string
+   * ] $user_identification
+   * @return bool Whether the request was successful
+   */
+  public function requestPasswordReset($user_identification) {
+
+    $user = null;
+    if (isset($user_identification['username'])) {
+      $user = User::where('username', $user_identification['username'])->first();
+    } else if (isset($user_identification['email'])) {
+      $user = User::where('email', $user_identification['email'])->first();
+    }
+
+    if ($user) {
+      $this->createVerificationToken($user->id, 'password_reset');
+      return true;
+    }
+    return false;
   }
 
   /**

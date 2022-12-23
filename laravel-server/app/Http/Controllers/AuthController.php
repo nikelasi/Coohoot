@@ -38,6 +38,28 @@ class AuthController extends Controller {
         ], 200);
     }
 
+    public function requestPasswordReset(Request $request) {
+
+        // Requesting
+        $sent = $this->authService->requestPasswordReset($request->only([
+            'username',
+            'email'
+        ]));
+
+        if (!$sent) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No user with that email or username found.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password reset email sent.'
+        ], 200);
+        
+    }
+
     public function verifyEmail(Request $request) {
 
         // Verifying
