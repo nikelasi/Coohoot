@@ -2,7 +2,11 @@ import { Flex, Heading, Text, VStack } from "@chakra-ui/react"
 
 import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 
-const NotFound: React.FC = () => {
+interface NotFoundProps {
+  message?: string;
+}
+
+const NotFound: React.FC<NotFoundProps> = ({ message = 'Page Not Found' }: NotFoundProps) => {
   return (
     <Flex
       justifyContent="center"
@@ -13,7 +17,7 @@ const NotFound: React.FC = () => {
       <VStack>
         <CoohootOwl boxSize="32" />
         <Heading fontSize="6xl">coo... 404</Heading>
-        <Text fontSize="3xl" color="brand">Page Not Found</Text>
+        <Text fontSize="3xl" color="brand">{message}</Text>
       </VStack>
     </Flex>
   )
