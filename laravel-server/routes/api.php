@@ -40,4 +40,11 @@ Route::group([
         Route::get('getimageurl', 'ImageController@imageUrl');
     });
 
+    // User routes
+    Route::group([
+        'prefix' => 'users'
+    ], function() {
+        Route::get('{username}', 'UserController@get');
+    });
+
 });
