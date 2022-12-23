@@ -1,13 +1,34 @@
-import { Text } from '@chakra-ui/react'
+import { Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import Page from "../../features/layout/Page.layout"
-import NotImplemented from '../common/NotImplemented'
 
 const Quizzes: React.FC = () => {
 
   return (
-    <Page>
-      <Text>Quizzes</Text>
-      <NotImplemented />
+    <Page
+      p="8"
+      gap="4">
+      <Heading>
+        Discovery
+        <Text
+          fontSize="lg">
+          Explore quizzes and templates
+        </Text>
+      </Heading>
+      {/* Quiz / Template Discovery */}
+      <Tabs
+        defaultIndex={0}
+        variant="soft-rounded">
+        <TabList
+          position="sticky"
+          gap="2">
+          <Tab>Quizzes</Tab>
+          <Tab>Templates</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>Quiz discovery</TabPanel>
+          <TabPanel>Template discovery</TabPanel>
+        </TabPanels>
+      </Tabs>
     </Page>
   )
 }
