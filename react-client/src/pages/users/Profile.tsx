@@ -1,4 +1,4 @@
-import { Heading, HStack, Spinner, Image, Text, VStack, Box, Flex, background } from '@chakra-ui/react'
+import { Heading, HStack, Spinner, Image, Text, VStack, Box, Flex, background, Button } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import api from '../../api'
@@ -6,10 +6,14 @@ import Page from "../../features/layout/Page.layout"
 
 import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import NotFound from '../common/NotFound'
+import { useAuth } from '../../features/auth/AuthContext'
+import { IoMdCreate } from 'react-icons/io'
 
 const Profile: React.FC = () => {
 
   const { username } = useParams()
+
+  const { user: currUser } = useAuth()
 
   const [loading, setLoading] = useState<boolean>(true)
   const [user, setUser] = useState<any>(null)
@@ -62,6 +66,13 @@ const Profile: React.FC = () => {
           fontSize="3xl">
           {username}
         </Text>
+        { !!currUser && currUser.username === username &&
+          <Button
+            p="3"
+            leftIcon={<IoMdCreate size={18} />}>
+            Edit Profile
+          </Button>
+        }
       </HStack>
       {/* User's Creations */}
       <Flex
