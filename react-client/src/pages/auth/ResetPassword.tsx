@@ -50,6 +50,10 @@ const ResetPassword: React.FC = () => {
             alignItems={{
               base: 'center',
               md: 'flex-start'
+            }}
+            textAlign={{
+              base: 'center',
+              md: 'left'
             }}>
             <Heading>Password Reset</Heading>
             <Fade
@@ -63,7 +67,7 @@ const ResetPassword: React.FC = () => {
               </Text>
               { !checking && username === null &&
               <Text fontSize="l">
-                Return to <Link as={RouterLink} to="/" color="brand.accent">home</Link>.
+                Return to <Link as={RouterLink} to="/" color="brand.accent">home</Link>?
               </Text> }
             </Fade>
           </Flex>

@@ -51,6 +51,10 @@ const Verify: React.FC = () => {
           alignItems={{
             base: 'center',
             md: 'flex-start'
+          }}
+          textAlign={{
+            base: 'center',
+            md: 'left'
           }}>
           <Heading>Email Verification</Heading>
           <Fade
@@ -67,7 +71,7 @@ const Verify: React.FC = () => {
               You may now <Link as={RouterLink} to="/login" color="brand.accent">login</Link>!
             </Text>
             : <Text fontSize="l">
-              Return to <Link as={RouterLink} to="/" color="brand.accent">home</Link>.
+              Return to <Link as={RouterLink} to="/" color="brand.accent">home</Link>?
             </Text>) }
           </Fade>
         </Flex>
