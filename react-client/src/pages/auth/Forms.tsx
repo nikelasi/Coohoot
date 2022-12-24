@@ -16,6 +16,7 @@ const Forms: React.FC<FormsProps> = ({ isLogin = false }: FormsProps) => {
 
   return (
     <OwlPage
+      owlType="normal"
       p="16"
       gap="8">
       <Tabs

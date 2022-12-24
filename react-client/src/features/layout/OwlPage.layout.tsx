@@ -1,10 +1,48 @@
-import { Box, FlexProps, Circle, Flex } from "@chakra-ui/react"
+import { Box, FlexProps, Circle, Flex, IconProps } from "@chakra-ui/react"
+import React, { useMemo } from "react"
 import { PropsWithChildren } from "react"
 
 import HappyOwlOnBranch from '../../assets/svg/HappyOwlOnBranch.svg'
+import CopOwlOnBranch from '../../assets/svg/CopOwlOnBranch.svg'
+import OwlOnBranch from '../../assets/svg/OwlOnBranch.svg'
 
-const OwlPage: React.FC<PropsWithChildren<FlexProps>> = (props: PropsWithChildren<FlexProps>) => {
+interface OwlOptionProps {
+  owlType?: string;
+}
+
+// combine FlexProps with OwlProps
+type Props = PropsWithChildren<OwlOptionProps & FlexProps>
+
+const OwlPage: React.FC<Props> = (props: Props) => {
   const { children, ...flexProps } = props;
+  const owlType = props.owlType || 'happy';
+
+  let Owl;
+  switch (owlType) {
+    case "normal":
+      Owl = <OwlOnBranch
+              boxSize="35vw"
+              position="absolute"
+              left="-4"
+              top="32" />;
+      break;
+    case "cop":
+      Owl = <CopOwlOnBranch
+              boxSize="35vw"
+              position="absolute"
+              left="-8"
+              top="32" />;
+      break;
+    default:
+      Owl = <HappyOwlOnBranch
+              boxSize="35vw"
+              position="absolute"
+              left="-4"
+              top="32" />;
+      break;
+  }
+  
+
   return (
     <Flex>
 
@@ -35,12 +73,7 @@ const OwlPage: React.FC<PropsWithChildren<FlexProps>> = (props: PropsWithChildre
             border="1rem solid"
             borderColor="brand.accent"
             />
-          <HappyOwlOnBranch
-            boxSize="35vw"
-            position="absolute"
-            left="-4"
-            top="32"
-            />
+          {Owl}
         </Box>
       </Box>
 
