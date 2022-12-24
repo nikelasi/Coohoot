@@ -1,8 +1,10 @@
 import { Box, Button, Circle, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, Icon, Image, Link, useColorMode, useDisclosure } from "@chakra-ui/react"
-import { Link as RouterLink, useLocation, useNavigate, useResolvedPath } from "react-router-dom"
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom"
 
 import HeaderLogo from '../../assets/svg/HeaderLogo.svg'
-import { IoMdSunny, IoMdMoon, IoMdMenu } from 'react-icons/io'
+import { IoMdSunny, IoMdMoon, IoMdMenu, IoMdBrowsers, IoMdPerson } from 'react-icons/io'
+import { IoExitOutline, IoEnterOutline } from 'react-icons/io5'
+import { MdExplore } from 'react-icons/md'
 import { createRef, useEffect, useState } from "react"
 import { useAuth } from "../auth/AuthContext"
 import useToast from "./useToast"
@@ -61,15 +63,19 @@ const Header: React.FC = () => {
           <HeaderLogo boxSize="24" />
         </Link>
         <Flex
-          h="7"
+          h="9"
           gap="4"
           alignItems="end"
           display={{
             base: "none",
             sm: "flex"
           }}>
-          <Link hidden={user === null} as={RouterLink} to="/dashboard" variant="no-underline">
-            <Button variant="link">Dashboard</Button>
+          <Link as={RouterLink} to="/discover" variant="no-underline">
+            <Button
+              leftIcon={<MdExplore />}
+              variant="link">
+              Discover
+            </Button>
           </Link>
         </Flex>
       </Flex>
@@ -162,15 +168,18 @@ const Header: React.FC = () => {
             textAlign="left">
             {/* Not logged in */}
             <Link hidden={user !== null} as={RouterLink} onClick={() => onClose()} to="/register" variant="no-underline">
-              <Button w="full">Register</Button>
+              <Button leftIcon={<IoMdPerson />} w="full">Register</Button>
             </Link>
             <Link hidden={user !== null} as={RouterLink} onClick={() => onClose()} to="/login" variant="no-underline">
-              <Button w="full">Login</Button>
+              <Button leftIcon={<IoEnterOutline />} w="full">Login</Button>
             </Link>
             {/* Logged in */}
-            <Button hidden={user === null} w="full" onClick={logout} isLoading={loggingOut} loadingText="Logging out...">Logout</Button>
+            <Button leftIcon={<IoExitOutline />} hidden={user === null} w="full" onClick={logout} isLoading={loggingOut} loadingText="Logging out...">Logout</Button>
             <Link hidden={user === null} as={RouterLink} onClick={() => onClose()} to="/dashboard" variant="no-underline">
-              <Button w="full">Dashboard</Button>
+              <Button leftIcon={<IoMdBrowsers />} w="full">Dashboard</Button>
+            </Link>
+            <Link as={RouterLink} onClick={() => onClose()} to="/discover" variant="no-underline">
+              <Button leftIcon={<MdExplore />} w="full">Discover</Button>
             </Link>
           </Flex>
           </DrawerBody>
