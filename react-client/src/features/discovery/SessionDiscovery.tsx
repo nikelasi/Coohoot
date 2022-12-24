@@ -1,7 +1,7 @@
 import { Flex } from "@chakra-ui/react"
 import usePaginator from "./usePaginator"
 
-const TemplateDiscovery: React.FC = () => {
+const SessionDiscovery: React.FC = () => {
 
   const { Paginator } = usePaginator({
     maxPages: 1
@@ -18,7 +18,7 @@ const TemplateDiscovery: React.FC = () => {
       <Paginator />
       <Flex
         flexGrow="1">
-        No templates found
+        No sessions found
       </Flex>
       <Flex
         alignSelf="flex-end">
@@ -28,4 +28,4 @@ const TemplateDiscovery: React.FC = () => {
   )
 }
 
-export default TemplateDiscovery
+export default SessionDiscovery

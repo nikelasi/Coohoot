@@ -1,6 +1,6 @@
 import { Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import QuizDiscovery from '../../features/discovery/QuizDiscovery'
-import TemplateDiscovery from '../../features/discovery/TemplateDiscovery'
+import SessionDiscovery from '../../features/discovery/SessionDiscovery'
 import Page from "../../features/layout/Page.layout"
 
 const Discover: React.FC = () => {
@@ -13,10 +13,10 @@ const Discover: React.FC = () => {
         Discovery
         <Text
           fontSize="lg">
-          Explore quizzes and templates
+          Explore quizzes and sessions
         </Text>
       </Heading>
-      {/* Quiz / Template Discovery */}
+      {/* Quiz / Session Discovery */}
       <Tabs
         flexGrow="1"
         defaultIndex={0}
@@ -28,7 +28,7 @@ const Discover: React.FC = () => {
           position="sticky"
           gap="2">
           <Tab>Quizzes</Tab>
-          <Tab>Templates</Tab>
+          <Tab>Sessions</Tab>
         </TabList>
         <TabPanels
           flexGrow="1"
@@ -43,7 +43,7 @@ const Discover: React.FC = () => {
             p="0"
             flexGrow="1"
             display="flex">
-            <TemplateDiscovery />
+            <SessionDiscovery />
           </TabPanel>
         </TabPanels>
       </Tabs>

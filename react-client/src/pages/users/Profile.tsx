@@ -104,18 +104,18 @@ const Profile: React.FC = () => {
             <Text>{username} has no quizzes</Text>
           </VStack>
         </VStack>
-        {/* User's Templates */}
+        {/* User's Sessions */}
         <VStack
           flexGrow={rFlexGrow}
           alignItems="stretch">
-          <Heading><Text as="span" color="brand.accent">{username}</Text>'s Templates</Heading>
+          <Heading><Text as="span" color="brand.accent">{username}</Text>'s Sessions</Heading>
           <VStack
             p="4"
             borderRadius="0.4rem"
             bgColor="highlight"
             alignItems="flex-start"
             flexGrow={rFlexGrow}>
-            <Text>{username} has no templates</Text>
+            <Text>{username} has not started any quiz sessions</Text>
           </VStack>
         </VStack>
       </Flex>
