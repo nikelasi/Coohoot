@@ -10,6 +10,7 @@ import {
   NotImplemented,
 
   Verify,
+  ResetPassword,
   Forms,
   AuthWall,
 
@@ -38,9 +39,10 @@ function App() {
 
           {/* Auth */}
           <Route path="/authwall" element={<AuthWall />} />
-          <Route path="/verify/:token" element={<Verify />} />
           <Route path='/login' element={<Forms isLogin />} />
           <Route path='/register' element={<Forms />} />
+          <Route path="/verify/:token" element={<Verify />} />
+          <Route path="/password_reset/:token" element={<ResetPassword />} />
 
           {/* Quizzes */}
           <Route path='/discover' element={<Discover />} />

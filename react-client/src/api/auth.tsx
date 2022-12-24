@@ -51,12 +51,12 @@ class AuthApi extends BaseApi {
     return result.success
   }
 
-  public checkPasswordResetToken = async (token: string): Promise<boolean> => {
+  public checkPasswordResetToken = async (token: string): Promise<any> => {
     const result = await this.post('/password-reset/check', { token })
-    return result.success
+    return result
   }
 
-  public resetPassword = async (token: string, password: string): Promise<boolean> => {
+  public resetPassword = async (token: string, password: string): Promise<any> => {
     const result = await this.post('/password-reset/reset', { token, password })
     return result
   }

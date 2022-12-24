@@ -1,32 +1,15 @@
 
-import Landing from './main/Landing'
-import Dashboard from './main/Dashboard'
+export { default as Landing } from './main/Landing'
+export { default as Dashboard } from './main/Dashboard'
 
-import NotFound from "./common/NotFound"
-import NotImplemented from "./common/NotImplemented"
+export { default as NotFound } from "./common/NotFound"
+export { default as NotImplemented } from "./common/NotImplemented"
 
-import Verify from './auth/Verify'
-import Forms from './auth/Forms'
-import AuthWall from './auth/AuthWall'
+export { default as Verify } from './auth/Verify'
+export { default as ResetPassword } from './auth/ResetPassword'
+export { default as Forms } from './auth/Forms'
+export { default as AuthWall } from './auth/AuthWall'
 
-import Discover from './quizzes/Discover'
+export { default as Discover } from './quizzes/Discover'
 
-import Profile from './users/Profile'
-
-export {
-
-  Landing,
-  Dashboard,
-
-  NotFound,
-  NotImplemented,
-
-  Verify,
-  Forms,
-  AuthWall,
-
-  Discover,
-
-  Profile
-  
-}
+export { default as Profile } from './users/Profile'
