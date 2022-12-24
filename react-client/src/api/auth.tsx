@@ -57,7 +57,7 @@ class AuthApi extends BaseApi {
   }
 
   public resetPassword = async (token: string, password: string): Promise<any> => {
-    const result = await this.post('/password-reset/reset', { token, password })
+    const result = await this.post('/password-reset', { token, password })
     return result
   }
   

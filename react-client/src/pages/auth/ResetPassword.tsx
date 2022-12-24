@@ -4,6 +4,7 @@ import { useParams, Link as RouterLink } from 'react-router-dom'
 import api from '../../api'
 
 import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
+import ResetPasswordForm from '../../features/auth/ResetPasswordForm'
 import Page from '../../features/layout/Page.layout'
 
 const ResetPassword: React.FC = () => {
@@ -80,7 +81,12 @@ const ResetPassword: React.FC = () => {
     <Page
       alignItems="center"
       py="16">
-      Password Reset for { username } [WIP]
+      <Heading mb="4">
+        Reset Password
+      </Heading>
+      <ResetPasswordForm
+        token={token!}
+        username={username!} />
     </Page>
   )
 }
