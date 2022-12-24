@@ -9,6 +9,11 @@ import NotFound from '../common/NotFound'
 import { useAuth } from '../../features/auth/AuthContext'
 import { IoMdCreate } from 'react-icons/io'
 
+const rFlexGrow = {
+  base: 0,
+  md: 1
+}
+
 const Profile: React.FC = () => {
 
   const { username } = useParams()
@@ -76,34 +81,40 @@ const Profile: React.FC = () => {
       </HStack>
       {/* User's Creations */}
       <Flex
-        gap="4"
+        flexGrow="1"
+        gap={{
+          base: "4",
+          md: "8"
+        }}
         direction={{
           base: "column",
           md: "row"
         }}>
         {/* User's Quizzes */}
         <VStack
-          flexGrow={1}
+          flexGrow={rFlexGrow}
           alignItems="stretch">
           <Heading><Text as="span" color="brand.accent">{username}</Text>'s Quizzes</Heading>
           <VStack
             p="4"
             borderRadius="0.4rem"
             bgColor="highlight"
-            alignItems="flex-start">
+            alignItems="flex-start"
+            flexGrow={rFlexGrow}>
             <Text>{username} has no quizzes</Text>
           </VStack>
         </VStack>
         {/* User's Templates */}
         <VStack
-          flexGrow={1}
+          flexGrow={rFlexGrow}
           alignItems="stretch">
           <Heading><Text as="span" color="brand.accent">{username}</Text>'s Templates</Heading>
           <VStack
             p="4"
             borderRadius="0.4rem"
             bgColor="highlight"
-            alignItems="flex-start">
+            alignItems="flex-start"
+            flexGrow={rFlexGrow}>
             <Text>{username} has no templates</Text>
           </VStack>
         </VStack>
