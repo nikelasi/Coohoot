@@ -3,6 +3,8 @@ import Modal from "../layout/Modal.layout"
 import { Formik, Field } from 'formik'
 import * as Yup from 'yup'
 import { useState } from "react"
+import api from "../../api"
+import useToast from "../layout/useToast"
 
 const ForgotPasswordSchema = Yup.object().shape({
   userIdentification: Yup.string()
@@ -16,6 +18,8 @@ interface ModalProps {
 
 const ForgotPasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps) => {
 
+  const toast = useToast()
+
   const [loading, setLoading] = useState<boolean>(false)
 
   return (
@@ -27,11 +31,19 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
       onSubmit={async (values, formikHelpers) => {
         const { userIdentification } = values
         setLoading(true)
-        alert("WIP")
-        await new Promise(resolve => setTimeout(resolve, 2000))
+        const success = await api.auth.forgotPassword(userIdentification)
         setLoading(false)
+        if (success) {
+          formikHelpers.setValues({
+            userIdentification: ""
+          })
+          onClose()
+          toast.success("Forgot Password", "Email sent! Please check your inbox for a link to reset your password.")
+        } else {
+          formikHelpers.setFieldError("userIdentification", "Invalid email or username")
+        }
       }}>
-      {({ handleSubmit, errors, touched }) => (
+      {({ handleSubmit, errors, touched, ...rest }) => (
         <Modal
           onClose={onClose}
           isOpen={isOpen}>
