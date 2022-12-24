@@ -28,10 +28,17 @@ Route::group([
     ], function() {
         Route::post('register', 'AuthController@register');
         Route::post('login', 'AuthController@login');
-        Route::post('request-password-reset', 'AuthController@requestPasswordReset');
         Route::post('verify-email', 'AuthController@verifyEmail');
         Route::post('logout', 'AuthController@logout');
         Route::get('me', 'AuthController@me');
+
+        // Password reset routes
+        Route::group([
+            'prefix' => 'password-reset'
+        ], function() {
+            Route::post('request', 'AuthController@requestPasswordReset');
+            Route::post('check', 'AuthController@checkPasswordResetToken');
+        });
     });
 
     // Debug routes

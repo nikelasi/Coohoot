@@ -38,28 +38,6 @@ class AuthController extends Controller {
         ], 200);
     }
 
-    public function requestPasswordReset(Request $request) {
-
-        // Requesting
-        $sent = $this->authService->requestPasswordReset($request->only([
-            'username',
-            'email'
-        ]));
-
-        if (!$sent) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No user with that email or username found.'
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Password reset email sent.'
-        ], 200);
-        
-    }
-
     public function verifyEmail(Request $request) {
 
         // Verifying
@@ -123,5 +101,49 @@ class AuthController extends Controller {
             'success' => true,
             'user' => $user
         ], 200);
+    }
+
+    // Password reset methods
+
+    public function requestPasswordReset(Request $request) {
+
+        // Requesting
+        $sent = $this->authService->requestPasswordReset($request->only([
+            'username',
+            'email'
+        ]));
+
+        if (!$sent) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No user with that email or username found.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password reset email sent.'
+        ], 200);
+        
+    }
+
+    public function checkPasswordResetToken(Request $request) {
+
+        // Checking
+        $username = $this->authService->checkPasswordResetToken($request->token);
+
+        if (!$username) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid token.'
+            ], 401);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Token valid.',
+            'username' => $username
+        ], 200);
+
     }
 }

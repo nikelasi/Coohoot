@@ -92,6 +92,25 @@ class AuthService {
   }
 
   /**
+   * Check if the given token is valid for password reset.
+   * 
+   * @param string $token The user's password reset token
+   * @return (string|null) The user's username if the token is valid, null otherwise
+   */
+  public function checkPasswordResetToken($token) {
+    $token = UserToken::where('token', $token)
+      ->where('type', 'password_reset')
+      ->first();
+
+    if (!$token) {
+      return null;
+    }
+
+    $user = User::find($token->user_id);
+    return $user->username;
+  }
+
+  /**
    * Attempt to verify the user's email with given token.
    * 
    * @param string $token The user's email verification token
