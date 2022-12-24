@@ -76,6 +76,12 @@ class AuthService {
     $token = UserToken::where('token', $token)->first();
 
     if ($token) {
+
+      if (strtotime($token->expires_at) < time()) {
+        $token->delete();
+        return false;
+      }
+
       $user = User::find($token->user_id);
       $user->verified = true;
       $user->save();
@@ -167,6 +173,11 @@ class AuthService {
       return null;
     }
 
+    if (strtotime($token->expires_at) < time()) {
+      $token->delete();
+      return null;
+    }
+
     $user = User::find($token->user_id);
     return $user->username;
   }
@@ -199,5 +210,5 @@ class AuthService {
 
     return true;
   }
-  
+
 }
