@@ -37,6 +37,30 @@ class AuthApi extends BaseApi {
     const result = await this.get('/me')
     return result
   }
+
+  // Reset password routes
+  public forgotPassword = async (userIdentification: string): Promise<boolean> => {
+    const body: PostBody = {}
+    const isEmail = userIdentification.includes('@')
+    if (isEmail) {
+      body.email = userIdentification
+    } else {
+      body.username = userIdentification
+    }
+    const result = await this.post('/password-reset/request', body)
+    return result.success
+  }
+
+  public checkPasswordResetToken = async (token: string): Promise<boolean> => {
+    const result = await this.post('/password-reset/check', { token })
+    return result.success
+  }
+
+  public resetPassword = async (token: string, password: string): Promise<boolean> => {
+    const result = await this.post('/password-reset/reset', { token, password })
+    return result
+  }
+  
 }
 
 export default AuthApi
