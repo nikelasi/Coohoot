@@ -146,4 +146,29 @@ class AuthController extends Controller {
         ], 200);
 
     }
+
+    public function resetPassword(Request $request) {
+
+        if ($errors = $this->validate($request, [
+            'password' => User::$rules['password']
+        ])) {
+            return $errors;
+        }
+
+        // Resetting
+        $reset = $this->authService->resetPassword($request->token, $request->password);
+
+        if (!$reset) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid token.'
+            ], 401);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password reset successfully.'
+        ], 200);
+
+    }
 }

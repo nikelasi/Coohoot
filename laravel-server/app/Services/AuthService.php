@@ -67,50 +67,6 @@ class AuthService {
   }
 
   /**
-   * Request a password reset for the given user.
-   * 
-   * @param array[
-   *  'username' => string,
-   *  'email' => string
-   * ] $user_identification
-   * @return bool Whether the request was successful
-   */
-  public function requestPasswordReset($user_identification) {
-
-    $user = null;
-    if (isset($user_identification['username'])) {
-      $user = User::where('username', $user_identification['username'])->first();
-    } else if (isset($user_identification['email'])) {
-      $user = User::where('email', $user_identification['email'])->first();
-    }
-
-    if ($user) {
-      $this->createVerificationToken($user->id, 'password_reset');
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Check if the given token is valid for password reset.
-   * 
-   * @param string $token The user's password reset token
-   * @return (string|null) The user's username if the token is valid, null otherwise
-   */
-  public function checkPasswordResetToken($token) {
-    $token = UserToken::where('token', $token)
-      ->where('type', 'password_reset')
-      ->first();
-
-    if (!$token) {
-      return null;
-    }
-
-    $user = User::find($token->user_id);
-    return $user->username;
-  }
-
-  /**
    * Attempt to verify the user's email with given token.
    * 
    * @param string $token The user's email verification token
@@ -169,4 +125,79 @@ class AuthService {
     return null;
   }
 
+  // Password reset methods
+
+  /**
+   * Request a password reset for the given user.
+   * 
+   * @param array[
+   *  'username' => string,
+   *  'email' => string
+   * ] $user_identification
+   * @return bool Whether the request was successful
+   */
+  public function requestPasswordReset($user_identification) {
+
+    $user = null;
+    if (isset($user_identification['username'])) {
+      $user = User::where('username', $user_identification['username'])->first();
+    } else if (isset($user_identification['email'])) {
+      $user = User::where('email', $user_identification['email'])->first();
+    }
+
+    if ($user) {
+      $this->createVerificationToken($user->id, 'password_reset');
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check if the given token is valid for password reset.
+   * 
+   * @param string $token The user's password reset token
+   * @return (string|null) The user's username if the token is valid, null otherwise
+   */
+  public function checkPasswordResetToken($token) {
+    $token = UserToken::where('token', $token)
+      ->where('type', 'password_reset')
+      ->first();
+
+    if (!$token) {
+      return null;
+    }
+
+    $user = User::find($token->user_id);
+    return $user->username;
+  }
+
+  /**
+   * Reset the user's password with the given token.
+   * 
+   * @param string $token The user's password reset token
+   * @param string $password The new password
+   * @return bool Whether the password reset was successful
+   */
+  public function resetPassword($token, $password) {
+    $token = UserToken::where('token', $token)
+      ->where('type', 'password_reset')
+      ->first();
+
+    if (!$token) {
+      return false;
+    }
+
+    $user = User::find($token->user_id);
+    $user->password = Hash::make($password);
+    $user->save();
+
+    $token->delete();
+
+    UserToken::where('user_id', $user->id)->delete(
+      UserToken::where('type', 'password_reset')->get()
+    );
+
+    return true;
+  }
+  
 }

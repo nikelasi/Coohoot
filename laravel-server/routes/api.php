@@ -38,6 +38,7 @@ Route::group([
         ], function() {
             Route::post('request', 'AuthController@requestPasswordReset');
             Route::post('check', 'AuthController@checkPasswordResetToken');
+            Route::post('/', 'AuthController@resetPassword');
         });
     });
 
