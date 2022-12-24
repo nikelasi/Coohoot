@@ -20,8 +20,6 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
 
   const toast = useToast()
 
-  const [loading, setLoading] = useState<boolean>(false)
-
   return (
     <Formik
       validationSchema={ForgotPasswordSchema}
@@ -30,9 +28,7 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
       }}
       onSubmit={async (values, formikHelpers) => {
         const { userIdentification } = values
-        setLoading(true)
         const success = await api.auth.forgotPassword(userIdentification)
-        setLoading(false)
         if (success) {
           formikHelpers.setValues({
             userIdentification: ""
@@ -43,7 +39,7 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
           formikHelpers.setFieldError("userIdentification", "Invalid email or username")
         }
       }}>
-      {({ handleSubmit, errors, touched, ...rest }) => (
+      {({ handleSubmit, errors, touched, isSubmitting }) => (
         <Modal
           onClose={onClose}
           isOpen={isOpen}>
@@ -55,7 +51,10 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
               flexDirection="column"
               gap="4">
               <Text>Enter your email address or username and we'll send you a link to reset your password.</Text>
-                <FormControl isRequired isInvalid={!!errors.userIdentification && touched.userIdentification}>
+                <FormControl
+                  isRequired
+                  isInvalid={!!errors.userIdentification && touched.userIdentification}
+                  isDisabled={isSubmitting}>
                   <FormLabel>Email / Username</FormLabel>
                   <Field
                     as={Input}
@@ -69,7 +68,7 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
               display="flex"
               gap="2">
               <Button
-                isLoading={loading}
+                isLoading={isSubmitting}
                 loadingText="Submitting..."
                 variant="ghost"
                 type="submit">

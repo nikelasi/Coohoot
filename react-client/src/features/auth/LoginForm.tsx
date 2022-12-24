@@ -26,8 +26,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
   const navigate = useNavigate()
   const { isOpen, onClose, onOpen } = useDisclosure()
 
-  const [submitting, setSubmitting] = useState<boolean>(false)
-
   return (
     <Formik
       validationSchema={LoginSchema}
@@ -37,9 +35,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
       }}
       onSubmit={async (values, formikHelpers) => {
         const { userIdentification, password } = values
-        setSubmitting(true)
         const { success, message } = await auth.login(userIdentification, password)
-        setSubmitting(false)
         if (success) {
           if (redirect) navigate(redirect)
           toast.success(`Login successful`, `Welcome back, ${userIdentification}`)
@@ -47,13 +43,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
           toast.error("Login failed", message)
         }
       }}>
-      {({ handleSubmit, errors, touched }) => (
+      {({ handleSubmit, errors, touched, isSubmitting }) => (
         <>
           <form onSubmit={handleSubmit}>
             <Flex
               direction="column"
               gap="4">
-              <FormControl isRequired isInvalid={!!errors.userIdentification && touched.userIdentification}>
+              <FormControl
+                isRequired
+                isInvalid={!!errors.userIdentification && touched.userIdentification}
+                isDisabled={isSubmitting}>
                 <FormLabel>Username / Email</FormLabel>
                 <Field
                   as={Input}
@@ -62,7 +61,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
                   placeholder="Enter your username or email..." />
                 <FormErrorMessage>{errors.userIdentification}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired isInvalid={!!errors.password && touched.password}>
+              <FormControl
+                isRequired
+                isInvalid={!!errors.password && touched.password}
+                isDisabled={isSubmitting}>
                 <FormLabel>Password</FormLabel>
                 <PasswordInput
                   name="password"
@@ -70,7 +72,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
                 <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>
               <Button
-                isLoading={submitting}
+                isLoading={isSubmitting}
                 loadingText="Logging in..."
                 type="submit">
                 Login

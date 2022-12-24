@@ -26,8 +26,6 @@ const RegisterForm: React.FC = () => {
 
   const toast = useToast()
 
-  const [submitting, setSubmitting] = useState<boolean>(false)
-
   return (
     <Formik
       validationSchema={RegisterSchema}
@@ -39,9 +37,7 @@ const RegisterForm: React.FC = () => {
       }}
       onSubmit={async (values, formikHelpers) => {
         const { username, email, password } = values
-        setSubmitting(true)
         let { success, errors } = await api.auth.register(username, email, password)
-        setSubmitting(false)
         if (success) {
           toast.success("Registration successful", "Please check your email to verify your account")
         } else {
@@ -52,12 +48,15 @@ const RegisterForm: React.FC = () => {
           formikHelpers.setErrors(errors)
         }
       }}>
-      {({ handleSubmit, errors, touched }) => (
+      {({ handleSubmit, errors, touched, isSubmitting }) => (
         <form onSubmit={handleSubmit}>
           <Flex
             direction="column"
             gap="4">
-              <FormControl isRequired isInvalid={!!errors.username && touched.username}>
+              <FormControl
+                isRequired
+                isInvalid={!!errors.username && touched.username}
+                isDisabled={isSubmitting}>
                 <FormLabel>Username</FormLabel>
                 <Field
                   as={Input}
@@ -67,7 +66,10 @@ const RegisterForm: React.FC = () => {
                   placeholder="Enter a username..." />
                 <FormErrorMessage>{errors.username}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired isInvalid={!!errors.email && touched.email}>
+              <FormControl
+                isRequired
+                isInvalid={!!errors.email && touched.email}
+                isDisabled={isSubmitting}>
                 <FormLabel>Email</FormLabel>
                 <Field
                   as={Input}
@@ -83,14 +85,20 @@ const RegisterForm: React.FC = () => {
                   base: "column",
                   md: "row"
                 }}>
-                <FormControl isRequired isInvalid={!!errors.password && touched.password}>
+                <FormControl
+                  isRequired
+                  isInvalid={!!errors.password && touched.password}
+                  isDisabled={isSubmitting}>
                   <FormLabel>Password</FormLabel>
                   <PasswordInput
                     name="password"
                     placeholder="Enter password..." />
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
-                <FormControl isRequired isInvalid={!!errors.confirmPassword && touched.confirmPassword}>
+                <FormControl
+                  isRequired
+                  isInvalid={!!errors.confirmPassword && touched.confirmPassword}
+                  isDisabled={isSubmitting}>
                   <FormLabel>Confirm Password</FormLabel>
                   <PasswordInput
                     name="confirmPassword"
@@ -99,7 +107,7 @@ const RegisterForm: React.FC = () => {
                 </FormControl>
               </Flex>
               <Button
-                isLoading={submitting}
+                isLoading={isSubmitting}
                 loadingText="Registering..."
                 type="submit">
                 Register
