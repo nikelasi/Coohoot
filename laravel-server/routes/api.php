@@ -54,6 +54,7 @@ Route::group([
         'prefix' => 'users'
     ], function() {
         Route::get('{username}', 'UserController@get');
+        Route::delete('/', 'UserController@delete');
     });
 
 });

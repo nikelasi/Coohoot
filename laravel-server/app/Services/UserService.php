@@ -16,4 +16,14 @@ class UserService {
     return User::where('username', $username)->first();
   }
 
+  /**
+   * Delete a user
+   * 
+   * @param User $user
+   * @return void
+   */
+  public function delete(User $user) {
+    $user->delete();
+  }
+
 }

@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use AuthService;
 
 class UserController extends Controller {
 
-    public function __construct(UserService $usersService) {
+    public function __construct(UserService $usersService, AuthService $authService) {
         $this->usersService = $usersService;
+        $this->authService = $authService;
+
+        $this->middleware('auth.jwt')->only([
+            'delete'
+        ]);
     }
 
     public function get($username) {
@@ -26,6 +32,27 @@ class UserController extends Controller {
             'success' => true,
             'message' => 'User found',
             'user' => $user
+        ], 200);
+    }
+
+    public function delete(Request $request) {
+
+        $user = auth()->user();
+        $verified = $this->authService->verifyPassword($request->password, $user);
+
+        if (!$verified) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid password'
+            ], 401);
+        }
+
+        auth()->logout();
+        $this->usersService->delete($user);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully'
         ], 200);
     }
     
