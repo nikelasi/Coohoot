@@ -10,7 +10,7 @@ const Dashboard: React.FC = () => {
   useAuthWall()
 
   const { user } = useAuth();
-  const { pfp_url, username, email } = user;
+  const { username, email, pfp_url } = user || {}
 
   return (
     <Page
