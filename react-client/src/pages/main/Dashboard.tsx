@@ -1,12 +1,13 @@
-import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel } from '@chakra-ui/react'
+import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel, FormControl, FormLabel, InputRightElement } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
-import { IoMdBrowsers, IoMdPerson, IoMdSearch } from 'react-icons/io'
+import { IoMdAddCircle, IoMdBrowsers, IoMdCode, IoMdCreate, IoMdPerson, IoMdSearch, IoMdTrash } from 'react-icons/io'
 import { useAuth } from '../../features/auth/AuthContext'
 import useAuthWall from '../../features/auth/useAuthWall'
 import Page from "../../features/layout/Page.layout"
 import QuizDiscovery from '../../features/discovery/QuizDiscovery'
 import SessionDiscovery from '../../features/discovery/SessionDiscovery'
 import { useState } from 'react'
+import { MdExplore } from 'react-icons/md'
 
 const Dashboard: React.FC = () => {
 
@@ -19,6 +20,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <Page
+      w="full"
       p="4"
       gap="4">
       
@@ -38,23 +40,26 @@ const Dashboard: React.FC = () => {
           md: "row"
         }}>
 
-        {/* START: User's Profile & Actions */}
+        {/* START: Actions & Profile Panel */}
         <Flex
           p="4"
           bgColor="highlight"
           borderRadius="md"
           flexDirection="column"
+          gap="6"
           w={{
             base: "100%",
             md: "auto"
           }}>
 
-          {/* Profile */}
+          {/* START: Profile Section */}
           <VStack
             gap="2"
             w="full"
             alignItems="stretch">
             <Text>Your Profile</Text>
+
+            {/* Profile Card */}
             <HStack
               gap="2"
               alignItems="center">
@@ -66,33 +71,109 @@ const Dashboard: React.FC = () => {
                 src={pfp_url}
                 alt={`${username}'s profile photo`} />
               <VStack
-                alignItems="flex-start">
+                alignItems="flex-start"
+                overflow="auto">
                 <Text
-                  lineHeight="5"
+                  lineHeight="8"
                   color="brand.accent"
-                  fontSize="3xl">
+                  fontSize="3xl"
+                  noOfLines={1}
+                  maxWidth={{
+                    base: "100%",
+                    md: "25vw"
+                  }}>
                   {username}
                 </Text>
                 <Text
                   marginTop="0px"
                   marginBlockStart="0"
                   color="brand"
-                  fontSize="md">
+                  fontSize="md"
+                  noOfLines={1}
+                  maxWidth={{
+                    base: "100%",
+                    md: "25vw"
+                  }}>
                   {email}
                 </Text>
               </VStack>
             </HStack>
-            <Link as={RouterLink} to={`/user/${username}`}>
-              <Button
-                leftIcon={<IoMdPerson />}
-                w="full">
-                View Profile
-              </Button>
 
-            </Link>
+            {/* Profile Actions */}
+            <Flex
+              flexDirection="column"
+              gap="2">
+              <Link
+                as={RouterLink}
+                to={`/user/${username}`}
+                variant="no-underline">
+                <Button
+                  leftIcon={<IoMdPerson />}
+                  w="full">
+                  View Profile
+                </Button>
+              </Link>
+              <Button
+                leftIcon={<IoMdCreate />}>
+                Edit Profile
+              </Button>
+              <Button
+                colorScheme="red"
+                leftIcon={<IoMdTrash />}>
+                Delete Account
+              </Button>
+            </Flex>
+
+          </VStack>
+          {/* END: Profile Section */}
+
+          {/* START: Actions Section */}
+          <VStack
+            gap="2"
+            w="full"
+            alignItems="stretch">
+            <Text>Actions</Text>
+
+            <VStack
+              w="full"
+              alignItems="stretch">
+              <Link
+                as={RouterLink}
+                to={`/discover`}
+                variant="no-underline">
+                <Button
+                  leftIcon={<MdExplore />}
+                  w="full">
+                  Discover Coohoots
+                </Button>
+              </Link>
+              <Button
+                leftIcon={<IoMdAddCircle />}>
+                Create a Quiz
+              </Button>
+            </VStack>
+
+            <HStack>
+              <FormControl>
+                <FormLabel>Join a Live Session</FormLabel>
+                <InputGroup
+                  size="sm">
+                  <InputLeftElement
+                    children={<Icon as={IoMdCode} fill="brand.accent" boxSize="4" />}/>
+                  <Input
+                    variant="flushed"
+                    pr="12"
+                    id="name"
+                    name="name"
+                    placeholder="Session Code" />
+                </InputGroup>
+              </FormControl>
+              <Button size="sm" alignSelf="flex-end">Join</Button>
+            </HStack>
+
           </VStack>
         </Flex>
-        {/* END: User's Profile & Actions */}
+        {/* END: Actions & Profile Panel */}
 
         {/* START: User's Quiz/Session Listing */}
         <Flex
