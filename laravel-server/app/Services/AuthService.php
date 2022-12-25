@@ -117,7 +117,7 @@ class AuthService {
       $user = User::where('email', $credentials['email'])->first();
     }
 
-    if ($user && Hash::check($credentials['password'], $user->password)) {
+    if ($this->verifyPassword($credentials['password'], $user)) {
       $token = auth()->login($user);
 
       if (!$user->verified) {
@@ -129,6 +129,17 @@ class AuthService {
     }
 
     return null;
+  }
+
+  /**
+   * Verify the user's password and return whether it is correct.
+   * 
+   * @param string $password The user's password
+   * @param User $user The user
+   * @return bool Whether the password is correct
+   */
+  public function verifyPassword($password, $user) {
+    return $user && Hash::check($password, $user->password);
   }
 
   // Password reset methods
