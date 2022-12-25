@@ -1,4 +1,4 @@
-import { Heading, HStack, Spinner, Image, Text, VStack, Box, Flex, background, Button, useDisclosure } from '@chakra-ui/react'
+import { Heading, HStack, Spinner, Image, Text, VStack, Flex } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import api from '../../api'
@@ -6,9 +6,6 @@ import Page from "../../features/layout/Page.layout"
 
 import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import NotFound from '../common/NotFound'
-import { useAuth } from '../../features/auth/AuthContext'
-import { IoMdCreate } from 'react-icons/io'
-import WIPModal from '../../features/layout/WIPModal'
 
 const rFlexGrow = {
   base: 0,
@@ -19,12 +16,8 @@ const Profile: React.FC = () => {
 
   const { username } = useParams()
 
-  const { user: currUser } = useAuth()
-
   const [loading, setLoading] = useState<boolean>(true)
   const [user, setUser] = useState<any>(null)
-
-  const { onOpen, isOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     (async () => {
@@ -59,8 +52,6 @@ const Profile: React.FC = () => {
       p="8"
       gap="4">
 
-      <WIPModal isOpen={isOpen} onClose={onClose} />
-
       {/* Profile */}
       <HStack
         gap="2"
@@ -74,17 +65,10 @@ const Profile: React.FC = () => {
           alt={`${username}'s profile photo`} />
         <Text
           color="brand.accent"
-          fontSize="3xl">
+          fontSize="3xl"
+          noOfLines={1}>
           {username}
         </Text>
-        { !!currUser && currUser.username === username &&
-          <Button
-            onClick={onOpen}
-            p="3"
-            leftIcon={<IoMdCreate size={18} />}>
-            Edit Profile
-          </Button>
-        }
       </HStack>
       {/* User's Creations */}
       <Flex
@@ -101,7 +85,7 @@ const Profile: React.FC = () => {
         <VStack
           flexGrow={rFlexGrow}
           alignItems="stretch">
-          <Heading><Text as="span" color="brand.accent">{username}</Text>'s Quizzes</Heading>
+          <Heading>Quizzes</Heading>
           <VStack
             p="4"
             borderRadius="0.4rem"
@@ -115,7 +99,7 @@ const Profile: React.FC = () => {
         <VStack
           flexGrow={rFlexGrow}
           alignItems="stretch">
-          <Heading><Text as="span" color="brand.accent">{username}</Text>'s Sessions</Heading>
+          <Heading>Sessions</Heading>
           <VStack
             p="4"
             borderRadius="0.4rem"
