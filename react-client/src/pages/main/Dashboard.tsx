@@ -9,6 +9,7 @@ import SessionDiscovery from '../../features/discovery/SessionDiscovery'
 import { useState } from 'react'
 import { MdExplore } from 'react-icons/md'
 import WIPModal from '../../features/layout/WIPModal'
+import DeleteUserModal from '../../features/users/DeleteUserModal'
 
 const Dashboard: React.FC = () => {
 
@@ -20,6 +21,7 @@ const Dashboard: React.FC = () => {
   const { username, email, pfp_url } = user || {}
 
   const { onOpen: onWIPOpen, isOpen: isWIPOpen, onClose: onWIPClose } = useDisclosure()
+  const { onOpen: onDUOpen, isOpen: isDUOpen, onClose: onDUClose } = useDisclosure()
 
   return (
     <Page
@@ -28,6 +30,7 @@ const Dashboard: React.FC = () => {
       gap="4">
 
       <WIPModal isOpen={isWIPOpen} onClose={onWIPClose} />
+      <DeleteUserModal isOpen={isDUOpen} onClose={onDUClose} />
       
       <Heading
         display="flex"
@@ -124,7 +127,7 @@ const Dashboard: React.FC = () => {
                 Edit Profile
               </Button>
               <Button
-                onClick={onWIPOpen}
+                onClick={onDUOpen}
                 colorScheme="red"
                 leftIcon={<IoMdTrash />}>
                 Delete Account
