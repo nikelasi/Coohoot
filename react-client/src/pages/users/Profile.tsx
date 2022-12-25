@@ -1,4 +1,4 @@
-import { Heading, HStack, Spinner, Image, Text, VStack, Box, Flex, background, Button } from '@chakra-ui/react'
+import { Heading, HStack, Spinner, Image, Text, VStack, Box, Flex, background, Button, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import api from '../../api'
@@ -8,6 +8,7 @@ import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import NotFound from '../common/NotFound'
 import { useAuth } from '../../features/auth/AuthContext'
 import { IoMdCreate } from 'react-icons/io'
+import WIPModal from '../../features/layout/WIPModal'
 
 const rFlexGrow = {
   base: 0,
@@ -22,6 +23,8 @@ const Profile: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(true)
   const [user, setUser] = useState<any>(null)
+
+  const { onOpen, isOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     (async () => {
@@ -55,6 +58,9 @@ const Profile: React.FC = () => {
     <Page
       p="8"
       gap="4">
+
+      <WIPModal isOpen={isOpen} onClose={onClose} />
+
       {/* Profile */}
       <HStack
         gap="2"
@@ -73,6 +79,7 @@ const Profile: React.FC = () => {
         </Text>
         { !!currUser && currUser.username === username &&
           <Button
+            onClick={onOpen}
             p="3"
             leftIcon={<IoMdCreate size={18} />}>
             Edit Profile

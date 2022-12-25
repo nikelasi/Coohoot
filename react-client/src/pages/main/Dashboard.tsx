@@ -1,4 +1,4 @@
-import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel, FormControl, FormLabel, InputRightElement } from '@chakra-ui/react'
+import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel, FormControl, FormLabel, InputRightElement, useDisclosure } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import { IoMdAddCircle, IoMdBrowsers, IoMdCode, IoMdCreate, IoMdPerson, IoMdSearch, IoMdTrash } from 'react-icons/io'
 import { useAuth } from '../../features/auth/AuthContext'
@@ -8,6 +8,7 @@ import QuizDiscovery from '../../features/discovery/QuizDiscovery'
 import SessionDiscovery from '../../features/discovery/SessionDiscovery'
 import { useState } from 'react'
 import { MdExplore } from 'react-icons/md'
+import WIPModal from '../../features/layout/WIPModal'
 
 const Dashboard: React.FC = () => {
 
@@ -18,11 +19,15 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth()
   const { username, email, pfp_url } = user || {}
 
+  const { onOpen: onWIPOpen, isOpen: isWIPOpen, onClose: onWIPClose } = useDisclosure()
+
   return (
     <Page
       w="full"
       p="4"
       gap="4">
+
+      <WIPModal isOpen={isWIPOpen} onClose={onWIPClose} />
       
       <Heading
         display="flex"
@@ -114,10 +119,12 @@ const Dashboard: React.FC = () => {
                 </Button>
               </Link>
               <Button
+                onClick={onWIPOpen}
                 leftIcon={<IoMdCreate />}>
                 Edit Profile
               </Button>
               <Button
+                onClick={onWIPOpen}
                 colorScheme="red"
                 leftIcon={<IoMdTrash />}>
                 Delete Account
@@ -148,6 +155,7 @@ const Dashboard: React.FC = () => {
                 </Button>
               </Link>
               <Button
+                onClick={onWIPOpen}
                 leftIcon={<IoMdAddCircle />}>
                 Create a Quiz
               </Button>
@@ -168,7 +176,12 @@ const Dashboard: React.FC = () => {
                     placeholder="Session Code" />
                 </InputGroup>
               </FormControl>
-              <Button size="sm" alignSelf="flex-end">Join</Button>
+              <Button
+                onClick={onWIPOpen}
+                size="sm"
+                alignSelf="flex-end">
+                Join
+              </Button>
             </HStack>
 
           </VStack>
