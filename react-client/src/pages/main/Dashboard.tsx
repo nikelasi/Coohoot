@@ -1,4 +1,4 @@
-import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel, FormControl, FormLabel, InputRightElement, useDisclosure } from '@chakra-ui/react'
+import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel, FormControl, FormLabel, InputRightElement, useDisclosure, HeadingProps, Divider } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import { IoMdAddCircle, IoMdBrowsers, IoMdCode, IoMdCreate, IoMdPerson, IoMdSearch, IoMdTrash } from 'react-icons/io'
 import { useAuth } from '../../features/auth/AuthContext'
@@ -10,6 +10,25 @@ import { useState } from 'react'
 import { MdExplore } from 'react-icons/md'
 import WIPModal from '../../features/layout/WIPModal'
 import DeleteUserModal from '../../features/users/DeleteUserModal'
+
+interface DashboardHeadingProps {
+  desktopOnly?: boolean;
+}
+
+const DashboardHeading: React.FC<DashboardHeadingProps> = ({ desktopOnly = false }: DashboardHeadingProps) => {
+  return (
+    <Heading
+      gap="2"
+      alignItems="center"
+      display={{
+        base: !desktopOnly ? "flex" : "none",
+        md: desktopOnly ? "flex" : "none"
+      }}>
+      <IoMdBrowsers fill="var(--chakra-colors-brand)" />
+      Dashboard
+    </Heading>
+  )
+}
 
 const Dashboard: React.FC = () => {
 
@@ -32,13 +51,7 @@ const Dashboard: React.FC = () => {
       <WIPModal isOpen={isWIPOpen} onClose={onWIPClose} />
       <DeleteUserModal isOpen={isDUOpen} onClose={onDUClose} />
       
-      <Heading
-        display="flex"
-        gap="2"
-        alignItems="center">
-        <IoMdBrowsers fill="var(--chakra-colors-brand)" />
-        Dashboard
-      </Heading>
+      <DashboardHeading />
 
       <Flex
         gap="4"
@@ -59,6 +72,8 @@ const Dashboard: React.FC = () => {
             base: "100%",
             md: "auto"
           }}>
+
+          <DashboardHeading desktopOnly />
 
           {/* START: Profile Section */}
           <VStack
@@ -190,6 +205,8 @@ const Dashboard: React.FC = () => {
           </VStack>
         </Flex>
         {/* END: Actions & Profile Panel */}
+
+        <Divider display={{ base: "block", md: "none" }} />
 
         {/* START: User's Quiz/Session Listing */}
         <Flex
