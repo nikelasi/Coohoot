@@ -40,6 +40,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirect }: LoginFormProps) => {
           if (redirect) navigate(redirect)
           toast.success(`Login successful`, `Welcome back, ${userIdentification}`)
         } else {
+          formikHelpers.setFieldValue("password", "")
           toast.error("Login failed", message)
         }
       }}>

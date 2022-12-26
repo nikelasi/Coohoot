@@ -40,6 +40,7 @@ const RegisterForm: React.FC = () => {
         let { success, errors } = await api.auth.register(username, email, password)
         if (success) {
           toast.success("Registration successful", "Please check your email to verify your account")
+          formikHelpers.resetForm()
         } else {
           errors = errors as Record<string, Array<string>>
           Object.keys(errors).forEach(key => {
