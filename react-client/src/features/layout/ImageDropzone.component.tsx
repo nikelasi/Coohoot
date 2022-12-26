@@ -35,8 +35,7 @@ const ImageDropzone: React.FC<Props> = ({ dropzoneProps, ...centerProps }: Props
     multiple: false,
     accept: {
       "image/jpeg": [".jpeg", ".jpg"],
-      "image/png": [".png"],
-      "image/gif": [".gif"]
+      "image/png": [".png"]
     }
   })
 
@@ -86,12 +85,12 @@ const ImageDropzone: React.FC<Props> = ({ dropzoneProps, ...centerProps }: Props
           top="1"
           color="red"
           fontSize="xs">
-          Please upload a .jpg, .jpeg, .png, or .gif file.
+          Please upload a .jpg, .jpeg, or .png file.
         </Text> }
       </Center>
       <Text
         fontSize="xs">
-        Only .jpg, .jpeg, .png, and .gif files will be accepted
+        Only .jpg, .jpeg, or .png files will be accepted
       </Text>
     </VStack>
   )
