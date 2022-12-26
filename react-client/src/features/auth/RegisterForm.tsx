@@ -18,7 +18,8 @@ const RegisterSchema = Yup.object().shape({
   password: Yup.string()
     .min(8, 'Too Short!')
     .max(50, 'Too Long!')
-    .required('Required'),
+    .required('Required')
+    .matches(/^(?=.*\d)(?=.*[@$!%*#?&]).*$/, 'Password must contain at least one special character and one number'),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
 })

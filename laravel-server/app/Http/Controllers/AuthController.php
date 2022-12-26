@@ -23,6 +23,7 @@ class AuthController extends Controller {
         // Validation
         if ($errors = $this->validate($request, User::$rules, [
             'username.regex' => 'Username can only contain letters, numbers and periods.',
+            'password.regex' => 'Password must contain at least one number and one special character.',
         ])) {
             return $errors;
         }

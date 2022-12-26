@@ -37,7 +37,7 @@ class User extends Authenticatable implements JWTSubject
     public static $rules = [
         'username' => 'required|string|min:2|max:50|unique:users|regex:/^[a-zA-Z0-9.]+$/',
         'email' => 'required|email|unique:users',
-        'password' => 'required|string|min:8|max:50',
+        'password' => 'required|string|min:8|max:50|regex:/^(?=.*\d)(?=.*[@$!%*#?&]).*$/',
         'pfp' => 'mimes:jpeg,jpg,png|max:10240'
     ];
 
