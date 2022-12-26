@@ -21,7 +21,9 @@ class AuthController extends Controller {
     public function register(Request $request) {
 
         // Validation
-        if ($errors = $this->validate($request, User::$rules)) {
+        if ($errors = $this->validate($request, User::$rules, [
+            'username.regex' => 'Username can only contain letters, numbers and periods.',
+        ])) {
             return $errors;
         }
 

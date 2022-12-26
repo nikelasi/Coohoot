@@ -10,7 +10,8 @@ const RegisterSchema = Yup.object().shape({
   username: Yup.string()
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
-    .required('Required'),
+    .required('Required')
+    .matches(/^[a-zA-Z0-9.]+$/, 'Username can only contain letters, numbers and periods'),
   email: Yup.string()
     .email('Invalid email')
     .required('Required'),
