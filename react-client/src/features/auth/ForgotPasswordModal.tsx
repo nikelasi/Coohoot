@@ -1,8 +1,7 @@
 import { Button, FormControl, FormErrorMessage, FormLabel, Input, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text } from "@chakra-ui/react"
-import Modal from "../layout/Modal.layout"
+import Modal, { ModalProps } from "../layout/Modal.layout"
 import { Formik, Field } from 'formik'
 import * as Yup from 'yup'
-import { useState } from "react"
 import api from "../../api"
 import useToast from "../layout/useToast"
 
@@ -11,14 +10,10 @@ const ForgotPasswordSchema = Yup.object().shape({
     .required('Required')
 })
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const ForgotPasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps) => {
+const ForgotPasswordModal: React.FC<ModalProps> = (props: ModalProps) => {
 
   const toast = useToast()
+  const { onClose } = props
 
   return (
     <Formik
@@ -40,9 +35,7 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
         }
       }}>
       {({ handleSubmit, errors, touched, isSubmitting }) => (
-        <Modal
-          onClose={onClose}
-          isOpen={isOpen}>
+        <Modal {...props}>
           <form onSubmit={handleSubmit}>
             <ModalHeader>Forgot Password</ModalHeader>
             <ModalCloseButton />

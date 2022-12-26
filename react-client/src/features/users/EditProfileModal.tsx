@@ -1,16 +1,13 @@
 import { Button, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, HStack, Image, VStack, useDisclosure, Avatar } from "@chakra-ui/react"
 import { MdPassword } from "react-icons/md";
 import { useAuth } from "../auth/AuthContext";
-import Modal from "../layout/Modal.layout"
+import Modal, { ModalProps } from "../layout/Modal.layout"
 import WIPModal from "../layout/WIPModal";
 import UpdatePasswordModal from "./ChangePasswordModal";
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+const EditProfileModal: React.FC<ModalProps> = (props: ModalProps) => {
 
-const EditProfileModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps) => {
+  const { onClose } = props
 
   const { user } = useAuth()
   const { username, email, pfp_url } = user || {}
@@ -19,9 +16,7 @@ const EditProfileModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps)
   const { isOpen: isCPOpen, onClose: onCPClose, onOpen: onCPOpen } = useDisclosure()
 
   return (
-    <Modal
-      onClose={onClose}
-      isOpen={isOpen}>
+    <Modal {...props}>
 
       <WIPModal isOpen={isWIPOpen} onClose={onWIPClose} />
       <UpdatePasswordModal isOpen={isCPOpen} onClose={onCPClose} />

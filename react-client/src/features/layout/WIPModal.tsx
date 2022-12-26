@@ -1,17 +1,12 @@
 import { Button, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text } from "@chakra-ui/react"
-import Modal from "../layout/Modal.layout"
+import Modal, { ModalProps } from "../layout/Modal.layout"
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+const WIPModal: React.FC<ModalProps> = (props: ModalProps) => {
 
-const WIPModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps) => {
+  const { onClose } = props
 
   return (
-    <Modal
-      onClose={onClose}
-      isOpen={isOpen}>
+    <Modal {...props}>
       <ModalHeader>Work in Progress</ModalHeader>
       <ModalCloseButton />
       <ModalBody

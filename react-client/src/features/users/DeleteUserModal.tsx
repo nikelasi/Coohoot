@@ -1,6 +1,6 @@
 import { Button, FormControl, FormErrorMessage, FormLabel, Input, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text } from "@chakra-ui/react"
-import { Field, Formik } from "formik";
-import Modal from "../layout/Modal.layout"
+import { Formik } from "formik";
+import Modal, { ModalProps } from "../layout/Modal.layout"
 import useToast from "../layout/useToast";
 import * as Yup from "yup";
 import PasswordInput from "../auth/PasswordInput.component";
@@ -12,14 +12,10 @@ const DeleteUserSchema = Yup.object().shape({
     .required("Password is required")
 })
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const DeleteUserModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps) => {
+const DeleteUserModal: React.FC<ModalProps> = (props: ModalProps) => {
 
   const toast = useToast()
+  const { onClose } = props
   const { deleteUser } = useAuth()
   const navigate = useNavigate()
 
@@ -41,9 +37,7 @@ const DeleteUserModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps) 
         }
       }}>
       {({ handleSubmit, errors, touched, isSubmitting }) => (
-        <Modal
-          onClose={onClose}
-          isOpen={isOpen}>
+        <Modal {...props}>
           <form onSubmit={handleSubmit}>
             <ModalHeader>Delete Account</ModalHeader>
             <ModalCloseButton />

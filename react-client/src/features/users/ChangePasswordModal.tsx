@@ -1,11 +1,9 @@
-import { Button, FormControl, FormErrorMessage, FormLabel, Input, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text } from "@chakra-ui/react"
-import { Field, Formik } from "formik";
-import Modal from "../layout/Modal.layout"
+import { Button, FormControl, FormErrorMessage, FormLabel, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text } from "@chakra-ui/react"
+import { Formik } from "formik";
+import Modal, { ModalProps } from "../layout/Modal.layout"
 import useToast from "../layout/useToast";
 import * as Yup from "yup";
 import PasswordInput from "../auth/PasswordInput.component";
-import { useAuth } from "../auth/AuthContext";
-import { useNavigate } from "react-router-dom";
 import api from "../../api";
 
 const ChangePasswordSchema = Yup.object().shape({
@@ -20,14 +18,10 @@ const ChangePasswordSchema = Yup.object().shape({
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
 })
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const ChangePasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps) => {
+const ChangePasswordModal: React.FC<ModalProps> = (props: ModalProps) => {
 
   const toast = useToast()
+  const { onClose } = props
 
   return (
     <Formik
@@ -54,9 +48,7 @@ const ChangePasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
         formikHelpers.setFieldError("oldPassword", "Incorrect Password")
       }}>
       {({ handleSubmit, errors, touched, isSubmitting }) => (
-        <Modal
-          onClose={onClose}
-          isOpen={isOpen}>
+        <Modal {...props}>
           <form onSubmit={handleSubmit}>
             <ModalHeader>Change Password</ModalHeader>
             <ModalCloseButton />
@@ -102,13 +94,13 @@ const ChangePasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
               <Button
                 isLoading={isSubmitting}
                 loadingText="Changing..."
-                type="submit"
-                colorScheme="red">
-                Confirm
+                type="submit">
+                Change
               </Button>
               <Button
-                onClick={onClose}>
-                Cancel
+                onClick={onClose}
+                colorScheme="red">
+                Close
               </Button>
             </ModalFooter>
           </form>
