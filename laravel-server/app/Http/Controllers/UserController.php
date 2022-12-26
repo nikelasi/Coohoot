@@ -37,8 +37,10 @@ class UserController extends Controller {
 
     public function delete(Request $request) {
 
+        $password = $request->header('Confirmation-Password');
+
         $user = auth()->user();
-        $verified = $this->authService->verifyPassword($request->password, $user);
+        $verified = $this->authService->verifyPassword($password, $user);
 
         if (!$verified) {
             return response()->json([

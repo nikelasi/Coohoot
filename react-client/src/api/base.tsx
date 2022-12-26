@@ -21,7 +21,7 @@ class BaseApi {
     return await response.json()
   }
 
-  protected post = async (path: string, body: any) => {
+  protected post = async (path: string, body: any = {}) => {
     const response = await fetch(`${this.url}${path}`, {
       method: 'POST',
       headers: {
@@ -33,7 +33,7 @@ class BaseApi {
     return await response.json()
   }
 
-  protected put = async (path: string, body: any) => {
+  protected put = async (path: string, body: any = {}) => {
     const response = await fetch(`${this.url}${path}`, {
       method: 'PUT',
       headers: {
@@ -45,11 +45,12 @@ class BaseApi {
     return await response.json()
   }
 
-  protected delete = async (path: string) => {
+  protected delete = async (path: string, headers: any = {}) => {
     const response = await fetch(`${this.url}${path}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${BaseApi.token}`
+        'Authorization': `Bearer ${BaseApi.token}`,
+        ...headers
       }
     })
     return await response.json()
