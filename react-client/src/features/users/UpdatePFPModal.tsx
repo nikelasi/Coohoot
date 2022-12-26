@@ -1,8 +1,21 @@
 
-import { ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text } from "@chakra-ui/react"
+import { Button, Flex, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, VStack, Image } from "@chakra-ui/react"
+import { useState } from "react"
+import ImageDropzone, { DropzoneState } from "../layout/ImageDropzone.component"
 import Modal, { ModalProps } from "../layout/Modal.layout"
 
 const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  const onDropzoneChange = (dropzoneState: DropzoneState) => {
+    const { acceptedFiles } = dropzoneState
+    if (acceptedFiles.length > 0) {
+      setSelectedFile(acceptedFiles[0])
+    } else {
+      setSelectedFile(null)
+    }
+  }
 
   return (
     <Modal {...props}>
@@ -13,15 +26,50 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
         flexDirection="column"
         gap="4">
 
-        <Text
+        { selectedFile
+        ? <Flex
+          gap="1"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          flexDirection={{
+            base: 'column',
+            md: 'row'
+          }}>
+          <Text
+            fontSize="sm">
+            Preview and crop your new profile photo.
+          </Text>
+          <Button
+            onClick={() => setSelectedFile(null)}
+            size="xs">
+            Clear upload
+          </Button>
+        </Flex>
+        : <Text
           fontSize="sm">
-          Update your profile photo here.
-        </Text>
+          Upload a new profile photo for your account.
+        </Text> }
 
         {/* File Drop Zone */}
-        <Text>File Drop Zone</Text>
+        { selectedFile === null && <ImageDropzone dropzoneProps={{
+          onDropzoneChange
+        }} /> }
+
+        {/* Preview */}
+        { selectedFile &&
+        <VStack
+          gap="2"
+          alignItems="stretch">
+          <Image src={URL.createObjectURL(selectedFile)} />
+          <Button size="sm">
+            Set as profile photo
+          </Button>
+        </VStack> }
+
+
         
       </ModalBody>
+      <ModalFooter />
     </Modal>
   )
 }
