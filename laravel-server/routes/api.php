@@ -42,19 +42,20 @@ Route::group([
         });
     });
 
-    // Debug routes
-    Route::group([
-        'prefix' => 'debug'
-    ], function() {
-        Route::get('getimageurl', 'ImageController@imageUrl');
-    });
-
     // User routes
     Route::group([
         'prefix' => 'users'
     ], function() {
         Route::get('{username}', 'UserController@get');
         Route::delete('/', 'UserController@delete');
+        Route::put('/updatePassword', 'UserController@updatePassword');
+    });
+
+    // Debug routes
+    Route::group([
+        'prefix' => 'debug'
+    ], function() {
+        Route::get('getimageurl', 'ImageController@imageUrl');
     });
 
 });

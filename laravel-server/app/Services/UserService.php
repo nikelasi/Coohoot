@@ -26,4 +26,16 @@ class UserService {
     $user->delete();
   }
 
+  /**
+   * Update a user's password
+   * 
+   * @param User $user
+   * @param string $password
+   * @return void
+   */
+  public function updatePassword(User $user, string $password) {
+    $user->password = $password;
+    $user->save();
+  }
+
 }

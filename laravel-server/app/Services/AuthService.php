@@ -15,8 +15,9 @@ use App\Mail\PasswordResetMail;
 
 class AuthService {
 
-  public function __construct(GoogleDriveService $drive) {
+  public function __construct(GoogleDriveService $drive, UserService $usersService) {
     $this->drive = $drive;
+    $this->usersService = $usersService;
   }
 
   /**
@@ -210,8 +211,7 @@ class AuthService {
     }
 
     $user = User::find($token->user_id);
-    $user->password = Hash::make($password);
-    $user->save();
+    $this->usersService->updatePassword($user, $password);
 
     $token->delete();
 

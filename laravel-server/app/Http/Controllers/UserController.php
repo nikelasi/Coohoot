@@ -57,5 +57,35 @@ class UserController extends Controller {
             'message' => 'User deleted successfully'
         ], 200);
     }
+
+    public function updatePassword(Request $request) {
+            
+        // Validation
+        if ($errors = $this->validate($request, [
+            'new_password' => User::$rules['password'],
+        ], [
+            'new_password.regex' => 'Password must contain at least one number and one special character.',
+        ])) {
+            return $errors;
+        }
+
+        $user = auth()->user();
+        $verified = $this->authService->verifyPassword($request->password, $user);
+
+        if (!$verified) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid password'
+            ], 401);
+        }
+
+        $this->usersService->updatePassword($user, $request->new_password);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password updated successfully'
+        ], 200);
+
+    }
     
 }
