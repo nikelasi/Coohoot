@@ -5,6 +5,11 @@ class UsersApi extends BaseApi {
     super(`${baseUrl}/users`)
   }
 
+  public getMe = async (): Promise<any> => {
+    const result = await this.get('/me')
+    return result
+  }
+
   public getByUsername = async (username: string): Promise<any> => {
     const result = await this.get(`/${username}`)
     return result.user

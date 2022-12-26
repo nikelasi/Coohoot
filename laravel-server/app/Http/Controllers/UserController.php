@@ -13,8 +13,18 @@ class UserController extends Controller {
         $this->authService = $authService;
 
         $this->middleware('auth.jwt')->only([
+            'me',
+            'updatePassword',
             'delete'
         ]);
+    }
+
+    public function me(Request $request) {
+        $user = auth()->user();
+        return response()->json([
+            'success' => true,
+            'user' => $user
+        ], 200);
     }
 
     public function get($username) {

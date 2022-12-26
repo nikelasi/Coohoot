@@ -33,11 +33,6 @@ class AuthApi extends BaseApi {
     return result.success
   }
 
-  public me = async (): Promise<any> => {
-    const result = await this.get('/me')
-    return result
-  }
-
   // Reset password routes
   public forgotPassword = async (userIdentification: string): Promise<boolean> => {
     const body: PostBody = {}

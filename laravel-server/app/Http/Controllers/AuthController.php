@@ -13,8 +13,7 @@ class AuthController extends Controller {
         $this->authService = $authService;
 
         $this->middleware('auth.jwt')->only([
-            'logout',
-            'me'
+            'logout'
         ]);
     }
 
@@ -95,14 +94,6 @@ class AuthController extends Controller {
         return response()->json([
             'success' => true,
             'message' => 'Logged out successfully.'
-        ], 200);
-    }
-
-    public function me(Request $request) {
-        $user = auth()->user();
-        return response()->json([
-            'success' => true,
-            'user' => $user
         ], 200);
     }
 

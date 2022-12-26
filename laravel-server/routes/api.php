@@ -30,7 +30,6 @@ Route::group([
         Route::post('login', 'AuthController@login');
         Route::post('verify-email', 'AuthController@verifyEmail');
         Route::post('logout', 'AuthController@logout');
-        Route::get('me', 'AuthController@me');
 
         // Password reset routes
         Route::group([
@@ -46,9 +45,10 @@ Route::group([
     Route::group([
         'prefix' => 'users'
     ], function() {
+        Route::get('me', 'UserController@me');
         Route::get('{username}', 'UserController@get');
         Route::delete('/', 'UserController@delete');
-        Route::put('/updatePassword', 'UserController@updatePassword');
+        Route::put('updatePassword', 'UserController@updatePassword');
     });
 
     // Debug routes

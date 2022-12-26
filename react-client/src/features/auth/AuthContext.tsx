@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
     setLoading(true)
     api.setToken(token)
     if (token) {
-      const result = await api.auth.me()
+      const result = await api.users.getMe()
       if (result.success) {
         setToken(token)
         setUser(result.user)
