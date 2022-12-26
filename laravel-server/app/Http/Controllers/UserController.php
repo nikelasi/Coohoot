@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use AuthService;
 
+use App\Models\User;
+
 class UserController extends Controller {
 
     public function __construct(UserService $usersService, AuthService $authService) {

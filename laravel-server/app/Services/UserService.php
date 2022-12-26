@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\User;
 
+use Illuminate\Support\Facades\Hash;
+
 class UserService {
 
   /**
@@ -34,7 +36,7 @@ class UserService {
    * @return void
    */
   public function updatePassword(User $user, string $password) {
-    $user->password = $password;
+    $user->password = Hash::make($password);
     $user->save();
   }
 

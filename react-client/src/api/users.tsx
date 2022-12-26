@@ -15,6 +15,14 @@ class UsersApi extends BaseApi {
     return result.user
   }
 
+  public changePassword = async (oldPassword: string, newPassword: string): Promise<any> => {
+    const result = await this.put('/change-password', {
+      password: oldPassword,
+      new_password: newPassword
+    })
+    return result
+  }
+
   public deleteUser = async (password: string): Promise<boolean> => {
     const { success } = await this.delete("", {
       "Confirmation-Password": password

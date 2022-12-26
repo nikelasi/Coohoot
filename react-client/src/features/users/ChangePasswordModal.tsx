@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import PasswordInput from "../auth/PasswordInput.component";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
+import api from "../../api";
 
 const ChangePasswordSchema = Yup.object().shape({
   oldPassword: Yup.string()
@@ -38,7 +39,19 @@ const ChangePasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
       }}
       onSubmit={async (values, formikHelpers) => {
         const { oldPassword, password } = values
-        
+        const { success, errors } = await api.users.changePassword(oldPassword, password)
+        if (success) {
+          toast.success("Success", "Password changed successfully")
+          formikHelpers.resetForm()
+          onClose()
+          return
+        }
+        if (errors) {
+          formikHelpers.setFieldError("password", errors.new_password[0])
+          return
+        }
+        toast.error("Incorrect password", "Please try again")
+        formikHelpers.setFieldError("oldPassword", "Incorrect Password")
       }}>
       {({ handleSubmit, errors, touched, isSubmitting }) => (
         <Modal
@@ -88,7 +101,7 @@ const ChangePasswordModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalPro
               gap="2">
               <Button
                 isLoading={isSubmitting}
-                loadingText="Deleting..."
+                loadingText="Changing..."
                 type="submit"
                 colorScheme="red">
                 Confirm
