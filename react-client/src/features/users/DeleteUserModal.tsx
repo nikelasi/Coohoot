@@ -36,8 +36,9 @@ const DeleteUserModal: React.FC<ModalProps> = (props: ModalProps) => {
           formikHelpers.setFieldError("password", "Incorrect password")
         }
       }}>
-      {({ handleSubmit, errors, touched, isSubmitting }) => (
-        <Modal {...props}>
+      {({ handleSubmit, errors, touched, isSubmitting, resetForm }) => (
+        <Modal {...props}
+          onCloseComplete={resetForm}>
           <form onSubmit={handleSubmit}>
             <ModalHeader>Delete Account</ModalHeader>
             <ModalCloseButton />

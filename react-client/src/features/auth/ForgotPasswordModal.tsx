@@ -34,8 +34,9 @@ const ForgotPasswordModal: React.FC<ModalProps> = (props: ModalProps) => {
           formikHelpers.setFieldError("userIdentification", "Invalid email or username")
         }
       }}>
-      {({ handleSubmit, errors, touched, isSubmitting }) => (
-        <Modal {...props}>
+      {({ handleSubmit, errors, touched, isSubmitting, resetForm }) => (
+        <Modal {...props}
+          onCloseComplete={resetForm}>
           <form onSubmit={handleSubmit}>
             <ModalHeader>Forgot Password</ModalHeader>
             <ModalCloseButton />

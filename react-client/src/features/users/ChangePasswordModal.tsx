@@ -47,8 +47,9 @@ const ChangePasswordModal: React.FC<ModalProps> = (props: ModalProps) => {
         toast.error("Incorrect password", "Please try again")
         formikHelpers.setFieldError("oldPassword", "Incorrect Password")
       }}>
-      {({ handleSubmit, errors, touched, isSubmitting }) => (
-        <Modal {...props}>
+      {({ handleSubmit, errors, touched, isSubmitting, setValues, resetForm }) => (
+        <Modal {...props}
+          onCloseComplete={resetForm}>
           <form onSubmit={handleSubmit}>
             <ModalHeader>Change Password</ModalHeader>
             <ModalCloseButton />
