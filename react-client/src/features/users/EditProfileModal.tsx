@@ -2,8 +2,8 @@ import { Button, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, HS
 import { MdPassword } from "react-icons/md";
 import { useAuth } from "../auth/AuthContext";
 import Modal, { ModalProps } from "../layout/Modal.layout"
-import WIPModal from "../layout/WIPModal";
-import UpdatePasswordModal from "./ChangePasswordModal";
+import ChangePasswordModal from "./ChangePasswordModal";
+import UpdatePFPModal from "./UpdatePFPModal";
 
 const EditProfileModal: React.FC<ModalProps> = (props: ModalProps) => {
 
@@ -12,14 +12,14 @@ const EditProfileModal: React.FC<ModalProps> = (props: ModalProps) => {
   const { user } = useAuth()
   const { username, email, pfp_url } = user || {}
 
-  const { isOpen: isWIPOpen, onClose: onWIPClose, onOpen: onWIPOpen } = useDisclosure()
+  const { isOpen: isUPOpen, onClose: onUPClose, onOpen: onUPOpen } = useDisclosure()
   const { isOpen: isCPOpen, onClose: onCPClose, onOpen: onCPOpen } = useDisclosure()
 
   return (
     <Modal {...props}>
 
-      <WIPModal isOpen={isWIPOpen} onClose={onWIPClose} />
-      <UpdatePasswordModal isOpen={isCPOpen} onClose={onCPClose} />
+      <UpdatePFPModal isOpen={isUPOpen} onClose={onUPClose} />
+      <ChangePasswordModal isOpen={isCPOpen} onClose={onCPClose} />
 
       <ModalHeader>Edit Profile</ModalHeader>
       <ModalCloseButton />
@@ -57,7 +57,7 @@ const EditProfileModal: React.FC<ModalProps> = (props: ModalProps) => {
               }
             }}
             cursor="pointer"
-            onClick={onWIPOpen}
+            onClick={onUPOpen}
             borderRadius="100%"
             border="3px solid"
             boxSize="16"
