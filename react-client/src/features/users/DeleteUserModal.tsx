@@ -3,9 +3,9 @@ import { Field, Formik } from "formik";
 import Modal from "../layout/Modal.layout"
 import useToast from "../layout/useToast";
 import * as Yup from "yup";
-import api from "../../api";
 import PasswordInput from "../auth/PasswordInput.component";
 import { useAuth } from "../auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const DeleteUserSchema = Yup.object().shape({
   password: Yup.string()
@@ -20,7 +20,8 @@ interface ModalProps {
 const DeleteUserModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps) => {
 
   const toast = useToast()
-  const { logout } = useAuth()
+  const { deleteUser } = useAuth()
+  const navigate = useNavigate()
 
   return (
     <Formik
@@ -30,9 +31,10 @@ const DeleteUserModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps) 
       }}
       onSubmit={async (values, formikHelpers) => {
         const { password } = values
-        const success = await api.users.deleteUser(password)
+        const success = await deleteUser(password)
         if (success) {
           toast.success("Delete Account", "Your account has been deleted. It's sad to see you go :(")
+          navigate("/")
           onClose()
         } else {
           formikHelpers.setFieldError("password", "Incorrect password")

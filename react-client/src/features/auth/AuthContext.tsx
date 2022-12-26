@@ -10,6 +10,7 @@ interface AuthContextObject {
   loading: boolean
   login: (userIdentification: string, password: string) => Promise<any>
   logout: () => Promise<boolean>
+  deleteUser: (password: string) => Promise<boolean>
 }
 
 const AuthContext = createContext<AuthContextObject>({
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextObject>({
   loading: true,
   login: async (userIdentification: string, password: string) => false,
   logout: async () => false,
+  deleteUser: async (password: string) => false
 })
 
 export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
@@ -66,8 +68,16 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
     return success
   }
 
+  const deleteUser = async (password: string): Promise<boolean> => {
+    const success = await api.users.deleteUser(password)
+    if (success) {
+      await updateToken(null)
+    }
+    return success
+  }
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, deleteUser, loading }}>
       {children}
     </AuthContext.Provider>
   )
