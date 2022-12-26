@@ -10,6 +10,7 @@ import { useState } from 'react'
 import { MdExplore } from 'react-icons/md'
 import WIPModal from '../../features/layout/WIPModal'
 import DeleteUserModal from '../../features/users/DeleteUserModal'
+import EditProfileModal from '../../features/users/EditProfileModal'
 
 interface DashboardHeadingProps {
   desktopOnly?: boolean;
@@ -41,6 +42,7 @@ const Dashboard: React.FC = () => {
 
   const { onOpen: onWIPOpen, isOpen: isWIPOpen, onClose: onWIPClose } = useDisclosure()
   const { onOpen: onDUOpen, isOpen: isDUOpen, onClose: onDUClose } = useDisclosure()
+  const { onOpen: onEPOpen, isOpen: isEPOpen, onClose: onEPClose } = useDisclosure()
 
   return (
     <Page
@@ -50,6 +52,7 @@ const Dashboard: React.FC = () => {
 
       <WIPModal isOpen={isWIPOpen} onClose={onWIPClose} />
       <DeleteUserModal isOpen={isDUOpen} onClose={onDUClose} />
+      <EditProfileModal isOpen={isEPOpen} onClose={onEPClose} />
       
       <DashboardHeading />
 
@@ -137,7 +140,7 @@ const Dashboard: React.FC = () => {
                 </Button>
               </Link>
               <Button
-                onClick={onWIPOpen}
+                onClick={onEPOpen}
                 leftIcon={<IoMdCreate />}>
                 Edit Profile
               </Button>
