@@ -3,6 +3,7 @@ import { MdPassword } from "react-icons/md";
 import { useAuth } from "../auth/AuthContext";
 import Modal from "../layout/Modal.layout"
 import WIPModal from "../layout/WIPModal";
+import UpdatePasswordModal from "./ChangePasswordModal";
 
 interface ModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ const EditProfileModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps)
   const { username, email, pfp_url } = user || {}
 
   const { isOpen: isWIPOpen, onClose: onWIPClose, onOpen: onWIPOpen } = useDisclosure()
+  const { isOpen: isCPOpen, onClose: onCPClose, onOpen: onCPOpen } = useDisclosure()
 
   return (
     <Modal
@@ -22,6 +24,7 @@ const EditProfileModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps)
       isOpen={isOpen}>
 
       <WIPModal isOpen={isWIPOpen} onClose={onWIPClose} />
+      <UpdatePasswordModal isOpen={isCPOpen} onClose={onCPClose} />
 
       <ModalHeader>Edit Profile</ModalHeader>
       <ModalCloseButton />
@@ -99,7 +102,7 @@ const EditProfileModal: React.FC<ModalProps> = ({ isOpen, onClose }: ModalProps)
         display="flex"
         gap="6">
         <Button
-          onClick={onWIPOpen}
+          onClick={onCPOpen}
           flexGrow={1}
           leftIcon={<MdPassword />}>
           Change Password
