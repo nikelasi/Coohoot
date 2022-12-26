@@ -1,5 +1,5 @@
 import { useDropzone } from 'react-dropzone';
-import { Center, useColorModeValue, Icon, CenterProps, Text, FormErrorMessage, VStack } from '@chakra-ui/react';
+import { Center, Icon, CenterProps, Text, VStack } from '@chakra-ui/react';
 import { MdFileUpload } from 'react-icons/md';
 import { useEffect } from 'react';
 

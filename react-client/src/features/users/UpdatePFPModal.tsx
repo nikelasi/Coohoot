@@ -1,10 +1,10 @@
 import { Button, Flex, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, VStack, Image } from "@chakra-ui/react"
 import { useMemo, useRef, useState } from "react"
-import ImageDropzone, { DropzoneState } from "../layout/ImageDropzone.component"
+import ImageDropzone, { DropzoneState } from "../images/ImageDropzone.component"
 import Modal, { ModalProps } from "../layout/Modal.layout"
 import ReactCrop, { Crop, centerCrop, makeAspectCrop, PixelCrop } from "react-image-crop"
 import 'react-image-crop/dist/ReactCrop.css'
-import cropImage from "./cropImage"
+import cropImage from "../images/cropImage"
 
 const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
 
