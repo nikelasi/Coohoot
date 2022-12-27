@@ -15,6 +15,7 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
   const [previewMode, setPreviewMode] = useState<"preview" | "crop">("crop")
   const [croppedUrl, setCroppedUrl] = useState<string | null>(null)
   const [previewLoading, setPreviewLoading] = useState<boolean>(false)
+  const [updatingPFP, setUpdatingPFP] = useState<boolean>(false)
 
   const imageRef = useRef<HTMLImageElement | null>(null)
 
@@ -81,6 +82,23 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
     }
   }
 
+  const setProfilePhoto = async () => {
+    setUpdatingPFP(true)
+    let imgUrl;
+    if (croppedUrl) {
+      imgUrl = croppedUrl
+    } else {
+      imgUrl = await cropImage(
+        imageRef.current as HTMLImageElement,
+        selectedFile as File,
+        completedCrop as PixelCrop
+      )
+    }
+    console.log(imgUrl)
+    // TODO: Send to server
+    setUpdatingPFP(false)
+  }
+
   useEffect(() => {
     if (croppedUrl) setPreviewMode("preview")
   }, [croppedUrl])
@@ -131,14 +149,11 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
 
           {/* Toolbar */}
           <HStack>
-            <Button onClick={async () => {
-              const url = await cropImage(
-                imageRef.current as HTMLImageElement,
-                selectedFile,
-                completedCrop as PixelCrop
-              )
-              console.log(url)
-            }} size="sm">
+            <Button
+              isLoading={updatingPFP}
+              loadingText="Setting..."
+              onClick={setProfilePhoto}
+              size="sm">
               Set as profile photo
             </Button>
             <Button
