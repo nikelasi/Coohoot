@@ -21,7 +21,7 @@ class GoogleDriveService {
    */
   public function uploadPfp($base64image) {
     if (!$base64image) {
-      return $this->getMediaUrl('default_pfp.png');
+      return "https://coohoot.nj.sg/cloud/default_pfp.png"; // return $this->getMediaUrl('default_pfp.png');
     }
 
     ['ext' => $ext] = Helpers::getB64ImageInfo($base64image);
@@ -40,7 +40,7 @@ class GoogleDriveService {
   protected function uploadImage(string $path, string $base64image) {
     ['contents' => $contents] = Helpers::getB64ImageInfo($base64image);
     $this->disk->put($path, $contents);
-    return $this->getMediaUrl($path);
+    return "https://coohoot.nj.sg/cloud/".$path; // return $this->getMediaUrl($path);
   }
 
   /**
