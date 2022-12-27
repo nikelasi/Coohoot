@@ -24,7 +24,7 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
   const imageRef = useRef<HTMLImageElement | null>(null)
 
   const toast = useToast()
-  const { user } = useAuth()
+  const { user, refreshUser } = useAuth()
   const { username, email } = user || {}
 
   const onDropzoneChange = (dropzoneState: DropzoneState) => {
@@ -110,6 +110,7 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
     setUpdatingPFP(false)
     if (success) {
       toast.success("Success", "Profile photo updated.")
+      refreshUser()
       resetModal()
       onClose()
     } else {
