@@ -194,8 +194,12 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\GoogleDriveServiceProvider::class, // Google Drive as Cloud Storage
 
+        /**
+         * Additional Service providers
+         */
+        App\Providers\GoogleDriveServiceProvider::class, // Google Drive as Cloud Storage
+        App\Providers\ValidationServiceProvider::class, // Validation for Base64 Images
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class // JWT Auth
     ],
 
