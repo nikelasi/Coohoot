@@ -181,6 +181,7 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
               Set as profile photo
             </Button>
             <Button
+              isDisabled={updatingPFP}
               onClick={switchMode}
               isLoading={previewLoading}
               loadingText={"Previewing..."}
@@ -196,6 +197,7 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
               alignSelf: "center",
               borderRadius: "0.3rem"
             }}
+            disabled={updatingPFP}
             circularCrop
             aspect={1}
             crop={crop}
