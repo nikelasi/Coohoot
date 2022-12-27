@@ -1,18 +1,25 @@
-import { Button, Flex, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, VStack, Image } from "@chakra-ui/react"
-import { useMemo, useRef, useState } from "react"
+import { Button, Flex, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, VStack, Image, HStack, Avatar } from "@chakra-ui/react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import ImageDropzone, { DropzoneState } from "../images/ImageDropzone.component"
 import Modal, { ModalProps } from "../layout/Modal.layout"
 import ReactCrop, { Crop, centerCrop, makeAspectCrop, PixelCrop } from "react-image-crop"
 import 'react-image-crop/dist/ReactCrop.css'
 import cropImage from "../images/cropImage"
+import { useAuth } from "../auth/AuthContext"
 
 const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
 
   const [crop, setCrop] = useState<Crop>()
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [previewMode, setPreviewMode] = useState<"preview" | "crop">("crop")
+  const [croppedUrl, setCroppedUrl] = useState<string | null>(null)
+  const [previewLoading, setPreviewLoading] = useState<boolean>(false)
 
   const imageRef = useRef<HTMLImageElement | null>(null)
+
+  const { user } = useAuth()
+  const { username, email } = user || {}
 
   const onDropzoneChange = (dropzoneState: DropzoneState) => {
     const { acceptedFiles } = dropzoneState
@@ -24,7 +31,7 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
   }
 
   const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    let { width, height } = e.currentTarget
+    let { naturalWidth: width, naturalHeight: height } = e.currentTarget
     imageRef.current = e.currentTarget
 
     let lowestDimen = {}
@@ -52,10 +59,31 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
 
   const imageUrl = useMemo(() => {
     if (selectedFile) {
+      setPreviewMode("crop")
       return URL.createObjectURL(selectedFile)
     }
     return null
   }, [selectedFile])
+
+  const switchMode = async () => {
+    if (previewMode === "crop") {
+      setPreviewLoading(true)
+      const url = await cropImage(
+        imageRef.current as HTMLImageElement,
+        selectedFile as File,
+        completedCrop as PixelCrop
+      )
+      setPreviewLoading(false)
+      setCroppedUrl(url as string)
+    } else {
+      setPreviewMode("crop")
+      setCroppedUrl(null)
+    }
+  }
+
+  useEffect(() => {
+    if (croppedUrl) setPreviewMode("preview")
+  }, [croppedUrl])
 
   return (
     <Modal {...props}>
@@ -95,13 +123,37 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
           onDropzoneChange
         }} /> }
 
-        {/* Preview */}
+        {/* Preview & Crop */}
         { selectedFile &&
         <VStack
           gap="2"
           alignItems="stretch">
+
+          {/* Toolbar */}
+          <HStack>
+            <Button onClick={async () => {
+              const url = await cropImage(
+                imageRef.current as HTMLImageElement,
+                selectedFile,
+                completedCrop as PixelCrop
+              )
+              console.log(url)
+            }} size="sm">
+              Set as profile photo
+            </Button>
+            <Button
+              onClick={switchMode}
+              isLoading={previewLoading}
+              loadingText={"Previewing..."}
+              size="sm">
+              { previewMode === "preview" ? "Crop" : "Preview"}
+            </Button>
+          </HStack>
+
+          {/* Cropper */}
           <ReactCrop
             style={{
+              display: previewMode === "preview" ? "none" : "inline-block",
               alignSelf: "center",
               borderRadius: "0.3rem"
             }}
@@ -115,12 +167,51 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
             onComplete={(c, _) => setCompletedCrop(c)}>
             <img onLoad={onImageLoad} src={imageUrl || ""} />
           </ReactCrop>
-          <Button onClick={async () => {
-            const url = await cropImage(imageRef.current as HTMLImageElement, selectedFile, completedCrop as PixelCrop)
-            console.log(url)
-          }} size="sm">
-            Set as profile photo
-          </Button>
+
+          {/* Profile Card */}
+          <HStack
+            display={previewMode === "preview" ? "flex" : "none"}
+            bgColor="highlight"
+            p="4"
+            borderRadius="lg"
+            gap="2"
+            alignItems="center">
+            <Avatar
+              ignoreFallback={true}
+              borderRadius="100%"
+              border="3px solid"
+              boxSize="16"
+              color="brand"
+              src={croppedUrl || ""} />
+            <VStack
+              alignItems="flex-start"
+              overflow="auto">
+              <Text
+                lineHeight="8"
+                color="brand.accent"
+                fontSize="3xl"
+                noOfLines={1}
+                maxWidth={{
+                  base: "100%",
+                  md: "25vw"
+                }}>
+                {username}
+              </Text>
+              <Text
+                marginTop="0px"
+                marginBlockStart="0"
+                color="brand"
+                fontSize="md"
+                noOfLines={1}
+                maxWidth={{
+                  base: "100%",
+                  md: "25vw"
+                }}>
+                {email}
+              </Text>
+            </VStack>
+          </HStack>
+
         </VStack> }
       </ModalBody>
       <ModalFooter />
