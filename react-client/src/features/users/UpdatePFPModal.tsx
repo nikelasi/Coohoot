@@ -6,8 +6,12 @@ import ReactCrop, { Crop, centerCrop, makeAspectCrop, PixelCrop } from "react-im
 import 'react-image-crop/dist/ReactCrop.css'
 import cropImage from "../images/cropImage"
 import { useAuth } from "../auth/AuthContext"
+import api from "../../api"
+import useToast from "../layout/useToast"
 
 const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
+
+  const { onClose } = props
 
   const [crop, setCrop] = useState<Crop>()
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
@@ -19,6 +23,7 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
 
   const imageRef = useRef<HTMLImageElement | null>(null)
 
+  const toast = useToast()
   const { user } = useAuth()
   const { username, email } = user || {}
 
@@ -82,9 +87,15 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
     }
   }
 
+  const resetModal = () => {
+    setSelectedFile(null)
+    setCroppedUrl(null)
+  }
+
   const setProfilePhoto = async () => {
+    
     setUpdatingPFP(true)
-    let imgUrl;
+    let imgUrl: string;
     if (croppedUrl) {
       imgUrl = croppedUrl
     } else {
@@ -92,11 +103,19 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
         imageRef.current as HTMLImageElement,
         selectedFile as File,
         completedCrop as PixelCrop
-      )
+      ) as string
     }
-    console.log(imgUrl)
-    // TODO: Send to server
+    
+    const { success } = await api.users.updatePfp(imgUrl)
     setUpdatingPFP(false)
+    if (success) {
+      toast.success("Success", "Profile photo updated.")
+      resetModal()
+      onClose()
+    } else {
+      toast.error("Error", "Could not update profile photo.")
+      resetModal()
+    }
   }
 
   useEffect(() => {
@@ -104,7 +123,11 @@ const UpdatePFPModal: React.FC<ModalProps> = (props: ModalProps) => {
   }, [croppedUrl])
 
   return (
-    <Modal {...props}>
+    <Modal {...props}
+      onCloseComplete={() => {
+        resetModal()
+        onClose()
+      }}>
       <ModalHeader>Change Profile Photo</ModalHeader>
       <ModalCloseButton />
       <ModalBody

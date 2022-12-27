@@ -23,6 +23,13 @@ class UsersApi extends BaseApi {
     return result
   }
 
+  public updatePfp = async (base64: string): Promise<any> => {
+    const result = await this.put('/update-pfp', {
+      pfp: base64
+    })
+    return result
+  }
+
   public deleteUser = async (password: string): Promise<boolean> => {
     const { success } = await this.delete("", {
       "Confirmation-Password": password
