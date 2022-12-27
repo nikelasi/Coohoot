@@ -40,7 +40,7 @@ RUN composer install
 RUN chown -R $USER:www-data storage
 RUN chown -R $USER:www-data bootstrap/cache
 RUN chmod -R 775 storage
-RUN chmod -R 755 bootstrap/cache
+RUN chmod -R 775 bootstrap/cache
 RUN a2enmod rewrite
 
 # 3: Copy React App to Laravel App
