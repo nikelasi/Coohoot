@@ -1,5 +1,6 @@
 .design-files/
 .backup-files/
+.idea/
 
 
 # Files that arent supposed to be public yet
