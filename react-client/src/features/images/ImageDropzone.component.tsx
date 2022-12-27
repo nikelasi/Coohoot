@@ -1,7 +1,7 @@
-import { useDropzone } from 'react-dropzone';
+import { FileError, FileRejection, useDropzone } from 'react-dropzone';
 import { Center, Icon, CenterProps, Text, VStack } from '@chakra-ui/react';
 import { MdFileUpload } from 'react-icons/md';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface DropzoneState {
   fileRejected: boolean;
@@ -21,8 +21,6 @@ const ImageDropzone: React.FC<Props> = ({ dropzoneProps, ...centerProps }: Props
 
   const { onDropzoneChange } = dropzoneProps;
 
-  const onDrop = (acceptedFiles: Array<File>) => {}
-
   const {
     getRootProps,
     getInputProps,
@@ -30,9 +28,9 @@ const ImageDropzone: React.FC<Props> = ({ dropzoneProps, ...centerProps }: Props
     fileRejections,
     acceptedFiles,
   } = useDropzone({
-    onDrop,
     maxFiles: 1,
     multiple: false,
+    maxSize: 10 * 1000 * 1000,
     accept: {
       "image/jpeg": [".jpeg", ".jpg"],
       "image/png": [".png"]
@@ -45,11 +43,44 @@ const ImageDropzone: React.FC<Props> = ({ dropzoneProps, ...centerProps }: Props
   const fileRejected = fileRejections.length > 0;
   const filesSelected = acceptedFiles.length > 0 || fileRejections.length > 0;
 
-  const text = !filesSelected ? 'No image selected'
-    : fileRejected ? `${fileRejections[0].file.name} is not a valid image file.`
-    : `${acceptedFiles[0].name} selected`;
+  const [text, setText] = useState('No image selected');
+  const [error, setError] = useState<string | null>(null);
+
+  const validateDrop = (acceptedFiles: Array<File>, fileRejections: Array<FileRejection>) => {
+    if (acceptedFiles.length > 0) {
+      setText(`${acceptedFiles[0].name} selected`)
+      setError(null);
+      return;
+    }
+
+    if (fileRejections.length > 0) {
+      fileRejections.forEach((file: FileRejection) => {
+        file.errors.forEach((err: FileError) => {
+          if (err.code === "file-too-large") {
+            setError(`Please upload a file smaller than 10MB.`);
+            setText(`${file.file.name} is too large.`)
+          }
+  
+          if (err.code === "file-invalid-type") {
+            setError(`Please upload a .jpg, .jpeg, or .png file.`);
+            setText(`${file.file.name} is not a valid image file.`)
+          }
+  
+          if (err.code === "too-many-files") {
+            setError("Please upload only one file.");
+            setText(`Too many files selected.`)
+          }
+        });
+      });
+      return
+    }
+
+    setText('No image selected');
+    setError(null);
+  }
 
   useEffect(() => {
+    validateDrop(acceptedFiles, fileRejections);
     onDropzoneChange({
       fileRejected,
       filesSelected,
@@ -79,13 +110,13 @@ const ImageDropzone: React.FC<Props> = ({ dropzoneProps, ...centerProps }: Props
         <input {...getInputProps()} />
         <Icon as={MdFileUpload} boxSize="12" />
         <Text textAlign="center" fontSize="sm">{dropText}</Text>
-        { fileRejected && <Text
+        { error && <Text
           position="absolute"
           left="1"
           top="1"
           color="red"
           fontSize="xs">
-          Please upload a .jpg, .jpeg, or .png file.
+          {error}
         </Text> }
       </Center>
       <Text
