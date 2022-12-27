@@ -17,7 +17,8 @@ class UserController extends Controller {
         $this->middleware('auth.jwt')->only([
             'me',
             'updatePassword',
-            'delete'
+            'delete',
+            'updatePfp'
         ]);
     }
 
@@ -96,6 +97,25 @@ class UserController extends Controller {
         return response()->json([
             'success' => true,
             'message' => 'Password updated successfully'
+        ], 200);
+
+    }
+
+    public function updatePfp(Request $request) {
+
+        // Validation
+        if ($errors = $this->validate($request, [
+            'pfp' => User::$rules['pfp'],
+        ])) {
+            return $errors;
+        }
+
+        $user = auth()->user();
+        $this->usersService->updatePfp($user, $request->pfp);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile photo updated successfully'
         ], 200);
 
     }

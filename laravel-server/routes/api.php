@@ -49,6 +49,7 @@ Route::group([
         Route::get('{username}', 'UserController@get');
         Route::delete('/', 'UserController@delete');
         Route::put('change-password', 'UserController@updatePassword');
+        Route::put('update-pfp', 'UserController@updatePfp');
     });
 
     // Debug routes

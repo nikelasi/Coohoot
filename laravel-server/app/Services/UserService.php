@@ -5,8 +5,13 @@ namespace App\Services;
 use App\Models\User;
 
 use Illuminate\Support\Facades\Hash;
+use GoogleDriveService;
 
 class UserService {
+
+  public function __construct(GoogleDriveService $drive) {
+    $this->drive = $drive;
+  }
 
   /**
    * Get a user by username
@@ -37,6 +42,19 @@ class UserService {
    */
   public function updatePassword(User $user, string $password) {
     $user->password = Hash::make($password);
+    $user->save();
+  }
+
+  /**
+   * Update a user's pfp
+   * 
+   * @param User $user
+   * @param string $base64 The base64 encoded image
+   * @return void
+   */
+  public function updatePfp(User $user, string $base64) {
+    $pfp = $this->drive->uploadPfp($base64);
+    $user->pfp_url = $pfp;
     $user->save();
   }
 
