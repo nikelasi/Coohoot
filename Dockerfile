@@ -37,15 +37,19 @@ COPY ./laravel-server/apache.conf /etc/apache2/sites-enabled/000-default.conf
 
 RUN composer install
 
+# 3: Set Permissions
 RUN chown -R $USER:www-data storage
 RUN chown -R $USER:www-data bootstrap/cache
 RUN chmod -R 775 storage
 RUN chmod -R 775 bootstrap/cache
 RUN a2enmod rewrite
 
-# 3: Copy React App to Laravel App
+# 4: Copy React App to Laravel App
 RUN mkdir /var/www/html/public/client
 RUN cp -r /var/www/react-client/dist/* /var/www/html/public/client
 
-# 4: Expose HTTP Port
+# 5: Expose HTTP Port
 EXPOSE 80
+
+# 6: Entry Point
+ENTRYPOINT ["/bin/bash", "entry.sh"]
