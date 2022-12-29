@@ -12,7 +12,10 @@ class QuizController extends Controller {
     }
 
     public function getAll() {
-        $quizzes = $this->quizService->getAll();
+
+        $limit = request()->query("limit", 12);
+        $quizzes = $this->quizService->getAll($limit);
+
         return response()->json([
             'success' => true,
             ...$quizzes
