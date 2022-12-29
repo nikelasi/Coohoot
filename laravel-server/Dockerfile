@@ -7,7 +7,8 @@ RUN apt update
 RUN apt install -y \
   libicu-dev \
   libpq-dev \
-  git
+  git \
+  supervisor
 
 RUN docker-php-ext-install \
   intl \
@@ -30,5 +31,5 @@ RUN a2enmod rewrite
 # Expose HTTP Port
 EXPOSE 80
 
-# Entry Point
-ENTRYPOINT ["/bin/bash", "entry.sh"]
+# Start Supervisor
+CMD supervisord -c /var/www/html/supervisor.conf

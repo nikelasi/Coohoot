@@ -23,7 +23,8 @@ RUN apt install -y \
   libicu-dev \
   libpq-dev \
   zip \
-  git
+  git \
+  supervisor
 
 RUN docker-php-ext-install \
   intl \
@@ -51,5 +52,5 @@ RUN cp -r /var/www/react-client/dist/* /var/www/html/public/client
 # 5: Expose HTTP Port
 EXPOSE 80
 
-# 6: Entry Point
-ENTRYPOINT ["/bin/bash", "entry.sh"]
+# 6: Start Supervisor
+CMD supervisord -c /var/www/html/supervisor.conf
