@@ -52,6 +52,13 @@ Route::group([
         Route::put('update-pfp', 'UserController@updatePfp');
     });
 
+    // Quizzes routes
+    Route::group([
+        'prefix' => 'quizzes'
+    ], function() {
+        Route::get('/', 'QuizController@getAll');
+    });
+
     // Debug routes
     Route::group([
         'prefix' => 'debug'
