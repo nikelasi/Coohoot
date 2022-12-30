@@ -3,7 +3,7 @@ import BaseApi from '../base'
 class PaginatorApi extends BaseApi {
 
   private route: string
-  private PAGE_SIZE: number = 2
+  private PAGE_SIZE: number = 12
 
   private totalPages: number = 1
 
