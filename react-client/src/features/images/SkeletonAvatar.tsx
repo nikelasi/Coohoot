@@ -11,12 +11,8 @@ const SkeletonAvatar: React.FC<SkeletonAvatarProps> = ({
 
   const [avatarLoaded, setAvatarLoaded] = useState<boolean>(false)
 
-  useEffect(() => {
-    setAvatarLoaded(false)
-  }, [src])
-
   // converted css var for chakra color
-  const cssVarColor = `var(--chakra-colors-${(circleProps.color as string).replace(".", "-")})`
+  const cssVarColor = circleProps.color ? `var(--chakra-colors-${(circleProps.color as string).replace(".", "-")})` : undefined
   const borderWidth = circleProps.border ? (circleProps.border as string).split(" ")[0] : "0px"
   const imgPadding = `${parseInt(borderWidth.replace("px", "")) - 1}px`
 

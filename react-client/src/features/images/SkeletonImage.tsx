@@ -15,10 +15,6 @@ const SkeletonImage: React.FC<SkeletonImageProps> = ({
 
   const [imageLoaded, setImageLoaded] = useState<boolean>(false)
 
-  useEffect(() => {
-    setImageLoaded(false)
-  }, [src])
-
   return (
     <Skeleton
       isLoaded={imageLoaded}
