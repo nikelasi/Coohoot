@@ -22,6 +22,7 @@ class QuizService {
 
     $quizzes = Quiz::where("visibility", "public")
       ->whereNotNull("owner_id")
+      ->with("owner:id,username,pfp_url")
       ->paginate($limit);
 
     return [
