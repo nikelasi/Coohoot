@@ -12,6 +12,7 @@ const Discover: React.FC = () => {
 
   return (
     <Page
+      w="full"
       p="8"
       gap="4">
       <Heading>
