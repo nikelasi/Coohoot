@@ -1,6 +1,7 @@
 import { Button, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, HStack, Image, VStack, useDisclosure, Avatar } from "@chakra-ui/react"
 import { MdPassword } from "react-icons/md";
 import { useAuth } from "../auth/AuthContext";
+import SkeletonAvatar from "../images/SkeletonAvatar";
 import Modal, { ModalProps } from "../layout/Modal.layout"
 import ChangePasswordModal from "./ChangePasswordModal";
 import UpdatePFPModal from "./UpdatePFPModal";
@@ -40,7 +41,7 @@ const EditProfileModal: React.FC<ModalProps> = (props: ModalProps) => {
           borderRadius="lg"
           gap="2"
           alignItems="center">
-          <Avatar
+          <SkeletonAvatar
             _hover={{
               "&::after": {
                 color: "white",
@@ -58,9 +59,8 @@ const EditProfileModal: React.FC<ModalProps> = (props: ModalProps) => {
             }}
             cursor="pointer"
             onClick={onUPOpen}
-            borderRadius="100%"
             border="3px solid"
-            boxSize="16"
+            size="16"
             color="brand"
             src={pfp_url} />
           <VStack

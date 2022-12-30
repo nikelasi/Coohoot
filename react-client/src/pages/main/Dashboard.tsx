@@ -11,6 +11,7 @@ import { MdExplore } from 'react-icons/md'
 import WIPModal from '../../features/layout/WIPModal'
 import DeleteUserModal from '../../features/users/DeleteUserModal'
 import EditProfileModal from '../../features/users/EditProfileModal'
+import SkeletonAvatar from '../../features/images/SkeletonAvatar'
 
 interface DashboardHeadingProps {
   desktopOnly?: boolean;
@@ -89,13 +90,11 @@ const Dashboard: React.FC = () => {
             <HStack
               gap="2"
               alignItems="center">
-              <Image
-                borderRadius="100%"
+              <SkeletonAvatar
                 border="3px solid"
-                borderColor="brand"
-                boxSize="16"
-                src={pfp_url}
-                alt={`${username}'s profile photo`} />
+                size="16"
+                color="brand"
+                src={pfp_url} />
               <VStack
                 alignItems="flex-start"
                 overflow="auto">

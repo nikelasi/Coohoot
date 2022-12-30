@@ -8,6 +8,7 @@ import { MdExplore } from 'react-icons/md'
 import { createRef, useEffect, useState } from "react"
 import { useAuth } from "../auth/AuthContext"
 import useToast from "./useToast"
+import SkeletonAvatar from "../images/SkeletonAvatar"
 
 const Header: React.FC = () => {
 
@@ -107,12 +108,11 @@ const Header: React.FC = () => {
           as={RouterLink}
           to={`/user/${user.username}`}
           variant="no-underline">
-          <Circle size="10" border="2px solid" borderColor="brand" overflow="hidden">
-            <Image
-              h="full"
-              w="full"
-              src={user.pfp_url} />
-          </Circle>
+          <SkeletonAvatar
+            src={user.pfp_url}
+            border="2px solid"
+            color="brand"
+            size={10} />
         </Link>}
         { user !== null &&
         <Button

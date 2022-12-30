@@ -6,6 +6,7 @@ import Page from "../../features/layout/Page.layout"
 
 import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import NotFound from '../common/NotFound'
+import SkeletonAvatar from '../../features/images/SkeletonAvatar'
 
 const rFlexGrow = {
   base: 0,
@@ -56,13 +57,11 @@ const Profile: React.FC = () => {
       <HStack
         gap="2"
         alignItems="center">
-        <Image
-          borderRadius="100%"
+        <SkeletonAvatar
           border="3px solid"
-          borderColor="brand"
-          boxSize="16"
-          src={pfp_url}
-          alt={`${username}'s profile photo`} />
+          color="brand"
+          size="16"
+          src={pfp_url}/>
         <Text
           color="brand.accent"
           fontSize="3xl"
