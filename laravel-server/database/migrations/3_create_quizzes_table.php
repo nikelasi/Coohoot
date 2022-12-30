@@ -27,7 +27,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('quizzes', function (Blueprint $table) {
-            $table->uuid("id");
+            $table->uuid("id")->primary();
             $table->uuid("owner_id")->nullable();
             $table->string("title");
             $table->string("description")->nullable();
