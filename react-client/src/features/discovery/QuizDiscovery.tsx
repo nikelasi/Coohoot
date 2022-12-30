@@ -1,10 +1,11 @@
 import { Flex } from "@chakra-ui/react"
+import api from "../../api"
 import usePaginator from "./usePaginator"
 
 const QuizDiscovery: React.FC = () => {
 
-  const { Paginator } = usePaginator({
-    maxPages: 1
+  const { Paginator, items, isLoading } = usePaginator({
+    paginatorApi: api.quizzes.getAllPaginated()
   })
 
   return (
@@ -18,7 +19,9 @@ const QuizDiscovery: React.FC = () => {
       <Paginator />
       <Flex
         flexGrow="1">
-        No quizzes found
+        { isLoading ? 'loading...' : items.map((item: any) => (
+          <div key={item.title}>quiz</div>
+        )) }
       </Flex>
       <Flex
         alignSelf="flex-end">

@@ -12,6 +12,16 @@ class BaseApi {
     BaseApi.token = token
   }
 
+  protected getWithUrl = async (url: string) => {
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${BaseApi.token}`
+      }
+    })
+    return await response.json()
+  }
+
+
   protected get = async (path: string) => {
     const response = await fetch(`${this.url}${path}`, {
       headers: {
