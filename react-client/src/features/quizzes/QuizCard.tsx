@@ -1,4 +1,5 @@
 import { AspectRatio, Avatar, Card, CardBody, Heading, HStack, Image, Skeleton, VStack, Text, Flex } from "@chakra-ui/react"
+import SkeletonImage from "../images/SkeletonImage"
 
 interface QuizCardProps {
   quiz: any
@@ -15,7 +16,7 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz }: QuizCardProps) => {
       position="relative"
       bgColor="background">
       <AspectRatio ratio={16 / 9}>
-        <Image fallback={<Skeleton />} src={thumbnail_url} />
+        <SkeletonImage src={thumbnail_url} />
       </AspectRatio>
       <CardBody p="2">
         <HStack w="full">
