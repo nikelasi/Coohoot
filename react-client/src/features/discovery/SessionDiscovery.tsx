@@ -4,7 +4,8 @@ import usePaginator from "./usePaginator"
 const SessionDiscovery: React.FC = () => {
 
   const { Paginator } = usePaginator({
-    maxPages: 1
+    maxPages: 1,
+    pageParam: 'sessionPage'
   })
 
   return (

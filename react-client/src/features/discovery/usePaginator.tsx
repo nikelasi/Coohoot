@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react"
+import { useSearchParams } from "react-router-dom";
 import PaginatorApi from "../../api/utils/paginator";
 import PaginatorComponent from "./Paginator"
 
 interface UsePaginatorProps {
   maxPages?: number;
   paginatorApi?: PaginatorApi;
+  pageParam?: string;
 }
 
 interface UsePaginatorReturn {
@@ -16,11 +18,14 @@ interface UsePaginatorReturn {
   items: any[];
 }
 
-const usePaginator: (props: UsePaginatorProps) => any = ({
-  paginatorApi
+const usePaginator: (props: UsePaginatorProps) => UsePaginatorReturn = ({
+  paginatorApi,
+  pageParam = 'page'
 }: UsePaginatorProps) => {
 
-  const [page, setPage] = useState<number>(1)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const [page, setPage] = useState<number>(parseInt(searchParams.get(pageParam) || "1"))
   const [maxPages, setMaxPages] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [items, setItems] = useState<any[]>([])
@@ -47,21 +52,35 @@ const usePaginator: (props: UsePaginatorProps) => any = ({
     return InnerPaginator
   }, [page, maxPages, isLoading, nextPage, prevPage])
 
-
-  useEffect(() => {
+  const loadPage = async (page: number) => {
     if (!paginatorApi) {
+      setSearchParams({
+        ...Object.fromEntries(searchParams.entries()),
+        [pageParam]: "1"
+      })
       setIsLoading(false)
       return
     }
 
-    (async () => {
-      setIsLoading(true)
-      const items = await paginatorApi.getPage(page)
-      setItems(items)
-      setMaxPages(paginatorApi.getTotalPages())
-      setIsLoading(false)
-    })()
+    setIsLoading(true)
 
+    const items = await paginatorApi.getPage(page)
+    setItems(items)
+
+    setMaxPages(paginatorApi.getTotalPages())
+    const newPage = page > paginatorApi.getTotalPages() ? paginatorApi.getTotalPages() : page < 1 ? 1 : page
+    setPage(newPage)
+    setSearchParams({
+      ...Object.fromEntries(searchParams.entries()),
+      [pageParam]: newPage.toString()
+    })
+
+    setIsLoading(false)
+  }
+
+
+  useEffect(() => {
+    loadPage(page)
   }, [page])
   
   return {

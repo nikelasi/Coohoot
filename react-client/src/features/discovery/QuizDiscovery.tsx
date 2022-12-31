@@ -1,4 +1,6 @@
 import { Flex, SimpleGrid, Skeleton, Spinner } from "@chakra-ui/react"
+import { useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
 import api from "../../api"
 import QuizCard from "../quizzes/QuizCard"
 import usePaginator from "./usePaginator"
@@ -6,7 +8,8 @@ import usePaginator from "./usePaginator"
 const QuizDiscovery: React.FC = () => {
 
   const { Paginator, items, isLoading } = usePaginator({
-    paginatorApi: api.quizzes.getAllPaginated()
+    paginatorApi: api.quizzes.getAllPaginated(),
+    pageParam: 'quizPage'
   })
 
   return (
