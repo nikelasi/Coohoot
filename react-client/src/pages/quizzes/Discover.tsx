@@ -1,5 +1,5 @@
 import { Flex, Heading, Icon, Input, InputGroup, InputLeftElement, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoMdSearch } from 'react-icons/io'
 import { useSearchParams } from 'react-router-dom'
 import QuizDiscovery from '../../features/discovery/QuizDiscovery'
@@ -8,7 +8,15 @@ import Page from "../../features/layout/Page.layout"
 
 const Discover: React.FC = () => {
 
-  const [tab, setTab] = useState("quizzes")
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [tab, setTab] = useState(searchParams.get("tab") || "quizzes")
+
+  useEffect(() => {
+    setSearchParams({
+      ...Object.fromEntries(searchParams.entries()),
+      tab
+    })
+  }, [tab])
 
   return (
     <Page
@@ -25,7 +33,8 @@ const Discover: React.FC = () => {
       {/* Quiz / Session Discovery */}
       <Tabs
         flexGrow="1"
-        defaultIndex={0}
+        // tabIndex={tab === "quizzes" ? 0 : 1}
+        defaultIndex={tab === "quizzes" ? 0 : 1}
         onChange={(index) => {
           setTab(index === 0 ? "quizzes" : "sessions")
         }}
