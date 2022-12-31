@@ -36,4 +36,20 @@ class QuizService {
 
   }
 
+  /**
+   * Get a quiz by id
+   * 
+   * @param string $id
+   * @return Quiz
+   */
+  public function get(string $id) {
+
+    return Quiz::where("id", $id)
+      ->where("visibility", "!=", "private")
+      ->whereNotNull("owner_id")
+      ->with("owner:id,username,pfp_url")
+      ->first();
+    
+  }
+
 }

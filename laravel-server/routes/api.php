@@ -57,6 +57,7 @@ Route::group([
         'prefix' => 'quizzes'
     ], function() {
         Route::get('/', 'QuizController@getAll');
+        Route::get('/{id}', 'QuizController@get');
     });
 
     // Debug routes

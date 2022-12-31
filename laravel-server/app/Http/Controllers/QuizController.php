@@ -22,4 +22,30 @@ class QuizController extends Controller {
         ], 200);
     }
 
+    public function get(string $id) {
+
+        // validate if id is a uuid
+        if (!preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12}$/i', $id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid id'
+            ], 400);
+        }
+            
+        $quiz = $this->quizService->get($id);
+
+        if (!$quiz) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quiz not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Quiz found',
+            'quiz' => $quiz
+        ], 200);
+    }
+
 }
