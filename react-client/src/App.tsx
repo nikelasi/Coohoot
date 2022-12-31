@@ -17,6 +17,7 @@ import {
   Discover,
 
   Profile,
+  Quiz,
 
 } from './pages'
 
@@ -46,6 +47,7 @@ function App() {
 
           {/* Quizzes */}
           <Route path='/discover' element={<Discover />} />
+          <Route path="/quiz/:quizId" element={<Quiz />} />
 
           {/* Users */}
           <Route path='/user/:username' element={<Profile />} />
