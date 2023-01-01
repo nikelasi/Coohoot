@@ -12,6 +12,7 @@ import WIPModal from '../../features/layout/WIPModal'
 import DeleteUserModal from '../../features/users/DeleteUserModal'
 import EditProfileModal from '../../features/users/EditProfileModal'
 import SkeletonAvatar from '../../features/images/SkeletonAvatar'
+import CreateQuizModal from '../../features/quizzes/CreateQuizModal'
 
 interface DashboardHeadingProps {
   desktopOnly?: boolean;
@@ -44,6 +45,7 @@ const Dashboard: React.FC = () => {
   const { onOpen: onWIPOpen, isOpen: isWIPOpen, onClose: onWIPClose } = useDisclosure()
   const { onOpen: onDUOpen, isOpen: isDUOpen, onClose: onDUClose } = useDisclosure()
   const { onOpen: onEPOpen, isOpen: isEPOpen, onClose: onEPClose } = useDisclosure()
+  const { onOpen: onCQOpen, isOpen: isCQOpen, onClose: onCQClose } = useDisclosure()
 
   return (
     <Page
@@ -54,6 +56,7 @@ const Dashboard: React.FC = () => {
       <WIPModal isOpen={isWIPOpen} onClose={onWIPClose} />
       <DeleteUserModal isOpen={isDUOpen} onClose={onDUClose} />
       <EditProfileModal isOpen={isEPOpen} onClose={onEPClose} />
+      <CreateQuizModal isOpen={isCQOpen} onClose={onCQClose} />
       
       <DashboardHeading />
 
@@ -175,7 +178,7 @@ const Dashboard: React.FC = () => {
                 </Button>
               </Link>
               <Button
-                onClick={onWIPOpen}
+                onClick={onCQOpen}
                 leftIcon={<IoMdAddCircle />}>
                 Create a Quiz
               </Button>
