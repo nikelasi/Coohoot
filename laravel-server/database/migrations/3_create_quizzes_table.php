@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string("description")->nullable();
             $table->string("thumbnail_url")->nullable();
             $table->enum("visibility", ["public", "private", "unlisted"])->default("public");
+            $table->boolean("published")->default(false);
             $table->timestamps();
             
             $table->foreign("owner_id")->references("id")->on("users")->nullOnDelete();
