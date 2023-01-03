@@ -21,6 +21,7 @@ class QuizService {
   public function getAll(int $limit = 12) {
 
     $quizzes = Quiz::where("visibility", "public")
+      ->where("published", true)
       ->whereNotNull("owner_id")
       ->with("owner:id,username,pfp_url")
       ->paginate($limit);
@@ -45,7 +46,13 @@ class QuizService {
   public function get(string $id) {
 
     return Quiz::where("id", $id)
-      ->where("visibility", "!=", "private")
+      ->where(function($query) {
+        $query->where("visibility", "!=", "private")
+          ->where("published", true);
+      })
+      ->when(auth()->user(), function($query) {
+        $query->orWhere("owner_id", auth()->user()->id);
+      })
       ->whereNotNull("owner_id")
       ->with("owner:id,username,pfp_url")
       ->first();
