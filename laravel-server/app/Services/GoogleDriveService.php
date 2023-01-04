@@ -14,19 +14,40 @@ class GoogleDriveService {
   }
 
   /**
+   * Upload quiz thumbnail to Google Drive
+   * 
+   * @param string $base64image
+   * @return string The image URL
+   */
+  public function uploadQuizThumbnail($base64image) {
+    return $this->upload('quiz_thumbnails', 'default_quiz.png', $base64image);
+  }
+
+  /**
    * Upload profile picture to Google Drive
    * 
    * @param string $base64image
    * @return string The image URL
    */
   public function uploadPfp($base64image) {
+    return $this->upload('pfp', 'default_pfp.png', $base64image);
+  }
+
+  /**
+   * Abstraction to upload an image to Google Drive
+   * 
+   * @param string $path The path to upload the image to
+   * @param string $default_image The default image to use if $base64image is empty
+   * @param string $base64image The base64 encoded image
+   */
+  protected function upload($path, $default_image, $base64image) {
     if (!$base64image) {
-      return "https://coohoot.nj.sg/cloud/default_pfp.png"; // return $this->getMediaUrl('default_pfp.png');
+      return "https://coohoot.nj.sg/cloud/{$default_image}";
     }
 
     ['ext' => $ext] = Helpers::getB64ImageInfo($base64image);
     $id = Str::uuid()->toString();
-    $path = "pfp/{$id}.{$ext}";
+    $path = "{$path}/{$id}.{$ext}";
     return $this->uploadImage($path, $base64image);
   }
 
