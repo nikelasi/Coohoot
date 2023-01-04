@@ -37,6 +37,23 @@ class QuizService {
 
   }
 
+  public function getMyQuizzes(int $limit = 12) {
+
+    $quizzes = Quiz::where("owner_id", auth()->user()->id)
+      ->with("owner:id,username,pfp_url")
+      ->paginate($limit);
+
+    return [
+      "next_page" => $quizzes->nextPageUrl(),
+      "prev_page" => $quizzes->previousPageUrl(),
+      "data" => $quizzes->items(),
+      "total_pages" => $quizzes->lastPage(),
+      "current_page" => $quizzes->currentPage(),
+      "per_page" => $quizzes->perPage()
+    ];
+
+  }
+
   /**
    * Get a quiz by id
    * 

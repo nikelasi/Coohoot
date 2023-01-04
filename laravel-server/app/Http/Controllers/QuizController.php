@@ -9,12 +9,27 @@ class QuizController extends Controller {
 
     public function __construct(QuizService $quizService) {
         $this->quizService = $quizService;
+
+        $this->middleware("auth.jwt")->only([
+            "getMine"
+        ]);
     }
 
     public function getAll() {
 
         $limit = request()->query("limit", 12);
         $quizzes = $this->quizService->getAll($limit);
+
+        return response()->json([
+            'success' => true,
+            ...$quizzes
+        ], 200);
+    }
+
+    public function getMine() {
+
+        $limit = request()->query("limit", 12);
+        $quizzes = $this->quizService->getMyQuizzes($limit);
 
         return response()->json([
             'success' => true,
