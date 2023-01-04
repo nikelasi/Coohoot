@@ -2,9 +2,15 @@
 
 namespace App\Services;
 
+use GoogleDriveService;
+
 use App\Models\Quiz;
 
 class QuizService {
+
+  public function __construct(GoogleDriveService $drive) {
+    $this->drive = $drive;
+  }
 
   /**
    * Get all quizzes
@@ -37,6 +43,18 @@ class QuizService {
 
   }
 
+  /**
+   * Get all quizzes created by the authenticated user
+   * 
+   * @param int $limit (default: 12)
+   * @return array[
+   *  'next_page' => string,
+   *  'prev_page' => string,
+   *  'data' => array[ Quiz ],
+   *  'total_pages' => int,
+   *  'current_page' => int
+   * ]
+   */
   public function getMyQuizzes(int $limit = 12) {
 
     $quizzes = Quiz::where("owner_id", auth()->user()->id)
@@ -74,6 +92,30 @@ class QuizService {
       ->with("owner:id,username,pfp_url")
       ->first();
     
+  }
+
+  /**
+   * Creates a quiz and returns the created quiz
+   * 
+   * @return Quiz
+   */
+  public function create() {
+    $quiz = request([
+      "title",
+      "description",
+      "visibility",
+      "thumbnail_url"
+    ]);
+
+    $thumbnail_url = $this->drive->uploadQuizThumbnail($quiz["thumbnail_url"]);
+
+    return Quiz::create([
+      "owner_id" => auth()->user()->id,
+      "title" => $quiz["title"],
+      "description" => $quiz["description"],
+      "visibility" => $quiz["visibility"],
+      "thumbnail_url" => $thumbnail_url
+    ]);
   }
 
 }

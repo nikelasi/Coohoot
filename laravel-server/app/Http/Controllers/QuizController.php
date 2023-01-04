@@ -63,4 +63,17 @@ class QuizController extends Controller {
         ], 200);
     }
 
+    public function create() {
+
+        // TODO: validate request
+
+        $quiz = $this->quizService->create($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Quiz created',
+            'quiz' => $quiz
+        ], 201);
+    }
+
 }

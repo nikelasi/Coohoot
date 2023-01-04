@@ -56,6 +56,7 @@ Route::group([
     Route::group([
         'prefix' => 'quizzes'
     ], function() {
+        Route::post('/', 'QuizController@create');
         Route::get('/', 'QuizController@getAll');
         Route::get('/mine', 'QuizController@getMine');
         Route::get('/{id}', 'QuizController@get');
