@@ -1,7 +1,7 @@
-import { Button, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, HStack, Image, VStack, useDisclosure, Avatar, AspectRatio, FormControl, FormLabel } from "@chakra-ui/react"
+import { Button, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, HStack, Image, VStack, useDisclosure, Avatar, AspectRatio, FormControl, FormLabel, tokenToCSSVar, Input, FormErrorMessage, Textarea, Select } from "@chakra-ui/react"
 import { IoMdAddCircle } from "react-icons/io";
 import Modal, { ModalProps } from "../layout/Modal.layout"
-import { Formik } from "formik"
+import { Field, Formik } from "formik"
 import * as Yup from "yup"
 import SkeletonImage from "../images/SkeletonImage";
 import { useState } from "react";
@@ -38,7 +38,7 @@ const CreateQuizModal: React.FC<ModalProps> = (props: ModalProps) => {
       onSubmit={async (values, formikHelpers) => {
         
       }}>
-      {({ handleSubmit, errors, touched, isSubmitting, setValues, resetForm }) => (
+      {({ handleSubmit, errors, touched, isSubmitting, setFieldValue, values, resetForm }) => (
         <Modal {...props}
           onCloseComplete={resetForm}>
 
@@ -77,6 +77,48 @@ const CreateQuizModal: React.FC<ModalProps> = (props: ModalProps) => {
                   }}>
                   <SkeletonImage src={imageUrl || "https://coohoot.nj.sg/cloud/default_quiz.png"} />
                 </AspectRatio>
+              </FormControl>
+
+              <FormControl
+                isRequired
+                isInvalid={!!errors.title && touched.title}
+                isDisabled={isSubmitting}>
+                <FormLabel>Title</FormLabel>
+                <Field
+                  as={Input}
+                  id="title"
+                  name="title"
+                  placeholder="Title" />
+                <FormErrorMessage>{errors.title}</FormErrorMessage>
+              </FormControl>
+
+              <FormControl
+                isRequired
+                isInvalid={!!errors.visibility && touched.visibility}
+                isDisabled={isSubmitting}>
+                <FormLabel>Visibility</FormLabel>
+                <Select
+                  id="visibility"
+                  name="visibility"
+                  value={values.visibility}
+                  onChange={(e) => setFieldValue("visibility", e.target.value)}>
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                  <option value="unlisted">Unlisted</option>
+                </Select>
+                <FormErrorMessage>{errors.visibility}</FormErrorMessage>
+              </FormControl>
+
+              <FormControl
+                isInvalid={!!errors.description && touched.description}
+                isDisabled={isSubmitting}>
+                <FormLabel>Description</FormLabel>
+                <Field
+                  as={Textarea}
+                  id="description"
+                  name="description"
+                  placeholder="Description" />
+                <FormErrorMessage>{errors.description}</FormErrorMessage>
               </FormControl>
             
             </ModalBody>
