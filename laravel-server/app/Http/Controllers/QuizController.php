@@ -67,7 +67,7 @@ class QuizController extends Controller {
 
         // TODO: validate request
 
-        $quiz = $this->quizService->create($data);
+        $quiz = $this->quizService->create();
 
         return response()->json([
             'success' => true,
