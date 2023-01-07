@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import PaginatorApi from "../../api/utils/paginator";
 import PaginatorComponent from "./Paginator"
 
@@ -29,6 +29,15 @@ const usePaginator: (props: UsePaginatorProps) => UsePaginatorReturn = ({
   const [maxPages, setMaxPages] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [items, setItems] = useState<any[]>([])
+
+  const navigate = useNavigate()
+
+  const location = useLocation()
+  const { pathname } = location;
+
+  const navigatePage = (page: any) => {
+    navigate(`${pathname}?page=${page}`)
+  }
 
   const nextPage = async () => {
     if (page === maxPages) return
@@ -69,18 +78,20 @@ const usePaginator: (props: UsePaginatorProps) => UsePaginatorReturn = ({
 
     setMaxPages(paginatorApi.getTotalPages())
     const newPage = page > paginatorApi.getTotalPages() ? paginatorApi.getTotalPages() : page < 1 ? 1 : page
+
+    setIsLoading(false)
     setPage(newPage)
     setSearchParams({
       ...Object.fromEntries(searchParams.entries()),
       [pageParam]: newPage.toString()
     })
-
-    setIsLoading(false)
   }
 
 
   useEffect(() => {
-    loadPage(page)
+    // scuffed way to fix
+    const timeout = setTimeout(() => loadPage(page), 1)
+    return () => clearTimeout(timeout)
   }, [page])
   
   return {
