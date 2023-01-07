@@ -6,6 +6,8 @@ import * as Yup from "yup"
 import SkeletonImage from "../images/SkeletonImage";
 import { useState } from "react";
 import ChangeThumbnailModal from "./ChangeThumbnailModal";
+import api from "../../api";
+import useToast from "../layout/useToast";
 
 const CreateQuizSchema = Yup.object().shape({
   title: Yup.string()
@@ -23,6 +25,8 @@ const CreateQuizModal: React.FC<ModalProps> = (props: ModalProps) => {
 
   const { onClose } = props
 
+  const toast = useToast();
+
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   const { isOpen: isCTOpen, onOpen: onCTOpen, onClose: onCTClose } = useDisclosure()
@@ -36,7 +40,16 @@ const CreateQuizModal: React.FC<ModalProps> = (props: ModalProps) => {
         visibility: "public",
       }}
       onSubmit={async (values, formikHelpers) => {
-        
+        const { title, description, visibility } = values
+
+        const quiz = api.quizzes.create(title, description, visibility, imageUrl);
+        if (!quiz) {
+          toast.error("Error", "Failed to create quiz")
+          return
+        }
+        formikHelpers.resetForm()
+        onClose()
+        toast.success("Success", "Quiz created successfully")
       }}>
       {({ handleSubmit, errors, touched, isSubmitting, setFieldValue, values, resetForm }) => (
         <Modal {...props}

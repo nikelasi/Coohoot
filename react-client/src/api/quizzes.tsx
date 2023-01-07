@@ -21,6 +21,19 @@ class QuizzesApi extends BaseApi {
     }
     return null
   }
+
+  public create = async (title: string, description: string, visibility: string, thumbnail_url: string | null) => {
+    const result = await this.post("/", {
+      title,
+      description,
+      visibility,
+      thumbnail_url
+    })
+    if (result.success) {
+      return result.quiz
+    }
+    return null
+  }
 }
 
 export default QuizzesApi
