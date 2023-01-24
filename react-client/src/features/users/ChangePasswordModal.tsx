@@ -82,7 +82,7 @@ const ChangePasswordModal: React.FC<ModalProps> = (props: ModalProps) => {
                 isRequired
                 isInvalid={!!errors.confirmPassword && touched.confirmPassword}
                 isDisabled={isSubmitting}>
-                <FormLabel>New Password</FormLabel>
+                <FormLabel>Confirm New Password</FormLabel>
                 <PasswordInput
                   name="confirmPassword"
                   placeholder="Confirm your new password..."/>
