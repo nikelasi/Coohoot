@@ -83,10 +83,10 @@ class QuizService {
     return Quiz::where("id", $id)
       ->where(function($query) {
         $query->where("visibility", "!=", "private")
-          ->where("published", true);
-      })
-      ->when(auth()->user(), function($query) {
-        $query->orWhere("owner_id", auth()->user()->id);
+          ->where("published", true)
+          ->when(auth()->user(), function($query) {
+            $query->orWhere("owner_id", auth()->user()->id);
+          });
       })
       ->whereNotNull("owner_id")
       ->with("owner:id,username,pfp_url")
