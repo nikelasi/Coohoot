@@ -1,4 +1,4 @@
-import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel, FormControl, FormLabel, InputRightElement, useDisclosure, HeadingProps, Divider } from '@chakra-ui/react'
+import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel, FormControl, FormLabel, InputRightElement, useDisclosure, HeadingProps, Divider, SimpleGrid, Spinner } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import { IoMdAddCircle, IoMdBrowsers, IoMdCode, IoMdCreate, IoMdPerson, IoMdSearch, IoMdTrash } from 'react-icons/io'
 import { useAuth } from '../../features/auth/AuthContext'
@@ -13,6 +13,9 @@ import DeleteUserModal from '../../features/users/DeleteUserModal'
 import EditProfileModal from '../../features/users/EditProfileModal'
 import SkeletonAvatar from '../../features/images/SkeletonAvatar'
 import CreateQuizModal from '../../features/quizzes/CreateQuizModal'
+import api from '../../api'
+import usePaginator from '../../features/discovery/usePaginator'
+import QuizCard from '../../features/quizzes/QuizCard'
 
 interface DashboardHeadingProps {
   desktopOnly?: boolean;
@@ -37,8 +40,6 @@ const Dashboard: React.FC = () => {
 
   useAuthWall()
 
-  const [tab, setTab] = useState("quizzes")
-
   const { user } = useAuth()
   const { username, email, pfp_url } = user || {}
 
@@ -46,6 +47,10 @@ const Dashboard: React.FC = () => {
   const { onOpen: onDUOpen, isOpen: isDUOpen, onClose: onDUClose } = useDisclosure()
   const { onOpen: onEPOpen, isOpen: isEPOpen, onClose: onEPClose } = useDisclosure()
   const { onOpen: onCQOpen, isOpen: isCQOpen, onClose: onCQClose } = useDisclosure()
+
+  const { Paginator, items, isLoading } = usePaginator({
+    paginatorApi: api.quizzes.getAllPaginated()
+  })
 
   return (
     <Page
@@ -184,36 +189,13 @@ const Dashboard: React.FC = () => {
               </Button>
             </VStack>
 
-            <HStack>
-              <FormControl>
-                <FormLabel>Join a Live Session</FormLabel>
-                <InputGroup
-                  size="sm">
-                  <InputLeftElement
-                    children={<Icon as={IoMdCode} fill="brand.accent" boxSize="4" />}/>
-                  <Input
-                    variant="flushed"
-                    pr="12"
-                    id="name"
-                    name="name"
-                    placeholder="Session Code" />
-                </InputGroup>
-              </FormControl>
-              <Button
-                onClick={onWIPOpen}
-                size="sm"
-                alignSelf="flex-end">
-                Join
-              </Button>
-            </HStack>
-
           </VStack>
         </Flex>
         {/* END: Actions & Profile Panel */}
 
         <Divider display={{ base: "block", md: "none" }} />
 
-        {/* START: User's Quiz/Session Listing */}
+        {/* START: User's Quiz Listing */}
         <Flex
           flexGrow="1"
           flexDirection="column"
@@ -223,59 +205,60 @@ const Dashboard: React.FC = () => {
             Your coohoots
             <Text
               fontSize="lg">
-              Quizzes and sessions you've created or started
+              Quizzes you have made
             </Text>
           </Heading>
           
-          <Tabs
+          <InputGroup>
+            <InputLeftElement
+              children={<Icon as={IoMdSearch} boxSize="6" color="gray.300" />} />
+            <Input
+              variant="filled"
+              colorScheme="highlight"
+              w="full"
+              placeholder="Search quizzes..." />
+          </InputGroup>
+          <Flex
             flexGrow="1"
-            defaultIndex={0}
-            onChange={(index) => {
-              setTab(index === 0 ? "quizzes" : "sessions")
-            }}
-            variant="soft-rounded"
-            display="flex"
-            flexDirection="column"
-            gap="4">
-            <Flex
-              flexDirection={{
-                base: 'column',
-                md: 'row'
-              }}
-              gap="4">
-              <TabList
-                position="sticky"
-                gap="2">
-                <Tab>Quizzes</Tab>
-                <Tab>Sessions</Tab>
-              </TabList>
-              <InputGroup>
-                <InputLeftElement
-                  children={<Icon as={IoMdSearch} boxSize="6" color="gray.300" />} />
-                <Input
-                  variant="filled"
-                  colorScheme="highlight"
+            direction="column"
+            gap="4"
+            bgColor="highlight"
+            borderRadius="lg"
+            p="4">
+            <Paginator />
+            { isLoading ?
+              <Flex
+                flexGrow="1"
+                alignItems="center"
+                justifyContent="center">
+                <Spinner size="xl" thickness="5px" color="brand" />
+              </Flex> :
+              <Flex
+                flexGrow="1">
+                { items.length !== 0
+                ? <SimpleGrid
                   w="full"
-                  placeholder={`Search ${tab}...`} />
-              </InputGroup>
+                  alignSelf="flex-start"
+                  gap="4"
+                  columns={{
+                    sm: 2,
+                    md: 3,
+                    lg: 4
+                  }}>
+                  {items.map((quiz: any) => {
+                    return <QuizCard
+                      quiz={quiz}
+                      key={quiz.id} />
+                  })}
+                </SimpleGrid>
+                : "No quizzes found" }
+              </Flex>
+            }
+            <Flex
+              alignSelf="flex-end">
+              <Paginator />
             </Flex>
-            <TabPanels
-              flexGrow="1"
-              display="flex">
-              <TabPanel
-                p="0"
-                flexGrow="1"
-                display="flex">
-                <QuizDiscovery />
-              </TabPanel>
-              <TabPanel
-                p="0"
-                flexGrow="1"
-                display="flex">
-                <SessionDiscovery />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
+          </Flex>
 
         </Flex>
         {/* END: User's Quiz/Session Listing */}

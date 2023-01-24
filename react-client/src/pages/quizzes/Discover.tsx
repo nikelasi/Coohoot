@@ -1,22 +1,19 @@
-import { Flex, Heading, Icon, Input, InputGroup, InputLeftElement, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
+import { Flex, Heading, Icon, Input, InputGroup, InputLeftElement, SimpleGrid, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { IoMdSearch } from 'react-icons/io'
 import { useSearchParams } from 'react-router-dom'
+import api from '../../api'
 import QuizDiscovery from '../../features/discovery/QuizDiscovery'
 import SessionDiscovery from '../../features/discovery/SessionDiscovery'
+import usePaginator from '../../features/discovery/usePaginator'
 import Page from "../../features/layout/Page.layout"
+import QuizCard from '../../features/quizzes/QuizCard'
 
 const Discover: React.FC = () => {
 
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [tab, setTab] = useState(searchParams.get("tab") || "quizzes")
-
-  useEffect(() => {
-    setSearchParams({
-      ...Object.fromEntries(searchParams.entries()),
-      tab
-    })
-  }, [tab])
+  const { Paginator, items, isLoading } = usePaginator({
+    paginatorApi: api.quizzes.getAllPaginated()
+  })
 
   return (
     <Page
@@ -27,60 +24,60 @@ const Discover: React.FC = () => {
         Discovery
         <Text
           fontSize="lg">
-          Explore quizzes and sessions
+          Explore and take quizzes created by people
         </Text>
       </Heading>
-      {/* Quiz / Session Discovery */}
-      <Tabs
+      {/* Quiz Discovery */}
+      <InputGroup>
+        <InputLeftElement
+          children={<Icon as={IoMdSearch} boxSize="6" color="gray.300" />} />
+        <Input
+          variant="filled"
+          colorScheme="highlight"
+          w="full"
+          placeholder="Search quizzes..." />
+      </InputGroup>
+      <Flex
         flexGrow="1"
-        // tabIndex={tab === "quizzes" ? 0 : 1}
-        defaultIndex={tab === "quizzes" ? 0 : 1}
-        onChange={(index) => {
-          setTab(index === 0 ? "quizzes" : "sessions")
-        }}
-        variant="soft-rounded"
-        display="flex"
-        flexDirection="column"
-        gap="4">
-        <Flex
-          flexDirection={{
-            base: 'column',
-            md: 'row'
-          }}
-          gap="4">
-          <TabList
-            position="sticky"
-            gap="2">
-            <Tab>Quizzes</Tab>
-            <Tab>Sessions</Tab>
-          </TabList>
-          <InputGroup>
-            <InputLeftElement
-              children={<Icon as={IoMdSearch} boxSize="6" color="gray.300" />} />
-            <Input
-              variant="filled"
-              colorScheme="highlight"
+        direction="column"
+        gap="4"
+        bgColor="highlight"
+        borderRadius="lg"
+        p="4">
+        <Paginator />
+        { isLoading ?
+          <Flex
+            flexGrow="1"
+            alignItems="center"
+            justifyContent="center">
+            <Spinner size="xl" thickness="5px" color="brand" />
+          </Flex> :
+          <Flex
+            flexGrow="1">
+            { items.length !== 0
+            ? <SimpleGrid
               w="full"
-              placeholder={`Search ${tab}...`} />
-          </InputGroup>
+              alignSelf="flex-start"
+              gap="4"
+              columns={{
+                sm: 2,
+                md: 3,
+                lg: 4
+              }}>
+              {items.map((quiz: any) => {
+                return <QuizCard
+                  quiz={quiz}
+                  key={quiz.id} />
+              })}
+            </SimpleGrid>
+            : "No quizzes found" }
+          </Flex>
+        }
+        <Flex
+          alignSelf="flex-end">
+          <Paginator />
         </Flex>
-        <TabPanels
-          flexGrow="1"
-          display="flex">
-          <TabPanel
-            p="0"
-            flexGrow="1"
-            display="flex">
-            <QuizDiscovery />
-          </TabPanel>
-          <TabPanel
-            p="0"
-            flexGrow="1"
-            display="flex">
-            <SessionDiscovery />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+      </Flex>
     </Page>
   )
 }
