@@ -76,4 +76,20 @@ class QuizController extends Controller {
         ], 201);
     }
 
+    public function publish() {
+
+        if ($this->quizService->publish()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Quiz published'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to publish quiz'
+        ], 400);
+
+    }
+
 }

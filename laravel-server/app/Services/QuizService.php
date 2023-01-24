@@ -118,4 +118,17 @@ class QuizService {
     ]);
   }
 
+  /**
+   * Publishes a quiz, checks whether it can be published
+   * 
+   * @return boolean whether it was published
+   */
+  public function publish() {
+    $quiz = Quiz::find(request()->quiz_id);
+    // TODO: validate quiz
+    $quiz->published = true;
+    $quiz->save();
+    return true;
+  }
+
 }
