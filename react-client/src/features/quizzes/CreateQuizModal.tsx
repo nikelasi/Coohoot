@@ -42,7 +42,7 @@ const CreateQuizModal: React.FC<ModalProps> = (props: ModalProps) => {
       onSubmit={async (values, formikHelpers) => {
         const { title, description, visibility } = values
 
-        const quiz = api.quizzes.create(title, description, visibility, imageUrl);
+        const quiz = await api.quizzes.create(title, description, visibility, imageUrl);
         if (!quiz) {
           toast.error("Error", "Failed to create quiz")
           return
@@ -141,12 +141,15 @@ const CreateQuizModal: React.FC<ModalProps> = (props: ModalProps) => {
               <Button
                 flexGrow={1}
                 leftIcon={<IoMdAddCircle />}
+                isLoading={isSubmitting}
+                loadingText="Creating..."
                 type="submit">
                 Create
               </Button>
               <Button
                 onClick={onClose}
-                colorScheme="red">
+                colorScheme="red"
+                isDisabled={isSubmitting}>
                 Close
               </Button>
             </ModalFooter>
