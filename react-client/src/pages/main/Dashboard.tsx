@@ -79,10 +79,19 @@ const Dashboard: React.FC = () => {
           bgColor="highlight"
           borderRadius="md"
           flexDirection="column"
+          h="100%"
           gap="6"
           w={{
             base: "100%",
             md: "auto"
+          }}
+          pos={{
+            base: "static",
+            md: "sticky"
+          }}
+          top={{
+            base: undefined,
+            md: "20"
           }}>
 
           <DashboardHeading desktopOnly />
