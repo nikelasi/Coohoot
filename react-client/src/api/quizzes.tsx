@@ -10,6 +10,10 @@ class QuizzesApi extends BaseApi {
     this.route = `${baseUrl}/quizzes`
   }
 
+  public getMinePaginated = () => {
+    return new PaginatorApi(`${this.route}/mine`)
+  }
+
   public getAllPaginated = () => {
     return new PaginatorApi(`${this.route}`)
   }

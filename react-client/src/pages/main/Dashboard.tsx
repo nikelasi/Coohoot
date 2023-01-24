@@ -49,7 +49,7 @@ const Dashboard: React.FC = () => {
   const { onOpen: onCQOpen, isOpen: isCQOpen, onClose: onCQClose } = useDisclosure()
 
   const { Paginator, items, isLoading } = usePaginator({
-    paginatorApi: api.quizzes.getAllPaginated()
+    paginatorApi: api.quizzes.getMinePaginated()
   })
 
   return (
