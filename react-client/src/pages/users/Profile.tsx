@@ -1,4 +1,4 @@
-import { Heading, HStack, Spinner, Image, Text, VStack, Flex } from '@chakra-ui/react'
+import { Heading, HStack, Spinner, Image, Text, VStack, Flex, InputGroup, InputLeftElement, Input, Icon, Divider, SimpleGrid } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import api from '../../api'
@@ -7,10 +7,27 @@ import Page from "../../features/layout/Page.layout"
 import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import NotFound from '../common/NotFound'
 import SkeletonAvatar from '../../features/images/SkeletonAvatar'
+import { IoMdPerson, IoMdSearch } from 'react-icons/io'
+import usePaginator from '../../features/discovery/usePaginator'
+import QuizCard from '../../features/quizzes/QuizCard'
 
-const rFlexGrow = {
-  base: 0,
-  md: 1
+interface ProfileHeadingProps {
+  desktopOnly?: boolean;
+}
+
+const ProfileHeading: React.FC<ProfileHeadingProps> = ({ desktopOnly = false }: ProfileHeadingProps) => {
+  return (
+    <Heading
+      gap="2"
+      alignItems="center"
+      display={{
+        base: !desktopOnly ? "flex" : "none",
+        md: desktopOnly ? "flex" : "none"
+      }}>
+      <IoMdPerson fill="var(--chakra-colors-brand)" />
+      Profile
+    </Heading>
+  )
 }
 
 const Profile: React.FC = () => {
@@ -27,6 +44,10 @@ const Profile: React.FC = () => {
       setLoading(false)
     })()
   }, [])
+
+  const { Paginator, items, isLoading } = usePaginator({
+    paginatorApi: api.quizzes.getAllPaginated()
+  })
 
   if (loading) {
     return (
@@ -50,64 +71,137 @@ const Profile: React.FC = () => {
 
   return (
     <Page
-      p="8"
+      p="4"
       gap="4">
 
-      {/* Profile */}
-      <HStack
-        gap="2"
-        alignItems="center">
-        <SkeletonAvatar
-          border="3px solid"
-          color="brand"
-          size="16"
-          src={pfp_url}/>
-        <Text
-          color="brand.accent"
-          fontSize="3xl"
-          noOfLines={1}>
-          {username}
-        </Text>
-      </HStack>
-      {/* User's Creations */}
+      <ProfileHeading />
+
       <Flex
+        gap="4"
         flexGrow="1"
-        gap={{
-          base: "4",
-          md: "8"
-        }}
-        direction={{
+        flexDirection={{
           base: "column",
           md: "row"
         }}>
-        {/* User's Quizzes */}
-        <VStack
-          flexGrow={rFlexGrow}
-          alignItems="stretch">
-          <Heading>Quizzes</Heading>
+
+        {/* START: Actions & Profile Panel */}
+        <Flex
+          p="4"
+          bgColor="highlight"
+          borderRadius="md"
+          flexDirection="column"
+          gap="6"
+          w={{
+            base: "100%",
+            md: "auto"
+          }}>
+
+          <ProfileHeading desktopOnly />
+
+          {/* START: Profile Section */}
           <VStack
-            p="4"
-            borderRadius="0.4rem"
-            bgColor="highlight"
-            alignItems="flex-start"
-            flexGrow={rFlexGrow}>
-            <Text>{username} has no quizzes</Text>
+            gap="2"
+            w="full"
+            alignItems="stretch">
+
+            {/* Profile Card */}
+            <HStack
+              gap="2"
+              alignItems="center">
+              <SkeletonAvatar
+                border="3px solid"
+                color="brand"
+                size="16"
+                src={pfp_url}/>
+              <Text
+                lineHeight="8"
+                color="brand.accent"
+                fontSize="3xl"
+                noOfLines={1}
+                maxWidth={{
+                  base: "100%",
+                  md: "25vw"
+                }}>
+                {username}
+              </Text>
+            </HStack>
+
           </VStack>
-        </VStack>
-        {/* User's Sessions */}
-        <VStack
-          flexGrow={rFlexGrow}
-          alignItems="stretch">
-          <Heading>Sessions</Heading>
-          <VStack
-            p="4"
-            borderRadius="0.4rem"
+          {/* END: Profile Section */}
+
+        </Flex>
+        {/* END: Actions & Profile Panel */}
+
+        <Divider display={{ base: "block", md: "none" }} />
+
+        {/* START: User's Quiz Listing */}
+        <Flex
+          flexGrow="1"
+          flexDirection="column"
+          gap="4">
+          
+          <Heading>
+            <Text as="span" color="brand">{username}</Text>'s coohoots
+            <Text
+              fontSize="lg">
+              Quizzes they have made
+            </Text>
+          </Heading>
+          
+          <InputGroup>
+            <InputLeftElement
+              children={<Icon as={IoMdSearch} boxSize="6" color="gray.300" />} />
+            <Input
+              variant="filled"
+              colorScheme="highlight"
+              w="full"
+              placeholder="Search quizzes..." />
+          </InputGroup>
+          <Flex
+            flexGrow="1"
+            direction="column"
+            gap="4"
             bgColor="highlight"
-            alignItems="flex-start"
-            flexGrow={rFlexGrow}>
-            <Text>{username} has not started any quiz sessions</Text>
-          </VStack>
-        </VStack>
+            borderRadius="lg"
+            p="4">
+            <Paginator />
+            { isLoading ?
+              <Flex
+                flexGrow="1"
+                alignItems="center"
+                justifyContent="center">
+                <Spinner size="xl" thickness="5px" color="brand" />
+              </Flex> :
+              <Flex
+                flexGrow="1">
+                { items.length !== 0
+                ? <SimpleGrid
+                  w="full"
+                  alignSelf="flex-start"
+                  gap="4"
+                  columns={{
+                    sm: 2,
+                    md: 3,
+                    lg: 4
+                  }}>
+                  {items.map((quiz: any) => {
+                    return <QuizCard
+                      quiz={quiz}
+                      key={quiz.id} />
+                  })}
+                </SimpleGrid>
+                : "No quizzes found" }
+              </Flex>
+            }
+            <Flex
+              alignSelf="flex-end">
+              <Paginator />
+            </Flex>
+          </Flex>
+
+        </Flex>
+        {/* END: User's Quiz/Session Listing */}
+        
       </Flex>
     </Page>
   )
