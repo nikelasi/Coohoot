@@ -23,7 +23,7 @@ class QuizzesApi extends BaseApi {
   }
 
   public create = async (title: string, description: string, visibility: string, thumbnail_url: string | null) => {
-    const result = await this.post("/", {
+    const result = await this.post("", {
       title,
       description,
       visibility,

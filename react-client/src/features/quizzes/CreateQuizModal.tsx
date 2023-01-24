@@ -140,7 +140,8 @@ const CreateQuizModal: React.FC<ModalProps> = (props: ModalProps) => {
               gap="4">
               <Button
                 flexGrow={1}
-                leftIcon={<IoMdAddCircle />}>
+                leftIcon={<IoMdAddCircle />}
+                type="submit">
                 Create
               </Button>
               <Button
