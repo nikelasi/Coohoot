@@ -9,10 +9,12 @@ import NotFound from '../common/NotFound'
 import SkeletonAvatar from '../../features/images/SkeletonAvatar'
 import SkeletonImage from '../../features/images/SkeletonImage'
 import { IoMdEyeOff, IoMdGlobe, IoMdLock } from 'react-icons/io'
+import { useAuth } from '../../features/auth/AuthContext'
 
 const Quiz: React.FC = () => {
 
   const { quizId } = useParams()
+  const { user } = useAuth();
 
   const [quiz, setQuiz] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -43,20 +45,20 @@ const Quiz: React.FC = () => {
     return <NotFound message="Quiz Not Found" />
   }
 
-  const { title, description, thumbnail_url, visibility, owner } = quiz
+  const { title, description, thumbnail_url, visibility, published, owner } = quiz
   const { username, pfp_url } = owner
+  const isOwner = user.username === username
 
   return (
     <Page
       w="full"
       flexDirection={{ base: "column", md: "row" }}
       overflow={{ md: "hidden" }}
-      h={{ md: "calc(100vh - 4rem)" }}>
+      minH={{ md: "calc(100vh - 4rem)" }}>
       <VStack
         p="8"
         alignItems="stretch"
-        boxShadow="lg"
-        sx={{ boxShadow: "2px 2px 8px 0px rgba(0, 0, 0, 0.5)" }}
+        sx={{ boxShadow: "2px 0px 2px 0px rgba(0, 0, 0, 0.1)" }}
         w={{
           base: "full",
           md: "40%"
@@ -92,7 +94,9 @@ const Quiz: React.FC = () => {
           </Link>
         </Flex>
         <Text fontSize="lg">{description || "No description provided"}</Text>
-        <Button>Create Session</Button>
+        <Button>Play</Button>
+        { isOwner && <Button>Edit</Button> }
+        { isOwner && <Button>{ published ? "Unpublish" : "Publish" }</Button> }
       </VStack>
 
       <Flex
