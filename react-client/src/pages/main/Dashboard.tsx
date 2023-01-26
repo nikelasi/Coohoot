@@ -16,6 +16,7 @@ import CreateQuizModal from '../../features/quizzes/CreateQuizModal'
 import api from '../../api'
 import usePaginator from '../../features/discovery/usePaginator'
 import QuizCard from '../../features/quizzes/QuizCard'
+import EditableQuizCard from '../../features/quizzes/EditableQuizCard'
 
 interface DashboardHeadingProps {
   desktopOnly?: boolean;
@@ -255,7 +256,7 @@ const Dashboard: React.FC = () => {
                     lg: 4
                   }}>
                   {items.map((quiz: any) => {
-                    return <QuizCard
+                    return <EditableQuizCard
                       quiz={quiz}
                       key={quiz.id} />
                   })}
