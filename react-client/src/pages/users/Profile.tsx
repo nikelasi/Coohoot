@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
   }, [])
 
   const { Paginator, items, isLoading } = usePaginator({
-    paginatorApi: api.quizzes.getAllPaginated()
+    paginatorApi: api.quizzes.getOthersPaginated(username || '')
   })
 
   if (loading) {
@@ -71,6 +71,7 @@ const Profile: React.FC = () => {
 
   return (
     <Page
+      w="full"
       p="4"
       gap="4">
 

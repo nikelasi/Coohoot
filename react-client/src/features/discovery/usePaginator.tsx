@@ -87,7 +87,6 @@ const usePaginator: (props: UsePaginatorProps) => UsePaginatorReturn = ({
     })
   }
 
-
   useEffect(() => {
     // scuffed way to fix
     const timeout = setTimeout(() => loadPage(page), 1)

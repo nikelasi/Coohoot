@@ -37,6 +37,17 @@ class QuizController extends Controller {
         ], 200);
     }
 
+    public function getOthers() {
+
+        $limit = request()->query("limit", 12);
+        $quizzes = $this->quizService->getOtherQuizzes($limit);
+
+        return response()->json([
+            'success' => true,
+            ...$quizzes
+        ], 200);
+    }
+
     public function get(string $id) {
 
         // validate if id is a uuid

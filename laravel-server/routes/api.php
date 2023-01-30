@@ -59,6 +59,7 @@ Route::group([
         Route::post('/', 'QuizController@create');
         Route::get('/', 'QuizController@getAll');
         Route::get('/mine', 'QuizController@getMine');
+        Route::get('/by/{username}', 'QuizController@getOthers');
         Route::get('/{id}', 'QuizController@get');
     });
 

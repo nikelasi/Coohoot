@@ -18,6 +18,10 @@ class QuizzesApi extends BaseApi {
     return new PaginatorApi(`${this.route}`)
   }
 
+  public getOthersPaginated = (userId: string) => {
+    return new PaginatorApi(`${this.route}/by/${userId}`)
+  }
+
   public getOne = async (id: string) => {
     const result = await this.get(`/${id}`)
     if (result.success) {
