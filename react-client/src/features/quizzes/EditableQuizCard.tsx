@@ -35,7 +35,7 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz }: QuizCardProps) => {
       rounded="lg"
       overflow="hidden"
       position="relative"
-      bgColor="background">
+      bgColor="var(--chakra-colors-chakra-body-bg)">
       <AspectRatio ratio={16 / 9}>
         <SkeletonImage src={thumbnail_url} />
       </AspectRatio>
