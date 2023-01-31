@@ -49,7 +49,7 @@ const Dashboard: React.FC = () => {
   const { onOpen: onEPOpen, isOpen: isEPOpen, onClose: onEPClose } = useDisclosure()
   const { onOpen: onCQOpen, isOpen: isCQOpen, onClose: onCQClose } = useDisclosure()
 
-  const { Paginator, items, isLoading } = usePaginator({
+  const { Paginator, items, isLoading, reloadPage } = usePaginator({
     paginatorApi: api.quizzes.getMinePaginated()
   })
 
@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
       <WIPModal isOpen={isWIPOpen} onClose={onWIPClose} />
       <DeleteUserModal isOpen={isDUOpen} onClose={onDUClose} />
       <EditProfileModal isOpen={isEPOpen} onClose={onEPClose} />
-      <CreateQuizModal isOpen={isCQOpen} onClose={onCQClose} />
+      <CreateQuizModal isOpen={isCQOpen} onClose={onCQClose} reload={reloadPage} />
       
       <DashboardHeading />
 

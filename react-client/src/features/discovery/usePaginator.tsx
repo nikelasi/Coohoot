@@ -14,6 +14,7 @@ interface UsePaginatorReturn {
   Paginator: React.FC;
   nextPage: () => void;
   prevPage: () => void;
+  reloadPage: () => void;
   isLoading: boolean;
   items: any[];
 }
@@ -99,6 +100,7 @@ const usePaginator: (props: UsePaginatorProps) => UsePaginatorReturn = ({
     isLoading,
     nextPage,
     prevPage,
+    reloadPage: () => loadPage(page),
     items
   }
 }

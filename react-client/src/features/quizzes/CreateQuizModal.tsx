@@ -8,6 +8,7 @@ import { useState } from "react";
 import ChangeThumbnailModal from "./ChangeThumbnailModal";
 import api from "../../api";
 import useToast from "../layout/useToast";
+import { useNavigate } from "react-router-dom";
 
 const CreateQuizSchema = Yup.object().shape({
   title: Yup.string()
@@ -20,12 +21,13 @@ const CreateQuizSchema = Yup.object().shape({
     .oneOf(["public", "private", "unlisted"], "Invalid visibility"),
 })
 
+type Props = ModalProps & { reload: Function }
 
-const CreateQuizModal: React.FC<ModalProps> = (props: ModalProps) => {
+const CreateQuizModal: React.FC<Props> = ({ reload, ...props }: Props) => {
 
   const { onClose } = props
 
-  const toast = useToast();
+  const toast = useToast()
 
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
@@ -50,6 +52,7 @@ const CreateQuizModal: React.FC<ModalProps> = (props: ModalProps) => {
         formikHelpers.resetForm()
         onClose()
         toast.success("Success", "Quiz created successfully")
+        reload()
       }}>
       {({ handleSubmit, errors, touched, isSubmitting, setFieldValue, values, resetForm }) => (
         <Modal {...props}
