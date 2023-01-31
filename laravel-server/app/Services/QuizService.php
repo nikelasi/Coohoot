@@ -169,9 +169,28 @@ class QuizService {
    * @return boolean whether it was published
    */
   public function publish() {
-    $quiz = Quiz::find(request()->quiz_id);
+    $quiz = Quiz::find(request("quiz_id"));
+    if ($quiz->owner_id !== auth()->user()->id) {
+      return false;
+    }
     // TODO: validate quiz
     $quiz->published = true;
+    $quiz->save();
+    return true;
+  }
+
+  /**
+   * Unpublishes a quiz
+   * 
+   * @return boolean whether it was unpublished
+   */
+  public function unpublish() {
+    $quiz = Quiz::find(request("quiz_id"));
+    if ($quiz->owner_id !== auth()->user()->id) {
+      return false;
+    }
+    // TODO: delete responses
+    $quiz->published = false;
     $quiz->save();
     return true;
   }

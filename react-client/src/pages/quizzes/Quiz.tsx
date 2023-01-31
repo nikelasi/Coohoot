@@ -1,4 +1,4 @@
-import { Heading, HStack, Spinner, Image, Text, VStack, Flex, Card, AspectRatio, Button, Link, Icon, useDisclosure } from '@chakra-ui/react'
+import { Heading, HStack, Spinner, Image, Text, VStack, Flex, Card, AspectRatio, Button, Link, Icon, useDisclosure, Tooltip } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useParams, Link as RouterLink, useNavigate } from 'react-router-dom'
 import api from '../../api'
@@ -8,10 +8,11 @@ import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import NotFound from '../common/NotFound'
 import SkeletonAvatar from '../../features/images/SkeletonAvatar'
 import SkeletonImage from '../../features/images/SkeletonImage'
-import { IoMdEyeOff, IoMdGlobe, IoMdLock, IoMdTrash } from 'react-icons/io'
+import { IoMdEyeOff, IoMdGlobe, IoMdLock } from 'react-icons/io'
 import { useAuth } from '../../features/auth/AuthContext'
 import ConfirmationModal from '../../features/layout/ConfirmationModal'
 import useToast from '../../features/layout/useToast'
+import { MdOutlinePublish } from 'react-icons/md'
 
 const Quiz: React.FC = () => {
 
@@ -23,16 +24,22 @@ const Quiz: React.FC = () => {
 
   const [quiz, setQuiz] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(true)
+  const [publishing, setPublishing] = useState<boolean>(false)
+
+  const loadQuiz = async () => {
+    setLoading(true)
+    const quiz = await api.quizzes.getOne(quizId || "")
+    setQuiz(quiz)
+    setLoading(false)
+  }
 
   useEffect(() => {
-    (async () => {
-      const quiz = await api.quizzes.getOne(quizId || "")
-      setQuiz(quiz)
-      setLoading(false)
-    })()
+    loadQuiz()
   }, [])
 
   const { onClose: onDQClose, onOpen: onDQOpen, isOpen: isDQOpen } = useDisclosure();
+  const { onClose: onUQClose, onOpen: onUQOpen, isOpen: isUQOpen } = useDisclosure();
+  const { onClose: onEQClose, onOpen: onEQOpen, isOpen: isEQOpen } = useDisclosure();
 
   if (loading) {
     return (
@@ -66,6 +73,32 @@ const Quiz: React.FC = () => {
     navigate("/dashboard")
   }
 
+  const onPublish = async () => {
+    setPublishing(true)
+    const published = await api.quizzes.publish(id)
+    setPublishing(false)
+    if (!published) {
+      toast.error("Error", "Failed to publish quiz")
+      return
+    }
+    toast.success("Success", "Quiz published")
+    loadQuiz()
+  }
+
+  const onUnpublish = async () => {
+    const unpublished = await api.quizzes.unpublish(id)
+    if (!unpublished) {
+      toast.error("Error", "Failed to unpublish quiz")
+      return
+    }
+    toast.success("Success", "Quiz unpublished")
+    loadQuiz()
+  }
+
+  const onEdit = () => {
+    navigate(`/quizzes/${id}/edit`)
+  }
+
   return (
     <Page
       w="full"
@@ -77,6 +110,17 @@ const Quiz: React.FC = () => {
         question="Are you sure you want to delete this quiz? All responses will be deleted."
         title="Delete Quiz"
         callback={onDelete} />
+      <ConfirmationModal onClose={onUQClose} isOpen={isUQOpen}
+        question="Are you sure you want to unpublish this quiz? All responses will be deleted."
+        title="Unpublish Quiz"
+        callback={onUnpublish} />
+      <ConfirmationModal onClose={onEQClose} isOpen={isEQOpen}
+        question="Are you sure you want to edit this published quiz? The quiz will be unpublished and all responses will be deleted."
+        title="Edit Quiz"
+        callback={async () => {
+          await onUnpublish()
+          onEdit()
+        }} />
 
       <VStack
         p="8"
@@ -117,14 +161,23 @@ const Quiz: React.FC = () => {
           </Link>
         </Flex>
         <Text fontSize="lg">{description || "No description provided"}</Text>
-        <Button>Play</Button>
-        { isOwner && <Button>Edit</Button> }
-        { isOwner && <Button>{ published ? "Unpublish" : "Publish" }</Button> }
+        <Button>{published ? "Play" : "Playtest"}</Button>
+        { isOwner &&
+        <Button
+          onClick={() => published ? onEQOpen() : onEdit()}>
+          Edit
+        </Button> }
+        { isOwner &&
+        <Button
+          isLoading={publishing}
+          loadingText="Publishing..."
+          onClick={published ? onUQOpen : onPublish}>
+          {published ? "Unpublish" : "Publish"}
+        </Button> }
         { isOwner &&
         <Button
           onClick={onDQOpen}
-          colorScheme="red"
-          leftIcon={<IoMdTrash />}>
+          colorScheme="red">
           Delete
         </Button> }
       </VStack>

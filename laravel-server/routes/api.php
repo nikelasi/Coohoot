@@ -56,12 +56,20 @@ Route::group([
     Route::group([
         'prefix' => 'quizzes'
     ], function() {
-        Route::post('/', 'QuizController@create');
+
+        // Paginated routes
         Route::get('/', 'QuizController@getAll');
         Route::get('/mine', 'QuizController@getMine');
         Route::get('/by/{username}', 'QuizController@getOthers');
+
+        // CRUD
+        Route::post('/', 'QuizController@create');
         Route::get('/{id}', 'QuizController@get');
         Route::delete('/{id}', 'QuizController@delete');
+        
+        // Publishing
+        Route::post('/publish', 'QuizController@publish');
+        Route::post('/unpublish', 'QuizController@unpublish');
     });
 
     // Debug routes

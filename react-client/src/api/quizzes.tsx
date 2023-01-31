@@ -47,6 +47,21 @@ class QuizzesApi extends BaseApi {
     const result = await this.delete(`/${quizId}`)
     return result.success
   }
+
+  public publish = async (quizId: string) => {
+    const result = await this.post(`/publish`, {
+      quiz_id: quizId
+    })
+    return result.success
+  }
+
+  public unpublish = async (quizId: string) => {
+    const result = await this.post(`/unpublish`, {
+      quiz_id: quizId
+    })
+    return result.success
+  }
+
 }
 
 export default QuizzesApi

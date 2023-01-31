@@ -118,4 +118,20 @@ class QuizController extends Controller {
 
     }
 
+    public function unpublish() {
+
+        if ($this->quizService->unpublish()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Quiz unpublished'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to unpublish quiz'
+        ], 400);
+
+    }
+
 }
