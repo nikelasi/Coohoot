@@ -61,6 +61,7 @@ Route::group([
         Route::get('/mine', 'QuizController@getMine');
         Route::get('/by/{username}', 'QuizController@getOthers');
         Route::get('/{id}', 'QuizController@get');
+        Route::delete('/{id}', 'QuizController@delete');
     });
 
     // Debug routes

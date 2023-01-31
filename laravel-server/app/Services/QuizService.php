@@ -150,6 +150,20 @@ class QuizService {
   }
 
   /**
+   * Deletes a quiz
+   * 
+   * @return boolean whether it was deleted
+   */
+  public function delete() {
+    $quiz = Quiz::find(request()->route("id"));
+    if ($quiz->owner_id !== auth()->user()->id) {
+      return false;
+    }
+    $quiz->delete();
+    return true;
+  }
+
+  /**
    * Publishes a quiz, checks whether it can be published
    * 
    * @return boolean whether it was published

@@ -245,7 +245,7 @@ const Dashboard: React.FC = () => {
               </Flex> :
               <Flex
                 flexGrow="1">
-                { items.length !== 0
+                { items && items.length !== 0
                 ? <SimpleGrid
                   w="full"
                   alignSelf="flex-start"

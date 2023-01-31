@@ -87,6 +87,21 @@ class QuizController extends Controller {
         ], 201);
     }
 
+    public function delete() {
+            
+        if ($this->quizService->delete()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Quiz deleted'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete quiz'
+        ], 400);
+    }
+
     public function publish() {
 
         if ($this->quizService->publish()) {

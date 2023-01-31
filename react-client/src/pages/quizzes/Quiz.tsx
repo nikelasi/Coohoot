@@ -1,6 +1,6 @@
-import { Heading, HStack, Spinner, Image, Text, VStack, Flex, Card, AspectRatio, Button, Link, Icon } from '@chakra-ui/react'
+import { Heading, HStack, Spinner, Image, Text, VStack, Flex, Card, AspectRatio, Button, Link, Icon, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { useParams, Link as RouterLink } from 'react-router-dom'
+import { useParams, Link as RouterLink, useNavigate } from 'react-router-dom'
 import api from '../../api'
 import Page from "../../features/layout/Page.layout"
 
@@ -8,13 +8,18 @@ import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import NotFound from '../common/NotFound'
 import SkeletonAvatar from '../../features/images/SkeletonAvatar'
 import SkeletonImage from '../../features/images/SkeletonImage'
-import { IoMdEyeOff, IoMdGlobe, IoMdLock } from 'react-icons/io'
+import { IoMdEyeOff, IoMdGlobe, IoMdLock, IoMdTrash } from 'react-icons/io'
 import { useAuth } from '../../features/auth/AuthContext'
+import ConfirmationModal from '../../features/layout/ConfirmationModal'
+import useToast from '../../features/layout/useToast'
 
 const Quiz: React.FC = () => {
 
   const { quizId } = useParams()
   const { user } = useAuth();
+
+  const toast = useToast()
+  const navigate = useNavigate();
 
   const [quiz, setQuiz] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -26,6 +31,8 @@ const Quiz: React.FC = () => {
       setLoading(false)
     })()
   }, [])
+
+  const { onClose: onDQClose, onOpen: onDQOpen, isOpen: isDQOpen } = useDisclosure();
 
   if (loading) {
     return (
@@ -45,9 +52,19 @@ const Quiz: React.FC = () => {
     return <NotFound message="Quiz Not Found" />
   }
 
-  const { title, description, thumbnail_url, visibility, published, owner } = quiz
+  const { title, description, thumbnail_url, visibility, published, owner, id } = quiz
   const { username, pfp_url } = owner
   const isOwner = user.username === username
+
+  const onDelete = async () => {
+    const deleted = await api.quizzes.deleteQuiz(id);
+    if (!deleted) {
+      toast.error("Error", "Failed to delete quiz")
+      return
+    }
+    toast.success("Success", "Quiz deleted")
+    navigate("/dashboard")
+  }
 
   return (
     <Page
@@ -55,6 +72,12 @@ const Quiz: React.FC = () => {
       flexDirection={{ base: "column", md: "row" }}
       overflow={{ md: "hidden" }}
       minH={{ md: "calc(100vh - 4rem)" }}>
+
+      <ConfirmationModal onClose={onDQClose} isOpen={isDQOpen}
+        question="Are you sure you want to delete this quiz? All responses will be deleted."
+        title="Delete Quiz"
+        callback={onDelete} />
+
       <VStack
         p="8"
         alignItems="stretch"
@@ -97,6 +120,13 @@ const Quiz: React.FC = () => {
         <Button>Play</Button>
         { isOwner && <Button>Edit</Button> }
         { isOwner && <Button>{ published ? "Unpublish" : "Publish" }</Button> }
+        { isOwner &&
+        <Button
+          onClick={onDQOpen}
+          colorScheme="red"
+          leftIcon={<IoMdTrash />}>
+          Delete
+        </Button> }
       </VStack>
 
       <Flex

@@ -42,6 +42,11 @@ class QuizzesApi extends BaseApi {
     }
     return null
   }
+
+  public deleteQuiz = async (quizId: string) => {
+    const result = await this.delete(`/${quizId}`)
+    return result.success
+  }
 }
 
 export default QuizzesApi
