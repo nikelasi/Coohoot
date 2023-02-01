@@ -43,7 +43,7 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz }: QuizCardProps) => {
           <SkeletonAvatar src={pfp_url} size="8" />
           <Flex flexDir="column" flexGrow="1">
             <Heading noOfLines={1} maxW="full" fontSize="md">{title}</Heading>
-            <Text noOfLines={1} maxW="full" fontSize="sm">
+            <Text noOfLines={1} maxW="full" fontSize="sm" onClick={e => e.stopPropagation()}>
               by <Link color="brand.accent" as={RouterLink} to={`/user/${username}`}>{username}</Link>
             </Text>
           </Flex>
