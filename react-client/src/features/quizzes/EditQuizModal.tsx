@@ -41,8 +41,6 @@ const EditQuizModal: React.FC<Props> = ({ updateDetails, quiz, ...props }: Props
         visibility: quiz.visibility as string,
       }}
       onSubmit={async (values, formikHelpers) => {
-        const { title, description, visibility } = values
-
         const success = await api.quizzes.editDetails({
           id: quiz.id,
           ...values,

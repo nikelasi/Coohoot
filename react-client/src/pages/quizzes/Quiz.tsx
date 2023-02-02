@@ -13,6 +13,7 @@ import { useAuth } from '../../features/auth/AuthContext'
 import ConfirmationModal from '../../features/layout/ConfirmationModal'
 import useToast from '../../features/layout/useToast'
 import { MdOutlinePublish } from 'react-icons/md'
+import EditQuizModal from '../../features/quizzes/EditQuizModal'
 
 const Quiz: React.FC = () => {
 
@@ -40,6 +41,7 @@ const Quiz: React.FC = () => {
   const { onClose: onDQClose, onOpen: onDQOpen, isOpen: isDQOpen } = useDisclosure();
   const { onClose: onUQClose, onOpen: onUQOpen, isOpen: isUQOpen } = useDisclosure();
   const { onClose: onEQClose, onOpen: onEQOpen, isOpen: isEQOpen } = useDisclosure();
+  const { onClose: onEQDClose, onOpen: onEQDOpen, isOpen: isEQDOpen } = useDisclosure();
 
   if (loading) {
     return (
@@ -95,6 +97,10 @@ const Quiz: React.FC = () => {
     loadQuiz()
   }
 
+  const onUpdateDetails = (values: any) => {
+    setQuiz({ ...quiz, ...values })
+  }
+
   const onEdit = () => {
     navigate(`/quiz/${id}/edit`)
   }
@@ -121,6 +127,7 @@ const Quiz: React.FC = () => {
           await onUnpublish()
           onEdit()
         }} />
+      <EditQuizModal onClose={onEQDClose} isOpen={isEQDOpen} updateDetails={onUpdateDetails} quiz={quiz} />
 
       <VStack
         p="8"
@@ -164,8 +171,8 @@ const Quiz: React.FC = () => {
         <Button>{published ? "Play" : "Playtest"}</Button>
         { isOwner &&
         <Button
-          onClick={() => published ? onEQOpen() : onEdit()}>
-          Edit
+          onClick={onEQDOpen}>
+          Edit Details
         </Button> }
         { isOwner &&
         <Button
@@ -187,7 +194,14 @@ const Quiz: React.FC = () => {
         flexDir="column"
         overflow="auto"
         flexGrow="1">
-        <Heading>Questions</Heading>
+        <HStack gap="2">
+          <Heading>Questions</Heading>
+          <Button
+            onClick={published ? onEQOpen : onEdit}
+            rounded="lg">
+            Edit
+          </Button>
+        </HStack>
         <Text>This quiz has no questions</Text>
       </Flex>
     </Page>
