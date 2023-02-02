@@ -23,7 +23,7 @@ services:
       - ./laravel-server/config:/var/www/html/config
       - ./laravel-server/resources:/var/www/html/resources
     ports:
-      - 8000:80
+      - 5000:80
     env_file:
       - ./laravel-server/.env
     networks:

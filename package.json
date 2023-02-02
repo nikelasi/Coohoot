@@ -15,7 +15,7 @@
 
     "run:server": "cd laravel-server && php artisan serve",
     "run:client": "cd react-client && npm run dev",
-    "run:docker": "docker container restart coohoot-backend-1 && docker compose up",
+    "run:docker": "docker compose up",
     "run:docker:fresh": "docker compose up --build",
 
     "deploy:railway": "npm run env:copy && railway up && npm run env:delete"
