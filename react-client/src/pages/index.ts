@@ -12,5 +12,6 @@ export { default as AuthWall } from './auth/AuthWall'
 
 export { default as Discover } from './quizzes/Discover'
 export { default as Quiz } from './quizzes/Quiz'
+export { default as Editor } from './quizzes/Editor'
 
 export { default as Profile } from './users/Profile'

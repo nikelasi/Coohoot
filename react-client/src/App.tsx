@@ -18,6 +18,7 @@ import {
 
   Profile,
   Quiz,
+  Editor
 
 } from './pages'
 
@@ -48,6 +49,7 @@ function App() {
           {/* Quizzes */}
           <Route path='/discover' element={<Discover />} />
           <Route path="/quiz/:quizId" element={<Quiz />} />
+          <Route path="/quiz/:quizId/edit" element={<Editor />} />
 
           {/* Users */}
           <Route path='/user/:username' element={<Profile />} />

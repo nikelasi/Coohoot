@@ -96,7 +96,7 @@ const Quiz: React.FC = () => {
   }
 
   const onEdit = () => {
-    navigate(`/quizzes/${id}/edit`)
+    navigate(`/quiz/${id}/edit`)
   }
 
   return (

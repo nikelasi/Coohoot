@@ -87,6 +87,23 @@ class QuizController extends Controller {
         ], 201);
     }
 
+    public function editDetails() {
+        
+        // TODO: validate request
+
+        if ($this->quizService->editDetails()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Quiz details edited'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to edit quiz details'
+        ]);
+    }
+
     public function delete() {
             
         if ($this->quizService->delete()) {

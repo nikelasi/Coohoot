@@ -131,22 +131,43 @@ class QuizService {
    * @return Quiz
    */
   public function create() {
-    $quiz = request([
-      "title",
-      "description",
-      "visibility",
-      "thumbnail_url"
-    ]);
 
-    $thumbnail_url = $this->drive->uploadQuizThumbnail($quiz["thumbnail_url"]);
+    $thumbnail_url = $this->drive->uploadQuizThumbnail(request("thumbnail_url"));
 
     return Quiz::create([
       "owner_id" => auth()->user()->id,
-      "title" => $quiz["title"],
-      "description" => $quiz["description"],
-      "visibility" => $quiz["visibility"],
+      ...request()->only([
+        "title",
+        "description",
+        "visibility"
+      ]),
       "thumbnail_url" => $thumbnail_url
     ]);
+  }
+
+  /**
+   * Edit a quiz's details
+   * 
+   * @return boolean whether it was edited or not
+   */
+  public function editDetails() {
+    $quiz = Quiz::find(request()->route("id"));
+    if ($quiz->owner_id !== auth()->user()->id) {
+      return false;
+    }
+    $thumbnail_url = $quiz->thumbnail_url;
+    if (request("thumbnail_url")) {
+      $thumbnail_url = $this->drive->uploadQuizThumbnail(request("thumbnail_url"));
+    }
+    $quiz->update([
+      ...request()->only([
+        "title",
+        "description",
+        "visibility"
+      ]),
+      "thumbnail_url" => $thumbnail_url
+    ]);
+    return true;
   }
 
   /**

@@ -64,6 +64,7 @@ Route::group([
 
         // CRUD
         Route::post('/', 'QuizController@create');
+        Route::put('/{id}', 'QuizController@editDetails');
         Route::get('/{id}', 'QuizController@get');
         Route::delete('/{id}', 'QuizController@delete');
         

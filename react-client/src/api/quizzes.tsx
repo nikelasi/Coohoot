@@ -43,6 +43,16 @@ class QuizzesApi extends BaseApi {
     return null
   }
 
+  public editDetails = async (quiz: any) => {
+    const result = await this.put(`/${quiz.id}`, {
+      title: quiz.title,
+      description: quiz.description,
+      visibility: quiz.visibility,
+      thumbnail_url: quiz.thumbnail_url
+    })
+    return result.success
+  }
+
   public deleteQuiz = async (quizId: string) => {
     const result = await this.delete(`/${quizId}`)
     return result.success
