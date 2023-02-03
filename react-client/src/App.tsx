@@ -1,4 +1,5 @@
 import { Box, Fade } from '@chakra-ui/react'
+import { useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Header from './features/layout/Header'
 import {
@@ -24,11 +25,16 @@ import {
 
 function App() {
 
-  const location = useLocation();
+  const location = useLocation()
+  const noheadersPath = [/^\/quiz\/.*\/edit$/]
+
+  useEffect(() => {
+    console.log(location.pathname)
+  }, [location.pathname])
 
   return (
     <Box>
-      <Header />
+      { !noheadersPath.some(re => re.test(location.pathname)) && <Header /> }
 
       <Fade
         key={location.pathname}
