@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\QuizService;
+use App\Models\Quiz;
 
 class QuizController extends Controller {
 
@@ -11,7 +12,12 @@ class QuizController extends Controller {
         $this->quizService = $quizService;
 
         $this->middleware("auth.jwt")->only([
-            "getMine"
+            "getMine",
+            "create",
+            "editDetails",
+            "delete",
+            "publish",
+            "unpublish"
         ]);
     }
 
@@ -76,7 +82,13 @@ class QuizController extends Controller {
 
     public function create() {
 
-        // TODO: validate request
+        if ($errors = $this->validate(request(), [
+            'title' => Quiz::$rules['title'],
+            'thumbnail' => Quiz::$rules['thumbnail'],
+            'visibility' => Quiz::$rules['visibility']
+        ])) {
+            return $errors;
+        }
 
         $quiz = $this->quizService->create();
 
@@ -89,7 +101,13 @@ class QuizController extends Controller {
 
     public function editDetails() {
         
-        // TODO: validate request
+        if ($errors = $this->validate(request(), [
+            'title' => Quiz::$rules['title'],
+            'thumbnail' => Quiz::$rules['thumbnail'],
+            'visibility' => Quiz::$rules['visibility']
+        ])) {
+            return $errors;
+        }
 
         if ($this->quizService->editDetails()) {
             return response()->json([
