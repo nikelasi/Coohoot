@@ -41,6 +41,14 @@ class User extends Authenticatable implements JWTSubject
         'pfp' => 'b64image|b64mimes:jpeg,jpg,png|b64max:10240'
     ];
 
+    public function quizzes() {
+        return $this->hasMany(Quiz::class);
+    }
+
+    public function tokens() {
+        return $this->hasMany(UserToken::class);
+    }
+
     // JWT
     public function getJWTIdentifier() {
         return $this->getKey();
