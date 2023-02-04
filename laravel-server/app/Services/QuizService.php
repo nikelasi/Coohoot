@@ -120,6 +120,7 @@ class QuizService {
           });
       })
       ->whereNotNull("owner_id")
+      ->with("questions")
       ->with("owner:id,username,pfp_url")
       ->first();
     

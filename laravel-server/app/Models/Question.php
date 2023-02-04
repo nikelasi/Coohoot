@@ -27,7 +27,16 @@ class Question extends Model
         'answers' => 'array'
     ];
 
-    public static $rules = [];
+    public static $rules = [
+        'quiz_id' => 'required|exists:quizzes,id',
+        'prev_question' => 'exists:questions,id',
+        'time' => 'integer|min:10|max:300',
+        'type' => 'required|in:mcq,msq,short-answer',
+        'image_url' => 'b64image|b64mimes:jpeg,jpg,png|b64max:10240',
+        'question' => 'required',
+        'options' => 'array',
+        'answers' => 'required|array'
+    ];
 
     public function quiz() {
         return $this->belongsTo(Quiz::class);
