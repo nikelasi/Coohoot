@@ -1,6 +1,6 @@
-import { Heading, Spinner, Text, VStack, Flex, Button, useDisclosure, Icon, useColorMode, HStack } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Heading, Spinner, Text, VStack, Flex, Button, useDisclosure, Icon, useColorMode, HStack, chakra } from '@chakra-ui/react'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import api from '../../api'
 import Page from "../../features/layout/Page.layout"
 
@@ -8,22 +8,28 @@ import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import CoohootIcon from '../../assets/svg/CoohootIcon.svg'
 import NotFound from '../common/NotFound'
 import { useAuth } from '../../features/auth/AuthContext'
-import { IoMdCreate, IoMdExit, IoMdMoon, IoMdSunny } from 'react-icons/io'
+import { IoMdAdd, IoMdCreate, IoMdExit, IoMdMoon, IoMdSave, IoMdSunny } from 'react-icons/io'
 import EditQuizModal from '../../features/quizzes/EditQuizModal'
+import { Reorder } from 'framer-motion'
+import QuestionCard from '../../features/editor/QuestionCard'
 
 const Editor: React.FC = () => {
 
   const { quizId } = useParams()
-  const { user } = useAuth();
+  const { user } = useAuth()
+  const navigate = useNavigate()
   const { colorMode, toggleColorMode } = useColorMode()
 
   const [quiz, setQuiz] = useState<any>(null)
+  const [questions, setQuestions] = useState<any>(null)
+  const [selectedId, setSelectedId] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
   const loadQuiz = async () => {
     setLoading(true)
     const quiz = await api.quizzes.getOne(quizId || "")
     setQuiz(quiz)
+    setQuestions(quiz?.questions)
     setLoading(false)
   }
 
@@ -53,10 +59,27 @@ const Editor: React.FC = () => {
 
   const { title, description, thumbnail_url, visibility, published, owner, id } = quiz
   const { username, pfp_url } = owner
-  const isOwner = user.username === username
 
   const onUpdateDetails = (values: any) => {
     setQuiz({ ...quiz, ...values })
+  }
+
+  const addQuestion = () => {
+    const id = `local$${Math.random().toString(36).slice(2)}`
+    setQuestions([
+      ...questions,
+      {
+        id,
+        question: "New Question",
+        type: "MCQ"
+      }
+    ])
+    setSelectedId(id)
+  }
+
+  const deleteQuestion = (id: string) => {
+    if (id === selectedId) setSelectedId(null)
+    setQuestions(questions.filter((q: any) => q.id !== id))
   }
 
   return (
@@ -72,7 +95,8 @@ const Editor: React.FC = () => {
         px="4"
         alignItems="center"
         justifyContent="space-between"
-        boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)">
+        boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
+        zIndex="100">
         
         {/* Left */}
         <Flex
@@ -87,8 +111,13 @@ const Editor: React.FC = () => {
         {/* Right */}
         <Flex gap="2">
           <Button
-            colorScheme="red"
             onClick={() => {}}
+            leftIcon={<IoMdSave />}>
+            Save
+          </Button>
+          <Button
+            colorScheme="red"
+            onClick={() => navigate(`/quiz/${id}`)}
             leftIcon={<IoMdExit />}>
             Exit
           </Button>
@@ -112,19 +141,85 @@ const Editor: React.FC = () => {
       <Page
         w="full"
         h="calc(100vh - 4rem)"
-        p="4">
+        flexDir="row">
+        
+        {/* Left Sidebar */}
         <VStack
-          gap="4">
-          
+          h="full"
+          overflowY="scroll"
+          alignItems="stretch"
+          p="4"
+          pt="0"
+          position="relative">
+          <VStack
+            bgColor="var(--chakra-colors-chakra-body-bg)"
+            position="sticky"
+            top="0"
+            pt="4"
+            alignItems="stretch"
+            zIndex="50">
+            <Button
+              flexShrink="0"
+              leftIcon={<IoMdCreate />}
+              onClick={onEQOpen}
+              mb="2">
+              Edit Details
+            </Button>
+            <Text fontSize="lg" mb="2">Questions</Text>
+          </VStack>
+          <VStack
+            as={Reorder.Group}
+            axis="y"
+            // overflowY="scroll"
+            listStyleType="none"
+            sx={{ listDecoration: "none" }}
+            values={questions}
+            onReorder={setQuestions}
+            gap="2"
+            alignItems="flex-start">
+            { (questions && questions.length === 0)
+            ? <Text>No questions yet</Text>
+            : questions.map((question: any, index: number) => (
+              <QuestionCard
+                key={question.id}
+                question={question}
+                index={index}
+                isSelected={selectedId === question.id}
+                onSelect={setSelectedId}
+                onDelete={deleteQuestion} />
+            )) }
+          </VStack>
+          <Button
+            flexShrink="0"
+            variant="ghost"
+            leftIcon={<IoMdAdd />}
+            onClick={addQuestion}>
+            Add Question
+          </Button>
         </VStack>
 
         <Flex
           p="8"
+          overflowY="scroll"
           flexDir="column"
-          overflow="auto"
           flexGrow="1">
+
+          { selectedId === null
+          ? <Text fontSize="lg">Select a question to edit</Text>
+          : <Text fontSize="lg">Editing Question {selectedId}</Text> }
           
         </Flex>
+
+        {/* Right Sidebar */}
+        { selectedId !== null &&
+        <VStack
+          h="full"
+          overflowY="scroll"
+          alignItems="stretch"
+          p="4">
+          
+          <Text fontSize="lg">Question Settings</Text>
+        </VStack> }
 
       </Page>
 
