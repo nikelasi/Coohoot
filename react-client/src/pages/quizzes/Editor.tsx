@@ -1,4 +1,4 @@
-import { Heading, Spinner, Text, VStack, Flex, Button, useDisclosure, Icon, useColorMode, HStack, chakra, Editable, EditablePreview, EditableInput } from '@chakra-ui/react'
+import { Heading, Spinner, Text, VStack, Flex, Button, useDisclosure, Icon, useColorMode, HStack, chakra, Editable, EditablePreview, EditableInput, FormControl, FormLabel, Select, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../../api'
@@ -58,9 +58,9 @@ const Editor: React.FC = () => {
     return <NotFound />
   }
 
-  const { title, description, thumbnail_url, visibility, published, owner, id } = quiz
-  const { username, pfp_url } = owner
+  const { id } = quiz
   const selectedQuestion = questions?.find((q: any) => q.id === selectedId)
+  const { type, time, image_url } = selectedQuestion || {}
 
   const updateSelectedQuestion = (values: any) => {
     setQuestions(questions.map((q: any) => q.id === selectedId ? { ...q, ...values } : q))
@@ -210,7 +210,7 @@ const Editor: React.FC = () => {
           </Button>
         </VStack>
 
-        
+        {/* Main */}
         <Flex
           p="8"
           overflowY="scroll"
@@ -225,6 +225,8 @@ const Editor: React.FC = () => {
               textAlign="center"
               gap="4"
               flexGrow="1">
+
+              {/* Question Text */}
               <Flex
                 rounded="md"
                 flexDir="column"
@@ -240,10 +242,11 @@ const Editor: React.FC = () => {
                   <EditableInput />
                 </Editable>
               </Flex>
-              <QuestionImage initialImage={quiz.image_url} updateImage={
+
+              {/* Image */}
+              <QuestionImage initialImage={image_url} updateImage={
                 (image: string | null) => updateSelectedQuestion({ image_url: image })
               } />
-              {/* Options */}
           </Flex> }
 
           
@@ -258,6 +261,27 @@ const Editor: React.FC = () => {
           p="4">
           
           <Text fontSize="lg">Question Settings</Text>
+
+          <FormControl>
+            <FormLabel>Type</FormLabel>
+            <Select
+              value={type}
+              onChange={(e) => updateSelectedQuestion({ type: e.target.value })}>
+              <option value="MCQ">MCQ</option>
+              <option value="Short Answer">Short Answer</option>
+            </Select>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Time (s)</FormLabel>
+            <NumberInput value={time} min={10} max={300} onChange={val => updateSelectedQuestion({ time: parseInt(val) })}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </FormControl>
         </VStack> }
 
       </Page>

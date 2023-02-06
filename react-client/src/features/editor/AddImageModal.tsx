@@ -85,9 +85,8 @@ const AddImageModal: React.FC<Props> = (props: Props) => {
         completedCrop as PixelCrop
       ) as string
     }
-    
-    setUpdating(false)
     const url = await api.quizzes.uploadImage(imgUrl as string);
+    setUpdating(false)
     if (url) {
       updateImage(url)
       onClose()
@@ -193,7 +192,7 @@ const AddImageModal: React.FC<Props> = (props: Props) => {
             minWidth={20}
             minHeight={20}
             onChange={(_, c) => setCrop(c)}
-            onComplete={(c, _) => {setCompletedCrop(c); console.log(c)}}>
+            onComplete={(c, _) => setCompletedCrop(c)}>
             <img ref={imageRef} onLoad={onImageLoad} src={imageUrl || ""} />
           </ReactCrop>
 
