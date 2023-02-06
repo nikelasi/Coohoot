@@ -93,7 +93,15 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           style={{ aspectRatio: 16 / 9 }}
           rounded="md"
           bgColor="highlight">
-          <Text fontSize="sm">{questionText}</Text>
+          <Text
+            fontSize="sm"
+            noOfLines={3}
+            overflow="hidden"
+            maxW="100%"
+            maxH="100%"
+            >
+            {questionText || "No question text"}
+          </Text>
         </Flex>
       </Flex>
     </Reorder.Item>

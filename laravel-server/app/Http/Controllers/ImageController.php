@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Question;
+
 use GoogleDriveService;
 
 class ImageController extends Controller {
@@ -29,6 +31,21 @@ class ImageController extends Controller {
         $url = $this->gd->getUrl($path);
         return response()->json([
             'path' => $path,
+            'url' => $url
+        ], 200);
+    }
+
+    public function uploadQuestionImage() {
+        if ($errors = $this->validate(request(), [
+            'image_url' => 'required|'.Question::$rules['image_url'],
+        ])) {
+            return $errors;
+        }
+
+        $url = $this->gd->uploadQuestionImage(request('image_url'));
+
+        return response()->json([
+            'success' => true,
             'url' => $url
         ], 200);
     }

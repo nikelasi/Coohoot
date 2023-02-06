@@ -32,6 +32,16 @@ class GoogleDriveService {
   public function uploadPfp($base64image) {
     return $this->upload('pfp', 'default_pfp.png', $base64image);
   }
+  
+  /**
+   * Upload question image to Google Drive
+   * 
+   * @param string $base64image
+   * @return string
+   */
+  public function uploadQuestionImage($base64image) {
+    return $this->upload('question_images', 'default_question.png', $base64image);
+  }
 
   /**
    * Abstraction to upload an image to Google Drive

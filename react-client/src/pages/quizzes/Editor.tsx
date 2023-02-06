@@ -1,4 +1,4 @@
-import { Heading, Spinner, Text, VStack, Flex, Button, useDisclosure, Icon, useColorMode, HStack, chakra } from '@chakra-ui/react'
+import { Heading, Spinner, Text, VStack, Flex, Button, useDisclosure, Icon, useColorMode, HStack, chakra, Editable, EditablePreview, EditableInput } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../../api'
@@ -8,10 +8,11 @@ import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import CoohootIcon from '../../assets/svg/CoohootIcon.svg'
 import NotFound from '../common/NotFound'
 import { useAuth } from '../../features/auth/AuthContext'
-import { IoMdAdd, IoMdCreate, IoMdExit, IoMdMoon, IoMdSave, IoMdSunny } from 'react-icons/io'
+import { IoMdAdd, IoMdCloudUpload, IoMdCreate, IoMdExit, IoMdMoon, IoMdSave, IoMdSunny } from 'react-icons/io'
 import EditQuizModal from '../../features/quizzes/EditQuizModal'
 import { Reorder } from 'framer-motion'
 import QuestionCard from '../../features/editor/QuestionCard'
+import QuestionImage from '../../features/editor/QuestionImage'
 
 const Editor: React.FC = () => {
 
@@ -59,6 +60,11 @@ const Editor: React.FC = () => {
 
   const { title, description, thumbnail_url, visibility, published, owner, id } = quiz
   const { username, pfp_url } = owner
+  const selectedQuestion = questions?.find((q: any) => q.id === selectedId)
+
+  const updateSelectedQuestion = (values: any) => {
+    setQuestions(questions.map((q: any) => q.id === selectedId ? { ...q, ...values } : q))
+  }
 
   const onUpdateDetails = (values: any) => {
     setQuiz({ ...quiz, ...values })
@@ -70,8 +76,12 @@ const Editor: React.FC = () => {
       ...questions,
       {
         id,
-        question: "New Question",
-        type: "MCQ"
+        question: null,
+        type: "MCQ",
+        time: 30,
+        image_url: null,
+        options: [],
+        answers: []
       }
     ])
     setSelectedId(id)
@@ -145,6 +155,8 @@ const Editor: React.FC = () => {
         
         {/* Left Sidebar */}
         <VStack
+          w="15%"
+          maxW="15%"
           h="full"
           overflowY="scroll"
           alignItems="stretch"
@@ -198,6 +210,7 @@ const Editor: React.FC = () => {
           </Button>
         </VStack>
 
+        
         <Flex
           p="8"
           overflowY="scroll"
@@ -206,7 +219,33 @@ const Editor: React.FC = () => {
 
           { selectedId === null
           ? <Text fontSize="lg">Select a question to edit</Text>
-          : <Text fontSize="lg">Editing Question {selectedId}</Text> }
+          : <Flex
+              flexDir="column"
+              alignItems="stretch"
+              textAlign="center"
+              gap="4"
+              flexGrow="1">
+              <Flex
+                rounded="md"
+                flexDir="column"
+                p="4"
+                background="highlight">
+                <Text fontSize="xl">Question</Text>
+                <Editable
+                  overflowWrap="break-word"
+                  placeholder="Type your question here"
+                  defaultValue={selectedQuestion.question}
+                  onChange={val => updateSelectedQuestion({ question: val })}>
+                  <EditablePreview />
+                  <EditableInput />
+                </Editable>
+              </Flex>
+              <QuestionImage initialImage={quiz.image_url} updateImage={
+                (image: string | null) => updateSelectedQuestion({ image_url: image })
+              } />
+              {/* Options */}
+          </Flex> }
+
           
         </Flex>
 

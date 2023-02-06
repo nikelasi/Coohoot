@@ -72,6 +72,16 @@ class QuizzesApi extends BaseApi {
     return result.success
   }
 
+  public uploadImage = async (base64_url: string) => {
+    const result = await this.post(`/upload-image`, {
+      image_url: base64_url
+    })
+    if (result.success) {
+      return result.url
+    }
+    return null
+  }
+
 }
 
 export default QuizzesApi

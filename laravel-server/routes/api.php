@@ -71,6 +71,9 @@ Route::group([
         // Publishing
         Route::post('/publish', 'QuizController@publish');
         Route::post('/unpublish', 'QuizController@unpublish');
+
+        // Questions Editor
+        Route::post('/upload-image', 'ImageController@uploadQuestionImage');
     });
 
     // Debug routes
