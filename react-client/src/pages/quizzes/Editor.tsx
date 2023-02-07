@@ -1,4 +1,4 @@
-import { Heading, Spinner, Text, VStack, Flex, Button, useDisclosure, Icon, useColorMode, HStack, chakra, Editable, EditablePreview, EditableInput, FormControl, FormLabel, Select, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/react'
+import { Heading, Spinner, Text, VStack, Flex, Button, useDisclosure, Icon, useColorMode, HStack, chakra, Editable, EditablePreview, EditableInput, FormControl, FormLabel, Select, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, Tooltip } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../../api'
@@ -8,7 +8,7 @@ import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import CoohootIcon from '../../assets/svg/CoohootIcon.svg'
 import NotFound from '../common/NotFound'
 import { useAuth } from '../../features/auth/AuthContext'
-import { IoMdAdd, IoMdCreate, IoMdExit, IoMdMoon, IoMdSave, IoMdSunny } from 'react-icons/io'
+import { IoMdAdd, IoMdCreate, IoMdExit, IoMdMoon, IoMdSave, IoMdSunny, IoMdWarning } from 'react-icons/io'
 import EditQuizModal from '../../features/quizzes/EditQuizModal'
 import { Reorder } from 'framer-motion'
 import QuestionCard from '../../features/editor/QuestionCard'
@@ -78,7 +78,7 @@ const Editor: React.FC = () => {
       ...questions,
       {
         id,
-        question: null,
+        question: "",
         type: "MCQ",
         time: 30,
         image_url: null,
@@ -184,7 +184,6 @@ const Editor: React.FC = () => {
           <VStack
             as={Reorder.Group}
             axis="y"
-            // overflowY="scroll"
             listStyleType="none"
             sx={{ listDecoration: "none" }}
             values={questions}
@@ -230,6 +229,7 @@ const Editor: React.FC = () => {
 
               {/* Question Text */}
               <Flex
+                position="relative"
                 rounded="md"
                 flexDir="column"
                 p="4"
@@ -243,6 +243,22 @@ const Editor: React.FC = () => {
                   <EditablePreview />
                   <EditableInput />
                 </Editable>
+                <Tooltip colorScheme="red" label="question text must be filled in">
+                  <Flex
+                    display={selectedQuestion.question === "" ? "flex" : "none"}
+                    position="absolute"
+                    top="4"
+                    left="4"
+                    bgColor="red"
+                    color="white"
+                    rounded="md"
+                    h="6"
+                    w="6"
+                    alignItems="center"
+                    justifyContent="center">
+                    <Icon as={IoMdWarning} />
+                  </Flex>
+                </Tooltip>
               </Flex>
 
               {/* Image */}

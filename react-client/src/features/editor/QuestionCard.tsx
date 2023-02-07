@@ -1,7 +1,7 @@
-import { VStack, Text, Flex, HStack, IconButton, useColorMode } from "@chakra-ui/react";
+import { VStack, Text, Flex, HStack, IconButton, useColorMode, Icon, Tooltip } from "@chakra-ui/react";
 import { Reorder } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { IoMdTrash } from "react-icons/io";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { IoMdTrash, IoMdWarning } from "react-icons/io";
 
 interface QuestionCardProps {
   question: any;
@@ -19,11 +19,38 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   isSelected
 }: QuestionCardProps) => {
 
-  const { question: questionText, id, type } = question
+  const { question: questionText, id, type, options, answers } = question
 
   const [scroll, setScroll] = useState<number>(0)
 
   const ref = useRef<HTMLDivElement>(null)
+
+  const deriveIsValid = () => {
+    console.log(question)
+    if (questionText === "") {
+      return false
+    }
+    if (type === 'MCQ') {
+      if (options.every((option: any) => option.value !== undefined && option.id !== undefined)) {
+        if (options.some((option: any) => option.value === "")) {
+          return false
+        }
+      }
+      if (answers.length < 1) {
+        return false
+      }
+    } else if (type === 'Short Answer') {
+      if (answers.every((answer: any) => answer.match(/^\/\^(.*)\$\/(i?)$/))) {
+        if (answers.some((answer: any) => answer.match(/^\/\^(.*)\$\/(i?)$/)[1] === "")) {
+          return false
+        }
+      }
+    }
+    return true
+  }
+
+  // turn deriveIsValid into a single expression
+  const isValid = useMemo(() => deriveIsValid(), [questionText, type, options, answers])
 
   return (
     <Reorder.Item
@@ -51,7 +78,23 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           }
         }
       }}
-      style={{ alignSelf: "stretch", cursor: "grab" }}>
+      style={{ alignSelf: "stretch", cursor: "grab", position: "relative" }}>
+      <Tooltip label="issues with question">
+        <Flex
+          display={isValid ? "none" : "flex"}
+          position="absolute"
+          right="0"
+          bottom="0"
+          bgColor="red"
+          color="white"
+          rounded="md"
+          h="6"
+          w="6"
+          alignItems="center"
+          justifyContent="center">
+          <Icon as={IoMdWarning} />
+        </Flex>
+      </Tooltip>
       <Flex
         ref={ref}
         border="2px solid transparent"

@@ -1,6 +1,6 @@
-import { Button, Checkbox, Editable, EditableInput, EditablePreview, Flex, IconButton, Input, InputGroup, InputLeftAddon, InputRightElement, Text } from "@chakra-ui/react";
+import { Button, Checkbox, Editable, EditableInput, EditablePreview, Flex, FormErrorMessage, Icon, IconButton, Input, InputGroup, InputLeftAddon, InputRightElement, Text, Tooltip } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { IoMdTrash } from "react-icons/io";
+import { IoMdTrash, IoMdWarning } from "react-icons/io";
 
 interface ShortAnswerAnswersProps {
   answers: any;
@@ -62,6 +62,24 @@ const ShortAnswerAnswers: React.FC<ShortAnswerAnswersProps> = ({
                       }}>
                       Case Sensitive
                     </Checkbox>
+                    <Tooltip colorScheme="red" label="please fill in an answer">
+                      <Flex
+                        display={answer.match(/^\/\^(.*)\$\/(i?)$/)[1] === "" ? "flex" : "none"}
+                        position="absolute"
+                        right="168"
+                        top="0"
+                        bottom="0"
+                        margin="auto"
+                        bgColor="red"
+                        color="white"
+                        rounded="md"
+                        h="6"
+                        w="6"
+                        alignItems="center"
+                        justifyContent="center">
+                        <Icon as={IoMdWarning} />
+                      </Flex>
+                    </Tooltip>
                   </InputRightElement>
                 </InputGroup>
               </Editable>
