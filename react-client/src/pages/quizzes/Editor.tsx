@@ -8,11 +8,13 @@ import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import CoohootIcon from '../../assets/svg/CoohootIcon.svg'
 import NotFound from '../common/NotFound'
 import { useAuth } from '../../features/auth/AuthContext'
-import { IoMdAdd, IoMdCloudUpload, IoMdCreate, IoMdExit, IoMdMoon, IoMdSave, IoMdSunny } from 'react-icons/io'
+import { IoMdAdd, IoMdCreate, IoMdExit, IoMdMoon, IoMdSave, IoMdSunny } from 'react-icons/io'
 import EditQuizModal from '../../features/quizzes/EditQuizModal'
 import { Reorder } from 'framer-motion'
 import QuestionCard from '../../features/editor/QuestionCard'
 import QuestionImage from '../../features/editor/QuestionImage'
+import MCQAnswers from '../../features/editor/MCQAnswers'
+import ShortAnswerAnswers from '../../features/editor/ShortAnswerAnswers'
 
 const Editor: React.FC = () => {
 
@@ -60,7 +62,7 @@ const Editor: React.FC = () => {
 
   const { id } = quiz
   const selectedQuestion = questions?.find((q: any) => q.id === selectedId)
-  const { type, time, image_url } = selectedQuestion || {}
+  const { answers, options, type, time, image_url } = selectedQuestion || {}
 
   const updateSelectedQuestion = (values: any) => {
     setQuestions(questions.map((q: any) => q.id === selectedId ? { ...q, ...values } : q))
@@ -247,6 +249,18 @@ const Editor: React.FC = () => {
               <QuestionImage initialImage={image_url} updateImage={
                 (image: string | null) => updateSelectedQuestion({ image_url: image })
               } />
+
+              {/* Answers */}
+              { type === 'MCQ' &&
+              <MCQAnswers
+                answers={answers}
+                options={options}
+                updateAnswers={(answers: any) => updateSelectedQuestion({ answers })}
+                updateOptions={(options: any) => updateSelectedQuestion({ options })} /> }
+              { type === 'Short Answer' &&
+              <ShortAnswerAnswers
+                answers={answers}
+                updateAnswers={(answers: any) => updateSelectedQuestion({ answers })} /> }
           </Flex> }
 
           
@@ -266,7 +280,7 @@ const Editor: React.FC = () => {
             <FormLabel>Type</FormLabel>
             <Select
               value={type}
-              onChange={(e) => updateSelectedQuestion({ type: e.target.value })}>
+              onChange={(e) => updateSelectedQuestion({ type: e.target.value, answers: [], options: [] })}>
               <option value="MCQ">MCQ</option>
               <option value="Short Answer">Short Answer</option>
             </Select>
