@@ -317,6 +317,31 @@ const Editor: React.FC = () => {
 
       </Page>
 
+      {/* Block non desktop */}
+      <Flex
+        display={{
+          base: "flex",
+          lg: "none"
+        }}
+        position="fixed"
+        inset="0"
+        bgColor="var(--chakra-colors-chakra-body-bg)"
+        zIndex="100"
+        alignItems="center"
+        justifyContent="center">
+        
+        <VStack>
+          <CoohootOwl boxSize="32" />
+          <Text fontSize="2xl" color="brand" textAlign="center">Sorry... editor only available on desktop</Text>
+          <Button
+            colorScheme="red"
+            onClick={() => navigate(`/quiz/${id}`)}
+            leftIcon={<IoMdExit />}>
+            Exit
+          </Button>
+        </VStack>
+      </Flex>
+
     </Page>
   )
 }
