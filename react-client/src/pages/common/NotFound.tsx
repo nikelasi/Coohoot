@@ -1,4 +1,5 @@
-import { Flex, Heading, Text, VStack } from "@chakra-ui/react"
+import { Flex, Heading, Link, Text, VStack } from "@chakra-ui/react"
+import { Link as RouterLink } from "react-router-dom";
 
 import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 
@@ -18,6 +19,9 @@ const NotFound: React.FC<NotFoundProps> = ({ message = 'Page Not Found' }: NotFo
         <CoohootOwl boxSize="32" />
         <Heading fontSize="6xl">coo... 404</Heading>
         <Text fontSize="3xl" color="brand">{message}</Text>
+        <Text fontSize="l">
+          Return to <Link as={RouterLink} to="/" color="brand.accent">home</Link>?
+        </Text>
       </VStack>
     </Flex>
   )
