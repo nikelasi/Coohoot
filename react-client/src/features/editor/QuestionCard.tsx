@@ -21,23 +21,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
   const { question: questionText, id, type } = question
 
-  // const [dragged, setDragged] = useState<boolean>(false)
   const [scroll, setScroll] = useState<number>(0)
 
-  // TODO: Dragging question to top/bottom of list should scroll the list
-  // if question is being dragged, scroll to it
-  // const ref = useRef<HTMLDivElement>(null)
-
-  // useEffect(() => {
-  //   if (isSelected) {
-  //     ref.current?.scrollIntoView({ behavior: "smooth", block: "center" })
-  //   }
-  // }, [isSelected])
-
-  // useEffect(() => {
-
-  // }, [scroll])
-
+  const ref = useRef<HTMLDivElement>(null)
 
   return (
     <Reorder.Item
@@ -47,27 +33,27 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
         opacity: 0.5,
         cursor: "grabbing"
       }}
-      // onDrag={(e: PointerEvent)=> {
-      //   if (ref.current) {
-      //     const parentRect = ref.current.parentElement!.getBoundingClientRect()
-      //     const parentTop = parentRect.y
-      //     const parentBottom = parentRect.y + parentRect.height
-      //     const top = e.clientY
-      //     const bottom = e.clientY + ref.current.getBoundingClientRect().height
-      //     if (top < parentTop) {
-      //       ref.current.scroll(0, 1)
-      //       ref.current.scrollIntoView({ behavior: "smooth", block: "start" })
-      //     } else if (bottom > parentBottom) {
-      //       // ref.current.scrollIntoView({ behavior: "smooth", block: "end" })
-      //       ref.current.scroll(0, -1)
-      //     }
-      //   }
-      // }}
-      // onDragStart={() => setDragged(true)}
-      // onDragEnd={() => setDragged(false)}
+      onDrag={(e: PointerEvent)=> {
+        if (ref.current) {
+
+          const sidebar = ref.current.parentElement!.parentElement!.parentElement!
+          const sidebarTop = sidebar.firstElementChild!.getBoundingClientRect().bottom
+          const sidebarBottom = sidebar.getBoundingClientRect().bottom
+
+          const currentRect = ref.current.getBoundingClientRect()
+          const top = currentRect.top
+          const bottom = currentRect.bottom
+
+          if (top < sidebarTop) {
+            sidebar.scrollBy(0, -2)
+          } else if (bottom >= sidebarBottom - 2) {
+            sidebar.scrollBy(0, 2)
+          }
+        }
+      }}
       style={{ alignSelf: "stretch", cursor: "grab" }}>
       <Flex
-        // ref={ref}
+        ref={ref}
         border="2px solid transparent"
         _hover={{ border: (isSelected ? "" : "2px solid"), borderColor: "var(--chakra-colors-brand-highlight)" }}
         alignSelf="stretch"
