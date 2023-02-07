@@ -15,6 +15,7 @@ import QuestionCard from '../../features/editor/QuestionCard'
 import QuestionImage from '../../features/editor/QuestionImage'
 import MCQAnswers from '../../features/editor/MCQAnswers'
 import ShortAnswerAnswers from '../../features/editor/ShortAnswerAnswers'
+import ConfirmationModal from '../../features/layout/ConfirmationModal'
 
 const Editor: React.FC = () => {
 
@@ -41,6 +42,7 @@ const Editor: React.FC = () => {
   }, [])
 
   const { onClose: onEQClose, onOpen: onEQOpen, isOpen: isEQOpen } = useDisclosure()
+  const { onClose: onCEClose, onOpen: onCEOpen, isOpen: isCEOpen } = useDisclosure()
 
   if (loading) {
     return (
@@ -100,6 +102,9 @@ const Editor: React.FC = () => {
       h="100vh">
       
       <EditQuizModal onClose={onEQClose} isOpen={isEQOpen} updateDetails={onUpdateDetails} quiz={quiz} />
+      <ConfirmationModal onClose={onCEClose} isOpen={isCEOpen} callback={() => navigate(`/quiz/${id}`)}
+        title="Exit Quiz Editor"
+        question="Are you sure you want to exit the quiz editor? All unsaved changes will be lost." />
 
       {/* Editor Toolbar */}
       <Flex
@@ -129,7 +134,7 @@ const Editor: React.FC = () => {
           </Button>
           <Button
             colorScheme="red"
-            onClick={() => navigate(`/quiz/${id}`)}
+            onClick={onCEOpen}
             leftIcon={<IoMdExit />}>
             Exit
           </Button>
