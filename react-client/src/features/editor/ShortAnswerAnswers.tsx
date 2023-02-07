@@ -44,6 +44,7 @@ const ShortAnswerAnswers: React.FC<ShortAnswerAnswersProps> = ({
                   <Input mr="40" textAlign="left" borderRightRadius={0} as={EditableInput} />
                   <Input mr="40" textAlign="left" borderRightRadius={0} pb="0" pt="2" as={EditablePreview} />
                   <InputRightElement
+                    color="white"
                     rounded="md"
                     borderLeftRadius={0}
                     w="40"

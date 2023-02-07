@@ -269,6 +269,7 @@ const Editor: React.FC = () => {
         {/* Right Sidebar */}
         { selectedId !== null &&
         <VStack
+          w="15%"
           h="full"
           overflowY="scroll"
           alignItems="stretch"

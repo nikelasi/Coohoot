@@ -2,6 +2,7 @@ import { Flex, Text, Button, Icon, useDisclosure, Image} from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { IoMdCloudUpload, IoMdImage } from "react-icons/io"
 import SkeletonImage from "../images/SkeletonImage";
+import ConfirmationModal from "../layout/ConfirmationModal";
 import AddImageModal from "./AddImageModal";
 
 interface QuestionImageProps {
@@ -14,6 +15,7 @@ const QuestionImage: React.FC<QuestionImageProps> = ({ initialImage = null, upda
   const [image, setImage] = useState<string | null>(initialImage)
 
   const { onClose: onAIClose, onOpen: onAIOpen, isOpen: isAIOpen } = useDisclosure()
+  const { onClose: onDIClose, onOpen: onDIOpen, isOpen: isDIOpen } = useDisclosure()
 
   useEffect(() => {
     updateImage(image)
@@ -27,7 +29,16 @@ const QuestionImage: React.FC<QuestionImageProps> = ({ initialImage = null, upda
       gap="3"
       background="highlight">
 
-      <AddImageModal onClose={onAIClose} isOpen={isAIOpen} updateImage={setImage} />
+      <AddImageModal
+        onClose={onAIClose}
+        isOpen={isAIOpen}
+        updateImage={setImage} />
+      <ConfirmationModal
+        onClose={onDIClose}
+        isOpen={isDIOpen}
+        callback={() => setImage(null)}
+        question="Are you sure you want to remove the image?"
+        title="Remove Image" />
 
       <Text fontSize="xl">Image (Optional)</Text>
       { image === null
@@ -48,36 +59,46 @@ const QuestionImage: React.FC<QuestionImageProps> = ({ initialImage = null, upda
         </Button>
       </Flex>
       : <Flex
-        alignSelf="center"
-        maxH="60"
-        rounded="md"
-        overflow="hidden"
-        cursor="pointer"
-        onClick={onAIOpen}
-        position="relative"
-        boxShadow="md"
-        _hover={{
-          "&::after": {
-            content: "'change'",
-            position: "absolute",
-            inset: "0 0 0 0",
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white"
-          }
-        }}>
-        <SkeletonImage
-          src={image}
-          imageProps={{
-            maxH: "60",
-            objectFit: "contain"
-          }}
-          skeletonProps={{
-            maxH: "60",
-            objectFit: "contain"
-          }} />
+        flexDirection="column"
+        gap="4">
+        <Flex
+          alignSelf="center"
+          maxH="60"
+          rounded="md"
+          overflow="hidden"
+          cursor="pointer"
+          onClick={onAIOpen}
+          position="relative"
+          boxShadow="md"
+          _hover={{
+            "&::after": {
+              content: "'change'",
+              position: "absolute",
+              inset: "0 0 0 0",
+              backgroundColor: "rgba(0,0,0,0.5)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "white"
+            }
+          }}>
+          <SkeletonImage
+            src={image}
+            imageProps={{
+              maxH: "60",
+              objectFit: "contain"
+            }}
+            skeletonProps={{
+              maxH: "60",
+              objectFit: "contain"
+            }} />
+        </Flex>
+        <Button
+          alignSelf="center"
+          onClick={onDIOpen}
+          colorScheme="red">
+          Remove
+        </Button>
       </Flex> }
     </Flex>
   )
