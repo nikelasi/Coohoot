@@ -1,5 +1,5 @@
 import { Heading, Spinner, Text, VStack, Flex, Button, useDisclosure, Icon, useColorMode, HStack, chakra, Editable, EditablePreview, EditableInput, FormControl, FormLabel, Select, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, Tooltip } from '@chakra-ui/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../../api'
 import Page from "../../features/layout/Page.layout"
@@ -16,6 +16,7 @@ import QuestionImage from '../../features/editor/QuestionImage'
 import MCQAnswers from '../../features/editor/MCQAnswers'
 import ShortAnswerAnswers from '../../features/editor/ShortAnswerAnswers'
 import ConfirmationModal from '../../features/layout/ConfirmationModal'
+import InvalidQuestionsModal from '../../features/editor/InvalidQuestionsModal'
 
 const Editor: React.FC = () => {
 
@@ -37,12 +38,39 @@ const Editor: React.FC = () => {
     setLoading(false)
   }
 
+  const isQuestionValid = (question: any) => {
+    const { questionText, type, options, answers } = question
+    if (questionText === "") {
+      return false
+    }
+    if (type === 'MCQ') {
+      if (options.every((option: any) => option.value !== undefined && option.id !== undefined)) {
+        if (options.some((option: any) => option.value === "")) {
+          return false
+        }
+      }
+      if (answers.length < 1) {
+        return false
+      }
+    } else if (type === 'Short Answer') {
+      if (answers.every((answer: any) => answer.match(/^\/\^(.*)\$\/(i?)$/))) {
+        if (answers.some((answer: any) => answer.match(/^\/\^(.*)\$\/(i?)$/)[1] === "")) {
+          return false
+        }
+      }
+    }
+    return true
+  }
+  
+  const isValid = useMemo(() => questions ? questions.every(isQuestionValid) : false, [questions])
+
   useEffect(() => {
     loadQuiz()
   }, [])
 
   const { onClose: onEQClose, onOpen: onEQOpen, isOpen: isEQOpen } = useDisclosure()
   const { onClose: onCEClose, onOpen: onCEOpen, isOpen: isCEOpen } = useDisclosure()
+  const { onClose: onIQClose, onOpen: onIQOpen, isOpen: isIQOpen } = useDisclosure()
 
   if (loading) {
     return (
@@ -102,6 +130,7 @@ const Editor: React.FC = () => {
       h="100vh">
       
       <EditQuizModal onClose={onEQClose} isOpen={isEQOpen} updateDetails={onUpdateDetails} quiz={quiz} />
+      <InvalidQuestionsModal onClose={onIQClose} isOpen={isIQOpen} questions={questions} setSelectedQuestion={setSelectedId} />
       <ConfirmationModal onClose={onCEClose} isOpen={isCEOpen} callback={() => navigate(`/quiz/${id}`)}
         title="Exit Quiz Editor"
         question="Are you sure you want to exit the quiz editor? All unsaved changes will be lost." />
@@ -128,7 +157,7 @@ const Editor: React.FC = () => {
         {/* Right */}
         <Flex gap="2">
           <Button
-            onClick={() => {}}
+            onClick={isValid ? () => {} : onIQOpen}
             leftIcon={<IoMdSave />}>
             Save
           </Button>
@@ -243,7 +272,7 @@ const Editor: React.FC = () => {
                 <Editable
                   overflowWrap="break-word"
                   placeholder="Type your question here"
-                  defaultValue={selectedQuestion.question}
+                  value={selectedQuestion.question}
                   onChange={val => updateSelectedQuestion({ question: val })}>
                   <EditablePreview />
                   <EditableInput />

@@ -26,7 +26,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   const ref = useRef<HTMLDivElement>(null)
 
   const deriveIsValid = () => {
-    console.log(question)
     if (questionText === "") {
       return false
     }
@@ -49,7 +48,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     return true
   }
 
-  // turn deriveIsValid into a single expression
   const isValid = useMemo(() => deriveIsValid(), [questionText, type, options, answers])
 
   return (
