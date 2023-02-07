@@ -21,6 +21,10 @@ const QuestionImage: React.FC<QuestionImageProps> = ({ initialImage = null, upda
     updateImage(image)
   }, [image])
 
+  useEffect(() => {
+    setImage(initialImage)
+  }, [initialImage])
+
   return (
     <Flex
       rounded="md"
