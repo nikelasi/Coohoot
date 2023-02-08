@@ -5,6 +5,7 @@ namespace App\Services;
 use GoogleDriveService;
 
 use App\Models\Quiz;
+use App\Models\Question;
 
 class QuizService {
 
@@ -111,7 +112,7 @@ class QuizService {
    */
   public function get(string $id) {
 
-    return Quiz::where("id", $id)
+    $quiz = Quiz::where("id", $id)
       ->where(function($query) {
         $query->where("visibility", "!=", "private")
           ->where("published", true)
@@ -120,10 +121,22 @@ class QuizService {
           });
       })
       ->whereNotNull("owner_id")
-      ->with("questions")
       ->with("owner:id,username,pfp_url")
       ->first();
+
+    $questions = $this->getQuestions($quiz);
+    if ($quiz->owner_id !== auth()->user()->id) {
+      $quiz->questions = array_map(function($question) {
+        return [
+          "question" => $question->question,
+          "options" => $question->options
+        ];
+      }, $questions);
+    } else {
+      $quiz->questions = $questions;
+    }
     
+    return $quiz;
   }
 
   /**
@@ -215,6 +228,33 @@ class QuizService {
     $quiz->published = false;
     $quiz->save();
     return true;
+  }
+
+  /**
+   * Gets all questions for a quiz
+   * 
+   * @param Quiz $quiz
+   * 
+   * @return array[ Question ]
+   */
+  public function getQuestions(Quiz $quiz) {
+
+    $prevId = null;
+    $questions = [];
+
+    while (true) {
+      $question = Question::where("quiz_id", $quiz->id)
+        ->where("prev_question", $prevId)
+        ->first();
+      if (!$question) {
+        break;
+      }
+      $questions[] = $question;
+      $prevId = $question->id;
+    }
+
+    return $questions;
+    
   }
 
 }

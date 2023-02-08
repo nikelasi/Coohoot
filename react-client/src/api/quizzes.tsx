@@ -82,6 +82,18 @@ class QuizzesApi extends BaseApi {
     return null
   }
 
+  public saveQuestions = async (quizId: string, questions: any[]) => {
+    const result = await this.post(`/${quizId}/questions`, {
+      questions: questions.map((question: any) => {
+        return {
+          ...question,
+          type: question.type.toLowerCase() === "mcq" ? "mcq" : "short-answer"
+        }
+      })
+    })
+    return [result.success, result.success ? result.questions : null]
+  }
+
 }
 
 export default QuizzesApi

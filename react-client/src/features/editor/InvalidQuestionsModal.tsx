@@ -48,7 +48,7 @@ const InvalidQuestionsModal: React.FC<Props> = ({ questions, setSelectedQuestion
           })
           .filter((question: any) => question.errors.length > 0)
           .map((question: any) => (
-            <Flex gap="2" flexDir="column" bgColor="highlight" key={question.index} p="2" position="relative">
+            <Flex gap="2" flexDir="column" bgColor="highlight" key={question.index} p="2" position="relative" rounded="md">
               <HStack justifyContent="space-between">
                 <Heading size="sm">Question {question.index + 1} - {question.type}</Heading>
                 <Button

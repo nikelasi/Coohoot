@@ -19,7 +19,7 @@ return new class extends Migration
             $table->uuid('prev_question')->nullable();
             $table->integer('time')->default(30);
             $table->enum('type', ['mcq', 'msq', 'short-answer']);
-            $table->string('image_url');
+            $table->string('image_url')->nullable();
             $table->string('question');
             $table->json('options')->nullable();
             $table->json('answers');

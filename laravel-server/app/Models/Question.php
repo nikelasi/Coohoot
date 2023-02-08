@@ -11,6 +11,8 @@ class Question extends Model
     use HasFactory;
     use HasUuids;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'quiz_id',
         'prev_question',

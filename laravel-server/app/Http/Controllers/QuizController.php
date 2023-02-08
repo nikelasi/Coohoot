@@ -17,7 +17,8 @@ class QuizController extends Controller {
             "editDetails",
             "delete",
             "publish",
-            "unpublish"
+            "unpublish",
+            "saveQuestions"
         ]);
     }
 
@@ -167,6 +168,62 @@ class QuizController extends Controller {
             'message' => 'Failed to unpublish quiz'
         ], 400);
 
+    }
+
+    public function saveQuestions() {
+            
+        // skip validation assume everything correct
+
+        $quizId = request()->route('id');
+        $quiz = Quiz::query()->find($quizId);
+        
+        if (!$quiz) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quiz not found'
+            ], 404);
+        }
+
+        if ($quiz->owner->id !== auth()->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        $prevId = null;
+        $questionIds = [];
+        $questions = [];
+        foreach (request()->input('questions') as $question) {
+            $qnId = $question['id'];
+            if (str_contains($qnId, 'local$')) {
+                $qnId = str_replace('local$', '', $qnId);
+                $qn = $quiz->questions()->create([
+                    "prev_question" => $prevId,
+                    ...$question
+                ]);
+                $prevId = $qn->id;
+                $questionIds[] = $qn->id;
+                $questions[] = $qn;
+            } else {
+                $qn = $quiz->questions()->find($qnId);
+                $qn->update([
+                    "prev_question" => $prevId,
+                    ...$question
+                ]);
+                $prevId = $qn->id;
+                $questionIds[] = $qn->id;
+                $questions[] = $qn;
+            }
+        }
+
+        $quiz->questions()->whereNotIn('id', $questionIds)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Questions saved',
+            'questions' => $questions
+        ]);
     }
 
 }

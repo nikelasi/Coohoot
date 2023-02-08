@@ -17,24 +17,31 @@ import MCQAnswers from '../../features/editor/MCQAnswers'
 import ShortAnswerAnswers from '../../features/editor/ShortAnswerAnswers'
 import ConfirmationModal from '../../features/layout/ConfirmationModal'
 import InvalidQuestionsModal from '../../features/editor/InvalidQuestionsModal'
+import useToast from '../../features/layout/useToast'
 
 const Editor: React.FC = () => {
 
   const { quizId } = useParams()
   const { user } = useAuth()
   const navigate = useNavigate()
+  const toast = useToast()
   const { colorMode, toggleColorMode } = useColorMode()
 
   const [quiz, setQuiz] = useState<any>(null)
   const [questions, setQuestions] = useState<any>(null)
   const [selectedId, setSelectedId] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(true)
+  const [saving, setSaving] = useState<boolean>(false)
 
   const loadQuiz = async () => {
     setLoading(true)
     const quiz = await api.quizzes.getOne(quizId || "")
     setQuiz(quiz)
-    setQuestions(quiz?.questions)
+    setQuestions(quiz?.questions.map((question: any) => {
+      const { prev_question, quiz_id, ...rest } = question
+      rest.type = question.type === 'mcq' ? 'MCQ' : 'Short Answer'
+      return rest
+    }))
     setLoading(false)
   }
 
@@ -124,6 +131,22 @@ const Editor: React.FC = () => {
     setQuestions(questions.filter((q: any) => q.id !== id))
   }
 
+  const onSave = async () => {
+    setSaving(true)
+    const [success, updatedQuestions] = await api.quizzes.saveQuestions(id, questions)
+    if (success) {
+      toast.success("Save successful", "Your quiz has been saved.")
+      setQuestions(updatedQuestions.map((question: any) => {
+        const { prev_question, quiz_id, ...rest } = question
+        rest.type = question.type === 'mcq' ? 'MCQ' : 'Short Answer'
+        return rest
+      }))
+    } else {
+      toast.error("Save failed", "Your quiz could not be saved. Please try again later.")
+    }
+    setSaving(false)
+  }
+
   return (
     <Page
       w="full"
@@ -157,14 +180,17 @@ const Editor: React.FC = () => {
         {/* Right */}
         <Flex gap="2">
           <Button
-            onClick={isValid ? () => {} : onIQOpen}
+            isLoading={saving}
+            loadingText="Saving..."
+            onClick={isValid ? onSave : onIQOpen}
             leftIcon={<IoMdSave />}>
             Save
           </Button>
           <Button
             colorScheme="red"
             onClick={onCEOpen}
-            leftIcon={<IoMdExit />}>
+            leftIcon={<IoMdExit />}
+            isDisabled={saving}>
             Exit
           </Button>
           <Button

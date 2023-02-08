@@ -74,6 +74,7 @@ Route::group([
 
         // Questions Editor
         Route::post('/upload-image', 'ImageController@uploadQuestionImage');
+        Route::post('/{id}/questions', 'QuizController@saveQuestions');
     });
 
     // Debug routes
