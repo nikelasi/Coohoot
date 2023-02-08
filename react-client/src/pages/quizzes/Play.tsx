@@ -4,7 +4,7 @@ import Page from "../../features/layout/Page.layout"
 
 import CoohootOwl from '../../assets/svg/CoohootOwl.svg'
 import CoohootIcon from '../../assets/svg/CoohootIcon.svg'
-import { IoMdExit, IoMdMoon, IoMdSunny } from "react-icons/io"
+import { IoMdCheckmark, IoMdClose, IoMdExit, IoMdMoon, IoMdSunny } from "react-icons/io"
 import ConfirmationModal from "../../features/layout/ConfirmationModal"
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
@@ -21,6 +21,14 @@ enum PageState {
   REVIEW
 }
 
+const parseRegex = (string: string) => {
+  const a = string.split("/");
+  const modifiers = a.pop();
+  a.shift();
+  const pattern = a.join("/");
+  return new RegExp(pattern, modifiers);
+}
+
 const Play: React.FC = () => {
 
   const { toggleColorMode, colorMode } = useColorMode()
@@ -34,16 +42,9 @@ const Play: React.FC = () => {
   const [answers, setAnswers] = useState<any>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [currQnIndex, setCurrQnIndex] = useState<number>(0)
+  const [reviewResults, setReviewResults] = useState<any>(null)
 
   const { onClose: onCEClose, onOpen: onCEOpen, isOpen: isCEOpen } = useDisclosure()
-
-  useEffect(() => {
-    console.log(questions)
-  }, [questions])
-
-  useEffect(() => {
-    console.log(answers)
-  }, [answers])
 
   const loadQuiz = async () => {
     setLoading(true)
@@ -86,6 +87,38 @@ const Play: React.FC = () => {
   const { thumbnail_url, title } = quiz
   const questionObj = questions[currQnIndex] || {}
   const { id, question, type, time, image_url, options } = questionObj
+
+  const onSubmit = async () => {
+    if (isPlaytest) {
+      let score = 0
+      const answerObjs: { answer: any; correct: boolean }[] = []
+      questions.forEach((question: any, index: number) => {
+        const answer = answers[index]
+        const answerObj = { answer, correct: false }
+        if (question.type === 'MCQ') {
+          if (question.answers.includes(answer)) {
+            score++
+            answerObj.correct = true
+          }
+        } else {
+          if (question.answers.some((regex_answer: string) => new RegExp(parseRegex(regex_answer)).test(answer))) {
+            score++
+            answerObj.correct = true
+          }
+        }
+        answerObjs.push(answerObj)
+      })
+      
+
+      setReviewResults({
+        score,
+        answers: answerObjs
+      })
+      setPageState(PageState.REVIEW)
+    } else {
+
+    }
+  }
 
   return (
     <Page
@@ -197,11 +230,13 @@ const Play: React.FC = () => {
         flexDir="column"
         pt="8"
         alignItems="center">
+
         <Heading fontSize="lg">Question {currQnIndex + 1}/{questions.length}</Heading>
         <HStack mt="1">
           <Badge colorScheme="brand" textTransform="unset">{type}</Badge>
           <Badge textTransform="unset">{time}s left</Badge>
         </HStack>
+
         <Flex
           m="4"
           p="4"
@@ -211,6 +246,7 @@ const Play: React.FC = () => {
           gap="1">
           <Text textAlign="center">{question}</Text>
         </Flex>
+
         { image_url &&
         <Flex
           flexShrink="0"
@@ -254,10 +290,87 @@ const Play: React.FC = () => {
           <Button onClick={() => setCurrQnIndex(i => i + 1)} isDisabled={currQnIndex === questions.length - 1 || answers[currQnIndex] === null}>
             Next
           </Button>
-          <Button onClick={() => {}} isDisabled={answers.some((answer: any) => answer === null)}>
+          <Button onClick={onSubmit} isDisabled={answers.some((answer: any) => answer === null)}>
             Submit
           </Button>
         </HStack>
+
+      </Page> }
+
+      { pageState === PageState.REVIEW && 
+      <Page
+        overflowY="scroll"
+        w="full"
+        h="calc(100vh - 4rem)"
+        flexDir="column"
+        pt="8"
+        alignItems="center">
+          
+        <Heading fontSize="lg">Review</Heading>
+
+        <Text mt="4" mb="4">You scored {reviewResults.score} out of {questions.length}</Text>
+
+        { reviewResults.answers.map((answer: any, i: number) => {
+          const { id, question, type, options, image_url, correct_answer } = questions[i]
+          return (
+            <Flex
+              position="relative"
+              key={id}
+              m="4"
+              p="4"
+              rounded="md"
+              flexDir="column"
+              bgColor="highlight"
+              gap="1">
+              <Text textAlign="center" fontSize="sm" fontWeight="bold">Question {i + 1}</Text>
+              <Text textAlign="center">{question}</Text>
+              { image_url &&
+              <Flex
+                alignSelf="center"
+                flexShrink="0"
+                maxH="48"
+                overflow="hidden"
+                rounded="md"
+                m="4"
+                boxShadow="md">
+                <SkeletonImage
+                  key={image_url}
+                  src={image_url}
+                  imageProps={{
+                    maxH: "48",
+                    objectFit: "contain"
+                  }}
+                  skeletonProps={{
+                    maxH: "48"
+                  }} />
+              </Flex> }
+              <Text textAlign="center" fontSize="sm" fontWeight="bold">Your Answer</Text>
+              <Text textAlign="center">{type === "MCQ" ? options.filter((opt: any) => opt.id === answer.answer)[0].value : answer.answer}</Text>
+              <Flex
+                position="absolute"
+                top="3"
+                right="3"
+                bgColor={answer.correct ? "green" : "red"}
+                color="white"
+                rounded="md"
+                h="6"
+                w="6"
+                alignItems="center"
+                justifyContent="center">
+                <Icon as={answer.correct ? IoMdCheckmark : IoMdClose} />
+              </Flex>
+            </Flex>
+          )
+        })}
+
+        <Button
+          flexShrink="0"
+          mt="4"
+          mb="8"
+          onClick={() => navigate(`/quiz/${quizId}`)}>
+          End Quiz
+        </Button>
+
       </Page> }
 
     </Page>
