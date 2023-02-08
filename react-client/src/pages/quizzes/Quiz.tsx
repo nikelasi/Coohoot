@@ -1,4 +1,4 @@
-import { Heading, HStack, Spinner, Image, Text, VStack, Flex, Card, AspectRatio, Button, Link, Icon, useDisclosure, Tooltip } from '@chakra-ui/react'
+import { Heading, HStack, Spinner, Image, Text, VStack, Flex, Card, AspectRatio, Button, Link, Icon, useDisclosure, Tooltip, Badge, SimpleGrid } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useParams, Link as RouterLink, useNavigate } from 'react-router-dom'
 import api from '../../api'
@@ -61,7 +61,7 @@ const Quiz: React.FC = () => {
     return <NotFound message="Quiz Not Found" />
   }
 
-  const { title, description, thumbnail_url, visibility, published, owner, id } = quiz
+  const { title, description, thumbnail_url, visibility, published, owner, id, questions } = quiz
   const { username, pfp_url } = owner
   const isOwner = user.username === username
 
@@ -76,6 +76,10 @@ const Quiz: React.FC = () => {
   }
 
   const onPublish = async () => {
+    if (questions.length < 1) {
+      toast.error("Cannot publish", "Quiz needs at least 1 question to be published")
+      return
+    }
     setPublishing(true)
     const published = await api.quizzes.publish(id)
     setPublishing(false)
@@ -202,7 +206,45 @@ const Quiz: React.FC = () => {
             Edit
           </Button>
         </HStack>
-        <Text>This quiz has no questions</Text>
+        <Flex
+          mt="4"
+          flexDir="column"
+          gap="4">
+          { questions && questions.length === 0
+          ? <Text>This quiz has no questions</Text>
+          : questions.map((question: any, index: number) => {
+            return (
+              <Flex
+                p="4"
+                flexDir="column"
+                gap="2"
+                rounded="md"
+                bgColor="highlight">
+                <HStack justifyContent="space-between" w="full">
+                  <Text><b>{index + 1}.</b> {question.question}</Text>
+                  {question.image_url &&
+                  <Flex
+                    alignSelf="center"
+                    mt="2"
+                    rounded="md"
+                    boxShadow="md"
+                    overflow="hidden">
+                    <SkeletonImage
+                      src={question.image_url}
+                      imageProps={{
+                        h: "20",
+                        objectFit: "contain"
+                      }}
+                      skeletonProps={{
+                        h: "20",
+                        objectFit: "contain"
+                      }} />
+                  </Flex>}
+                </HStack>
+              </Flex>
+            )
+          }) }
+        </Flex>
       </Flex>
     </Page>
   )

@@ -133,7 +133,8 @@ class QuizService {
       $quiz->questions = array_map(function($question) {
         return [
           "question" => $question->question,
-          "options" => $question->options
+          "options" => $question->options,
+          "image_url" => $question->image_url
         ];
       }, $questions);
     } else {
@@ -204,18 +205,11 @@ class QuizService {
 
   /**
    * Publishes a quiz, checks whether it can be published
-   * 
-   * @return boolean whether it was published
    */
   public function publish() {
     $quiz = Quiz::find(request("quiz_id"));
-    if ($quiz->owner_id !== auth()->user()->id) {
-      return false;
-    }
-    // TODO: validate quiz
     $quiz->published = true;
     $quiz->save();
-    return true;
   }
 
   /**

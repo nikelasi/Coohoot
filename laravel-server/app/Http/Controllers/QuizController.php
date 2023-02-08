@@ -140,17 +140,33 @@ class QuizController extends Controller {
 
     public function publish() {
 
-        if ($this->quizService->publish()) {
+        $quiz = Quiz::find(request("quiz_id"));
+        if (!$quiz) {
             return response()->json([
-                'success' => true,
-                'message' => 'Quiz published'
-            ]);
+                'success' => false,
+                'message' => 'Quiz not found'
+            ], 404);
         }
 
+        if ($quiz->owner_id !== auth()->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        if ($quiz->questions->count() < 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quiz must have at least 1 question'
+            ], 400);
+        }
+
+        $this->quizService->publish();
         return response()->json([
-            'success' => false,
-            'message' => 'Failed to publish quiz'
-        ], 400);
+            'success' => true,
+            'message' => 'Quiz published'
+        ]);
 
     }
 
