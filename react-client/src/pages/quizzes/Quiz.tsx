@@ -63,7 +63,7 @@ const Quiz: React.FC = () => {
 
   const { title, description, thumbnail_url, visibility, published, owner, id, questions } = quiz
   const { username, pfp_url } = owner
-  const isOwner = user.username === username
+  const isOwner = user ? user.username === "username" : false
 
   const onDelete = async () => {
     const deleted = await api.quizzes.deleteQuiz(id);

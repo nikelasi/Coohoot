@@ -129,7 +129,7 @@ class QuizService {
     }
     
     $questions = $this->getQuestions($quiz);
-    if ($quiz->owner_id !== auth()->user()->id) {
+    if (auth()->user() && $quiz->owner_id !== auth()->user()->id) {
       $quiz->questions = array_map(function($question) {
         return [
           "question" => $question->question,
