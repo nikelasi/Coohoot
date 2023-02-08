@@ -7,7 +7,7 @@ import CoohootIcon from '../../assets/svg/CoohootIcon.svg'
 import { IoMdCheckmark, IoMdClose, IoMdExit, IoMdMoon, IoMdSunny } from "react-icons/io"
 import ConfirmationModal from "../../features/layout/ConfirmationModal"
 import { useNavigate, useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import api from "../../api"
 import NotFound from "../common/NotFound"
 import SkeletonImage from "../../features/images/SkeletonImage"
@@ -43,6 +43,9 @@ const Play: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [currQnIndex, setCurrQnIndex] = useState<number>(0)
   const [reviewResults, setReviewResults] = useState<any>(null)
+  const [timer, setTimer] = useState<number>(0)
+
+  let timerInterval = useRef<NodeJS.Timer | null>(null)
 
   const { onClose: onCEClose, onOpen: onCEOpen, isOpen: isCEOpen } = useDisclosure()
 
@@ -95,6 +98,10 @@ const Play: React.FC = () => {
       questions.forEach((question: any, index: number) => {
         const answer = answers[index]
         const answerObj = { answer, correct: false }
+        if (answer === null) {
+          answerObjs.push(answerObj)
+          return
+        }
         if (question.type === 'MCQ') {
           if (question.answers.includes(answer)) {
             score++
@@ -118,6 +125,32 @@ const Play: React.FC = () => {
     } else {
 
     }
+  }
+
+  const timerReset = () => {
+    setTimer(time)
+    if (timerInterval.current) clearInterval(timerInterval.current)
+    setTimeout(() => {
+      timerInterval.current = setInterval(() => {
+        setTimer(t => {
+          if (t === 1) {
+            if (timerInterval.current !== null)
+              clearInterval(timerInterval.current)
+          }
+          return t - 1
+        })
+      }, 1000)
+    }, 1000)
+  }
+
+  const onNext = () => {
+    setCurrQnIndex(i => i + 1)
+    timerReset()
+  }
+
+  const onStart = () => {
+    setPageState(PageState.PLAYING)
+    timerReset()
   }
 
   return (
@@ -215,7 +248,7 @@ const Play: React.FC = () => {
             </Link>
           </Flex>
           <Button
-            onClick={() => setPageState(PageState.PLAYING)}>
+            onClick={onStart}>
             Start
           </Button>
         </Flex>
@@ -234,7 +267,7 @@ const Play: React.FC = () => {
         <Heading fontSize="lg">Question {currQnIndex + 1}/{questions.length}</Heading>
         <HStack mt="1">
           <Badge colorScheme="brand" textTransform="unset">{type}</Badge>
-          <Badge textTransform="unset">{time}s left</Badge>
+          <Badge textTransform="unset">{timer}s left</Badge>
         </HStack>
 
         <Flex
@@ -267,7 +300,7 @@ const Play: React.FC = () => {
             }} />
         </Flex> }
         
-        { type === "MCQ" &&
+        { timer !== 0 && type === "MCQ" &&
         <MCQInput
           key={id}
           id={id}
@@ -278,7 +311,7 @@ const Play: React.FC = () => {
             setAnswers(answers.map((a: string, i: number) => i === qnIndex ? answer : a))
           }} /> }
 
-        { type === "Short Answer" &&
+        { timer !== 0 && type === "Short Answer" &&
         <ShortAnswerInput
           answer={answers[currQnIndex]}
           qnIndex={currQnIndex}
@@ -286,11 +319,23 @@ const Play: React.FC = () => {
             setAnswers(answers.map((a: string, i: number) => i === qnIndex ? (answer === "" ? null : answer) : a))
           }} /> }
 
+        { timer === 0 &&
+        <Flex
+          flexDir="column"
+          gap="2"
+          alignItems="center">
+            <Text textAlign="center">Time's up!</Text>
+            { currQnIndex !== questions.length - 1
+            ? <Text textAlign="center">Please move on to the next question</Text>
+            : <Text textAlign="center">Please submit</Text>}
+        </Flex> }
+
+
         <HStack mt="4" mb="4">
-          <Button onClick={() => setCurrQnIndex(i => i + 1)} isDisabled={currQnIndex === questions.length - 1 || answers[currQnIndex] === null}>
+          <Button onClick={onNext} isDisabled={currQnIndex === questions.length - 1 || (answers[currQnIndex] === null && timer !== 0)}>
             Next
           </Button>
-          <Button onClick={onSubmit} isDisabled={answers.some((answer: any) => answer === null)}>
+          <Button onClick={onSubmit} isDisabled={answers[questions.length - 1] === null && timer !== 0}>
             Submit
           </Button>
         </HStack>
@@ -345,7 +390,9 @@ const Play: React.FC = () => {
                   }} />
               </Flex> }
               <Text textAlign="center" fontSize="sm" fontWeight="bold">Your Answer</Text>
-              <Text textAlign="center">{type === "MCQ" ? options.filter((opt: any) => opt.id === answer.answer)[0].value : answer.answer}</Text>
+              { answer.answer === null
+              ? <Text textAlign="center">Unattempted</Text>
+              : <Text textAlign="center">{type === "MCQ" ? options.filter((opt: any) => opt.id === answer.answer)[0].value : answer.answer}</Text> }
               <Flex
                 position="absolute"
                 top="3"
