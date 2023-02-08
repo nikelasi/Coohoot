@@ -28,7 +28,10 @@ const AuthWall: React.FC = () => {
   return (
     <OwlPage
       owlType="cop"
-      p="16"
+      p={{
+        base: "4",
+        md: "16"
+      }}
       gap="8">
       <Heading
         fontSize="5xl"
