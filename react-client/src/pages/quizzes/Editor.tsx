@@ -136,11 +136,13 @@ const Editor: React.FC = () => {
     const [success, updatedQuestions] = await api.quizzes.saveQuestions(id, questions)
     if (success) {
       toast.success("Save successful", "Your quiz has been saved.")
+      const currQnIndex = quiz.questions.findIndex((question: any) => question.id === selectedId)
       setQuestions(updatedQuestions.map((question: any) => {
         const { prev_question, quiz_id, ...rest } = question
         rest.type = question.type === 'mcq' ? 'MCQ' : 'Short Answer'
         return rest
       }))
+      setSelectedId(updatedQuestions[currQnIndex]?.id || quiz?.questions[0]?.id)
     } else {
       toast.error("Save failed", "Your quiz could not be saved. Please try again later.")
     }

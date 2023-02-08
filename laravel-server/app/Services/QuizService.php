@@ -124,6 +124,10 @@ class QuizService {
       ->with("owner:id,username,pfp_url")
       ->first();
 
+    if (!$quiz) {
+      return null;
+    }
+    
     $questions = $this->getQuestions($quiz);
     if ($quiz->owner_id !== auth()->user()->id) {
       $quiz->questions = array_map(function($question) {
