@@ -14,8 +14,8 @@ interface OwlOptionProps {
 type Props = PropsWithChildren<OwlOptionProps & FlexProps>
 
 const OwlPage: React.FC<Props> = (props: Props) => {
-  const { children, ...flexProps } = props;
-  const owlType = props.owlType || 'happy';
+  let { children, owlType, ...flexProps } = props;
+  owlType = props.owlType || 'happy';
 
   let Owl;
   switch (owlType) {
