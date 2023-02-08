@@ -19,18 +19,15 @@ import {
 
   Profile,
   Quiz,
-  Editor
+  Editor,
+  Play
 
 } from './pages'
 
 function App() {
 
   const location = useLocation()
-  const noheadersPath = [/^\/quiz\/.*\/edit$/]
-
-  useEffect(() => {
-    console.log(location.pathname)
-  }, [location.pathname])
+  const noheadersPath = [/^\/quiz\/.*\/edit$/, /^\/play\/.*$/]
 
   return (
     <Box>
@@ -56,6 +53,7 @@ function App() {
           <Route path='/discover' element={<Discover />} />
           <Route path="/quiz/:quizId" element={<Quiz />} />
           <Route path="/quiz/:quizId/edit" element={<Editor />} />
+          <Route path="/play/:quizId" element={<Play />} />
 
           {/* Users */}
           <Route path='/user/:username' element={<Profile />} />

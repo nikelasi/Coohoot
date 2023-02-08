@@ -172,7 +172,7 @@ const Quiz: React.FC = () => {
           </Link>
         </Flex>
         <Text fontSize="lg">{description || "No description provided"}</Text>
-        <Button>{published ? "Play" : "Playtest"}</Button>
+        <Button onClick={() => navigate(`/play/${id}`)}>{published ? "Play" : "Playtest"}</Button>
         { isOwner &&
         <Button
           onClick={onEQDOpen}>
@@ -215,6 +215,7 @@ const Quiz: React.FC = () => {
           : questions.map((question: any, index: number) => {
             return (
               <Flex
+                key={index}
                 p="4"
                 flexDir="column"
                 gap="2"
