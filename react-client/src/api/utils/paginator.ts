@@ -16,14 +16,19 @@ class PaginatorApi extends BaseApi {
     return `${this.route}&page=${page}`
   }
 
-  private async getResults(page: number = 1) {
-    const { data, total_pages } = await this.getWithUrl(this.routeWithPage(page))
+  private routeWithSearch(page: number, searchParam: string): string {
+    if (!searchParam) return this.routeWithPage(page)
+    return `${this.routeWithPage(page)}&search=${searchParam}`
+  }
+
+  private async getResults(page: number = 1, searchParam: string = "") {
+    const { data, total_pages } = await this.getWithUrl(this.routeWithSearch(page, searchParam))
     this.totalPages = total_pages
     return data
   }
 
-  public async getPage(page: number) {
-    return await this.getResults(page)
+  public async getPage(page: number, searchParam: string = "") {
+    return await this.getResults(page, searchParam)
   }
 
   public getTotalPages() {

@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react"
+import { Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement } from "@chakra-ui/react";
+import React, { useEffect, useMemo, useRef, useState } from "react"
+import { IoMdSearch } from "react-icons/io";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import PaginatorApi from "../../api/utils/paginator";
 import PaginatorComponent from "./Paginator"
@@ -7,6 +9,7 @@ interface UsePaginatorProps {
   maxPages?: number;
   paginatorApi?: PaginatorApi;
   pageParam?: string;
+  searchParam?: string;
 }
 
 interface UsePaginatorReturn {
@@ -21,7 +24,8 @@ interface UsePaginatorReturn {
 
 const usePaginator: (props: UsePaginatorProps) => UsePaginatorReturn = ({
   paginatorApi,
-  pageParam = 'page'
+  pageParam = 'page',
+  searchParam
 }: UsePaginatorProps) => {
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -74,7 +78,7 @@ const usePaginator: (props: UsePaginatorProps) => UsePaginatorReturn = ({
 
     setIsLoading(true)
 
-    const items = await paginatorApi.getPage(page)
+    const items = await paginatorApi.getPage(page, searchParam || "")
     setItems(items)
 
     setMaxPages(paginatorApi.getTotalPages())
@@ -92,7 +96,7 @@ const usePaginator: (props: UsePaginatorProps) => UsePaginatorReturn = ({
     // scuffed way to fix
     const timeout = setTimeout(() => loadPage(page), 1)
     return () => clearTimeout(timeout)
-  }, [page])
+  }, [page, searchParam])
   
   return {
     page,

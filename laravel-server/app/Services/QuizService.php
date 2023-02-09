@@ -31,6 +31,9 @@ class QuizService {
       ->where("published", true)
       ->whereNotNull("owner_id")
       ->with("owner:id,username,pfp_url")
+      ->when(request()->query("search"), function($query) {
+        $query->where("title", "like", "%" . request()->query("search") . "%");
+      })
       ->paginate($limit);
 
     return [
@@ -60,6 +63,9 @@ class QuizService {
 
     $quizzes = Quiz::where("owner_id", auth()->user()->id)
       ->with("owner:id,username,pfp_url")
+      ->when(request()->query("search"), function($query) {
+        $query->where("title", "like", "%" . request()->query("search") . "%");
+      })
       ->paginate($limit);
 
     return [
@@ -91,6 +97,9 @@ class QuizService {
       ->where("visibility", "public")
       ->where("published", true)
       ->with("owner:id,username,pfp_url")
+      ->when(request()->query("search"), function($query) {
+        $query->where("title", "like", "%" . request()->query("search") . "%");
+      })
       ->paginate($limit);
 
     return [

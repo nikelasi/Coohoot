@@ -36,6 +36,7 @@ const Profile: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(true)
   const [user, setUser] = useState<any>(null)
+  const [searchParam, setSearchParam] = useState<string>("")
 
   useEffect(() => {
     (async () => {
@@ -46,7 +47,8 @@ const Profile: React.FC = () => {
   }, [])
 
   const { Paginator, items, isLoading } = usePaginator({
-    paginatorApi: api.quizzes.getOthersPaginated(username || '')
+    paginatorApi: api.quizzes.getOthersPaginated(username || ''),
+    searchParam
   })
 
   if (loading) {
@@ -153,6 +155,8 @@ const Profile: React.FC = () => {
             <InputLeftElement
               children={<Icon as={IoMdSearch} boxSize="6" color="gray.300" />} />
             <Input
+              value={searchParam}
+              onChange={(e) => setSearchParam(e.target.value)}
               variant="filled"
               colorScheme="highlight"
               w="full"

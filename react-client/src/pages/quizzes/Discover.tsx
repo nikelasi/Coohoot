@@ -11,8 +11,11 @@ import QuizCard from '../../features/quizzes/QuizCard'
 
 const Discover: React.FC = () => {
 
+  const [searchParam, setSearchParam] = useState<string>("")
+
   const { Paginator, items, isLoading } = usePaginator({
-    paginatorApi: api.quizzes.getAllPaginated()
+    paginatorApi: api.quizzes.getAllPaginated(),
+    searchParam
   })
 
   return (
@@ -32,6 +35,8 @@ const Discover: React.FC = () => {
         <InputLeftElement
           children={<Icon as={IoMdSearch} boxSize="6" color="gray.300" />} />
         <Input
+          value={searchParam}
+          onChange={(e) => setSearchParam(e.target.value)}
           variant="filled"
           colorScheme="highlight"
           w="full"

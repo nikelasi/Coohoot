@@ -1,4 +1,4 @@
-import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel, FormControl, FormLabel, InputRightElement, useDisclosure, HeadingProps, Divider, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { Flex, Heading, HStack, Text, Image, Button, VStack, Link, Tabs, TabList, Tab, InputGroup, InputLeftElement, Icon, Input, TabPanels, TabPanel, FormControl, FormLabel, InputRightElement, useDisclosure, HeadingProps, Divider, SimpleGrid, Spinner, IconButton } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import { IoMdAddCircle, IoMdBrowsers, IoMdCode, IoMdCreate, IoMdPerson, IoMdSearch, IoMdTrash } from 'react-icons/io'
 import { useAuth } from '../../features/auth/AuthContext'
@@ -43,6 +43,8 @@ const Dashboard: React.FC = () => {
 
   const { user } = useAuth()
   const { username, email, pfp_url } = user || {}
+  
+  const [searchQuery, setSearchQuery] = useState<string>("")
 
   const { onOpen: onWIPOpen, isOpen: isWIPOpen, onClose: onWIPClose } = useDisclosure()
   const { onOpen: onDUOpen, isOpen: isDUOpen, onClose: onDUClose } = useDisclosure()
@@ -50,7 +52,8 @@ const Dashboard: React.FC = () => {
   const { onOpen: onCQOpen, isOpen: isCQOpen, onClose: onCQClose } = useDisclosure()
 
   const { Paginator, items, isLoading, reloadPage } = usePaginator({
-    paginatorApi: api.quizzes.getMinePaginated()
+    paginatorApi: api.quizzes.getMinePaginated(),
+    searchParam: searchQuery
   })
 
   return (
@@ -223,6 +226,10 @@ const Dashboard: React.FC = () => {
             <InputLeftElement
               children={<Icon as={IoMdSearch} boxSize="6" color="gray.300" />} />
             <Input
+              value={searchQuery}
+              onChange={e => {
+                setSearchQuery(e.target.value)
+              }}
               variant="filled"
               colorScheme="highlight"
               w="full"
