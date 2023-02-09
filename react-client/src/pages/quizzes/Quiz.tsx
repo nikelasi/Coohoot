@@ -14,11 +14,22 @@ import ConfirmationModal from '../../features/layout/ConfirmationModal'
 import useToast from '../../features/layout/useToast'
 import { MdOutlinePublish } from 'react-icons/md'
 import EditQuizModal from '../../features/quizzes/EditQuizModal'
+import { ArcElement, Tooltip as cTooltip, Chart as ChartJS, Legend } from 'chart.js'
+import { Pie } from 'react-chartjs-2'
 
 enum ViewMode {
   QUESTIONS = "questions",
   RESPONSES = "responses"
 }
+
+const colors = [
+  'rgba(255, 99, 132, 0.7)',
+  'rgba(54, 162, 235, 0.7)',
+  'rgba(255, 206, 86, 0.7)',
+  'rgba(75, 192, 192, 0.7)',
+  'rgba(153, 102, 255, 0.7)',
+  'rgba(255, 159, 64, 0.7)',
+]
 
 const Quiz: React.FC = () => {
 
@@ -42,6 +53,8 @@ const Quiz: React.FC = () => {
 
   useEffect(() => {
     loadQuiz()
+    ChartJS.register(ArcElement, cTooltip, Legend)
+    return () => ChartJS.unregister(ArcElement, cTooltip, Legend)
   }, [])
 
   const { onClose: onDQClose, onOpen: onDQOpen, isOpen: isDQOpen } = useDisclosure();
@@ -336,7 +349,29 @@ const Quiz: React.FC = () => {
                     bgColor="highlight">
                     { question.responses.length === 0
                     ? <Text>This question has no answers</Text>
-                    : "Chart"}
+                    : <Pie
+                    datasetIdKey={question.id}
+                    options={{
+                      maintainAspectRatio: false,
+                    }}
+                    data={{
+                      labels: question.type === "mcq" 
+                        ? question.options.map((opt: any) => opt.value)
+                        : [...new Set(question.responses.map((res: any) => res.answer))],
+                      datasets: [
+                        {
+                          data: question.type === "mcq"
+                            ? question.options.map((opt: any) => {
+                              return question.responses.filter((r: any) => r.answer === opt.value).length
+                            })
+                            : [...new Set(question.responses.map((res: any) => res.answer))].map((res: any) => {
+                              return question.responses.filter((r: any) => r.answer === res).length
+                            }),
+                            backgroundColor: (question.type === "mcq" ? question.options : [...new Set(question.responses.map((res: any) => res.answer))]).map((_: any, i: number) => colors[i % colors.length])
+                        }
+                      ]
+                    }}
+                  />}
                   </Flex>
                 </AccordionPanel>
               </AccordionItem>

@@ -159,12 +159,12 @@ class QuizService {
           "responses" => array_map(function ($answer) use ($question) {
             $correct = $answer["correct"];
             $answer = $answer["answer"];
-            if ($question->type === "mcq") {
-              $answer = array_values(array_filter($question->options, function ($option) use ($answer) {
-                return $option["id"] === $answer;
-              }))[0]["value"];
-            } else {
-              $answer = $answer;
+            if ($answer) {
+              if ($question->type === "mcq") {
+                $answer = array_values(array_filter($question->options, function ($option) use ($answer) {
+                  return $option["id"] === $answer;
+                }))[0]["value"];
+              }
             }
             return [
               "answer" => $answer,
