@@ -47,6 +47,7 @@ const Editor: React.FC = () => {
 
   const isQuestionValid = (question: any) => {
     const { questionText, type, options, answers } = question
+    console.log(question)
     if (questionText === "") {
       return false
     }

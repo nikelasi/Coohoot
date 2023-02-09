@@ -151,11 +151,13 @@ class QuizService {
     } else {
       $quiz->questions = array_map(function ($question) {
         return [
+          "id" => $question->id,
           "time" => $question->time,
           "type" => $question->type,
           "question" => $question->question,
           "options" => $question->options,
           "image_url" => $question->image_url,
+          "answers" => $question->answers,
           "responses" => array_map(function ($answer) use ($question) {
             $correct = $answer["correct"];
             $answer = $answer["answer"];
