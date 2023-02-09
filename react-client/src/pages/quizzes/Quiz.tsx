@@ -1,4 +1,4 @@
-import { Heading, HStack, Spinner, Image, Text, VStack, Flex, Card, AspectRatio, Button, Link, Icon, useDisclosure, Tooltip, Badge, SimpleGrid } from '@chakra-ui/react'
+import { Heading, HStack, Spinner, Image, Text, VStack, Flex, Card, AspectRatio, Button, Link, Icon, useDisclosure, Tooltip, Badge, SimpleGrid, Accordion, AccordionPanel, AccordionButton, AccordionItem, AccordionIcon } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useParams, Link as RouterLink, useNavigate } from 'react-router-dom'
 import api from '../../api'
@@ -15,6 +15,11 @@ import useToast from '../../features/layout/useToast'
 import { MdOutlinePublish } from 'react-icons/md'
 import EditQuizModal from '../../features/quizzes/EditQuizModal'
 
+enum ViewMode {
+  QUESTIONS = "questions",
+  RESPONSES = "responses"
+}
+
 const Quiz: React.FC = () => {
 
   const { quizId } = useParams()
@@ -26,6 +31,7 @@ const Quiz: React.FC = () => {
   const [quiz, setQuiz] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [publishing, setPublishing] = useState<boolean>(false)
+  const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.QUESTIONS)
 
   const loadQuiz = async () => {
     setLoading(true)
@@ -193,11 +199,17 @@ const Quiz: React.FC = () => {
         </Button> }
       </VStack>
 
-      <Flex
+      { viewMode === ViewMode.QUESTIONS && <Flex
         p="8"
         flexDir="column"
         overflow="auto"
         flexGrow="1">
+        { published && isOwner &&
+        <Button
+          mb="4"
+          onClick={() => setViewMode(ViewMode.RESPONSES)}>
+          View Responses
+        </Button> }
         <HStack gap="2">
           <Heading>Questions</Heading>
           { isOwner && <Button
@@ -246,7 +258,92 @@ const Quiz: React.FC = () => {
             )
           }) }
         </Flex>
-      </Flex>
+      </Flex> }
+
+      { viewMode === ViewMode.RESPONSES && <Flex
+        p="8"
+        flexDir="column"
+        overflow="auto"
+        flexGrow="1">
+        { isOwner &&
+        <Button
+          mb="4"
+          onClick={() => setViewMode(ViewMode.QUESTIONS)}>
+          View Questions
+        </Button> }
+        <HStack gap="2">
+          <Heading>Responses</Heading>
+          <Tooltip label="Number of Responses">
+            <Badge>{quiz.total_responses}</Badge>
+          </Tooltip>
+          <Tooltip label="Average Score">
+            <Badge>AVG {Math.round((parseFloat(quiz.average_score) + Number.EPSILON) * 100) / 100}/{questions.length}</Badge>
+          </Tooltip>
+        </HStack>
+        <Accordion
+          allowMultiple={true}
+          allowToggle={true}>
+          { questions && questions.length === 0
+          ? <Text>This quiz has no questions</Text>
+          : questions.map((question: any, index: number) => {
+            return (
+              <AccordionItem
+                mt="4"
+                border="none">
+                <AccordionButton p="0">
+                  <Flex
+                    w="full"
+                    key={index}
+                    p="4"
+                    flexDir="column"
+                    gap="2"
+                    rounded="md"
+                    bgColor="highlight">
+                    <HStack justifyContent="space-between" w="full">
+                      <HStack>
+                        <AccordionIcon />
+                        <Text><b>{index + 1}.</b> {question.question}</Text>
+                      </HStack>
+                      {question.image_url &&
+                      <Flex
+                        alignSelf="center"
+                        mt="2"
+                        rounded="md"
+                        boxShadow="md"
+                        overflow="hidden">
+                        <SkeletonImage
+                          src={question.image_url}
+                          imageProps={{
+                            h: "20",
+                            objectFit: "contain"
+                          }}
+                          skeletonProps={{
+                            h: "20",
+                            objectFit: "contain"
+                          }} />
+                      </Flex>}
+                    </HStack>
+                  </Flex>
+                </AccordionButton>
+                <AccordionPanel>
+                  <Flex
+                    w="full"
+                    key={index}
+                    p="4"
+                    flexDir="column"
+                    gap="2"
+                    rounded="md"
+                    bgColor="highlight">
+                    { question.responses.length === 0
+                    ? <Text>This question has no answers</Text>
+                    : "Chart"}
+                  </Flex>
+                </AccordionPanel>
+              </AccordionItem>
+            )
+          }) }
+        </Accordion>
+      </Flex> }
     </Page>
   )
 }

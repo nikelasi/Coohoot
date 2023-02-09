@@ -142,12 +142,39 @@ class QuizService {
       $quiz->questions = array_map(function($question) {
         return [
           "question" => $question->question,
+          "time" => $question->time,
+          "type" => $question->type,
           "options" => $question->options,
           "image_url" => $question->image_url
         ];
       }, $questions);
     } else {
-      $quiz->questions = $questions;
+      $quiz->questions = array_map(function ($question) {
+        return [
+          "time" => $question->time,
+          "type" => $question->type,
+          "question" => $question->question,
+          "options" => $question->options,
+          "image_url" => $question->image_url,
+          "responses" => array_map(function ($answer) use ($question) {
+            $correct = $answer["correct"];
+            $answer = $answer["answer"];
+            if ($question->type === "mcq") {
+              $answer = array_values(array_filter($question->options, function ($option) use ($answer) {
+                return $option["id"] === $answer;
+              }))[0]["value"];
+            } else {
+              $answer = $answer;
+            }
+            return [
+              "answer" => $answer,
+              "correct" => $correct,
+            ];
+          }, $question->answers()->get()->toArray())
+        ];
+      }, $questions);
+      $quiz->average_score = $quiz->responses()->avg("score");
+      $quiz->total_responses = $quiz->responses()->count();
     }
     
     return $quiz;
