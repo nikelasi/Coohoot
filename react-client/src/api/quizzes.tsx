@@ -94,6 +94,16 @@ class QuizzesApi extends BaseApi {
     return [result.success, result.success ? result.questions : null]
   }
 
+  public submitResponse = async (quizId: string, answers: any[]) => {
+    const result = await this.post(`/${quizId}/response`, {
+      answers
+    })
+    return [result.success, {
+      score: result.score,
+      answers: result.answers
+    }]
+  }
+
 }
 
 export default QuizzesApi

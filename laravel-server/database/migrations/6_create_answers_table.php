@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid("id")->primary();
             $table->uuid("response_id");
             $table->uuid("question_id");
-            $table->text("answer");
+            $table->text("answer")->nullable();
             $table->boolean("correct");
 
             $table->foreign("response_id")->references("id")->on("responses");

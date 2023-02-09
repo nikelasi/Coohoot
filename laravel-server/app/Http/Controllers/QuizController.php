@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\QuizService;
 use App\Models\Quiz;
+use App\Models\Response;
+use App\Models\Answer;
 
 class QuizController extends Controller {
 
@@ -242,4 +244,75 @@ class QuizController extends Controller {
         ]);
     }
 
+    public function submitResponse() {
+        $quizId = request()->route('id');
+        $quiz = Quiz::query()->find($quizId);
+        
+        if (!$quiz) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quiz not found'
+            ], 404);
+        }
+
+        if (!$quiz->published) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quiz not published, cannot submit response'
+            ], 400);
+        }
+
+        $response = Response::create([
+            'quiz_id' => $quizId,
+            'score' => 0
+        ]);
+
+        $responseId = $response->id;
+        $questions = $this->quizService->getQuestions($quiz);
+        $answers = request('answers');
+
+        if (count($questions) !== count($answers)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid number of answers'
+            ], 400);
+        }
+
+        foreach ($questions as $index => $question) {
+            $answer = $answers[$index];
+            if ($answer === null) {
+                $correct = false;
+            } else {
+                if ($question->type === 'mcq') {
+                    $correct = in_array($answer, $question->answers);
+                } else {
+                    $correct = false;
+                    foreach ($question->answers as $regex) {
+                        if (preg_match($regex, $answer)) {
+                            $correct = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if ($correct) $response->increment('score');
+            Answer::create([
+                'response_id' => $responseId,
+                'question_id' => $question['id'],
+                'answer' => $answer,
+                'correct' => $correct
+            ]);
+            $answers[$index] = [
+                'answer' => $answer,
+                'correct' => $correct
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Response submitted',
+            'score' => $response->score,
+            'answers' => $answers
+        ]);
+    }
 }

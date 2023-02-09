@@ -14,6 +14,7 @@ import SkeletonImage from "../../features/images/SkeletonImage"
 import SkeletonAvatar from "../../features/images/SkeletonAvatar"
 import MCQInput from "../../features/player/MCQInput"
 import ShortAnswerInput from "../../features/player/ShortAnswerInput"
+import useToast from "../../features/layout/useToast"
 
 enum PageState {
   START,
@@ -33,6 +34,7 @@ const Play: React.FC = () => {
 
   const { toggleColorMode, colorMode } = useColorMode()
   const navigate = useNavigate()
+  const toast = useToast()
   const { quizId } = useParams()
 
   const [pageState, setPageState] = useState<PageState>(PageState.START)
@@ -44,6 +46,7 @@ const Play: React.FC = () => {
   const [currQnIndex, setCurrQnIndex] = useState<number>(0)
   const [reviewResults, setReviewResults] = useState<any>(null)
   const [timer, setTimer] = useState<number>(0)
+  const [submitting, setSubmitting] = useState<boolean>(false)
 
   let timerInterval = useRef<NodeJS.Timer | null>(null)
 
@@ -123,7 +126,16 @@ const Play: React.FC = () => {
       })
       setPageState(PageState.REVIEW)
     } else {
-
+      setSubmitting(true)
+      const [success, results] = await api.quizzes.submitResponse(quizId as string, answers)
+      if (success) {
+        setReviewResults(results)
+        setPageState(PageState.REVIEW)
+      } else {
+        toast.error("Quiz Submission Failed", "Quiz has stopped accepting submissions. Find another quiz to play.")
+        navigate(`/discover`)
+      }
+      setSubmitting(false)
     }
   }
 
@@ -335,7 +347,11 @@ const Play: React.FC = () => {
           <Button onClick={onNext} isDisabled={currQnIndex === questions.length - 1 || (answers[currQnIndex] === null && timer !== 0)}>
             Next
           </Button>
-          <Button onClick={onSubmit} isDisabled={answers[questions.length - 1] === null && timer !== 0}>
+          <Button
+            isLoading={submitting}
+            loadingText="Submitting..."
+            onClick={onSubmit}
+            isDisabled={answers[questions.length - 1] === null && timer !== 0}>
             Submit
           </Button>
         </HStack>
