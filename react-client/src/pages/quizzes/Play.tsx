@@ -351,7 +351,7 @@ const Play: React.FC = () => {
             isLoading={submitting}
             loadingText="Submitting..."
             onClick={onSubmit}
-            isDisabled={answers[questions.length - 1] === null && timer !== 0}>
+            isDisabled={(answers[questions.length - 1] === null && timer !== 0) || (answers[questions.length - 1] !== null && timer === 0)}>
             Submit
           </Button>
         </HStack>
@@ -372,7 +372,7 @@ const Play: React.FC = () => {
         <Text mt="4" mb="4">You scored {reviewResults.score} out of {questions.length}</Text>
 
         { reviewResults.answers.map((answer: any, i: number) => {
-          const { id, question, type, options, image_url, correct_answer } = questions[i]
+          const { id, question, type, options, image_url } = questions[i]
           return (
             <Flex
               position="relative"
