@@ -127,7 +127,7 @@ const Play: React.FC = () => {
     }
   }
 
-  const timerReset = () => {
+  const timerReset = (time: number) => {
     setTimer(time)
     if (timerInterval.current) clearInterval(timerInterval.current)
     setTimeout(() => {
@@ -144,13 +144,13 @@ const Play: React.FC = () => {
   }
 
   const onNext = () => {
+    timerReset(questions[currQnIndex + 1].time)
     setCurrQnIndex(i => i + 1)
-    timerReset()
   }
 
   const onStart = () => {
     setPageState(PageState.PLAYING)
-    timerReset()
+    timerReset(questions[currQnIndex].time)
   }
 
   return (
