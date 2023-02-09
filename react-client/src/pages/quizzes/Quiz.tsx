@@ -200,11 +200,11 @@ const Quiz: React.FC = () => {
         flexGrow="1">
         <HStack gap="2">
           <Heading>Questions</Heading>
-          <Button
+          { isOwner && <Button
             onClick={published ? onEQOpen : onEdit}
             rounded="lg">
             Edit
-          </Button>
+          </Button> }
         </HStack>
         <Flex
           mt="4"
