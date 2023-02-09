@@ -413,9 +413,22 @@ const Play: React.FC = () => {
         <Button
           flexShrink="0"
           mt="4"
-          mb="8"
+          mb="2"
           onClick={() => navigate(`/quiz/${quizId}`)}>
           End Quiz
+        </Button>
+
+        <Button
+          mb="8"
+          textAlign="center"
+          fontSize="sm"
+          variant="link"
+          onClick={() => {
+            setAnswers(Array(questions.length).fill(null))
+            setCurrQnIndex(0)
+            setPageState(PageState.START)
+          }}>
+          Play again?
         </Button>
 
       </Page> }
