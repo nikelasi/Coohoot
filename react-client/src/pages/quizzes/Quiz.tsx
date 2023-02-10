@@ -191,7 +191,13 @@ const Quiz: React.FC = () => {
           </Link>
         </Flex>
         <Text fontSize="lg">{description || "No description provided"}</Text>
-        <Button onClick={() => navigate(`/play/${id}`)}>{published ? "Play" : "Playtest"}</Button>
+        <Button onClick={() => {
+          if (questions.length < 1) {
+            toast.error("Cannot play", "Quiz needs at least 1 question to be played")
+          } else {
+            navigate(`/play/${id}`)
+          }
+        }}>{published ? "Play" : "Playtest"}</Button>
         { isOwner &&
         <Button
           onClick={onEQDOpen}>
