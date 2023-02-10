@@ -47,7 +47,6 @@ const Editor: React.FC = () => {
 
   const isQuestionValid = (question: any) => {
     const { questionText, type, options, answers } = question
-    console.log(question)
     if (questionText === "") {
       return false
     }
@@ -76,6 +75,8 @@ const Editor: React.FC = () => {
     loadQuiz()
   }, [])
 
+  const selectedQuestion = questions?.find((q: any) => q.id === selectedId) || {}
+
   const { onClose: onEQClose, onOpen: onEQOpen, isOpen: isEQOpen } = useDisclosure()
   const { onClose: onCEClose, onOpen: onCEOpen, isOpen: isCEOpen } = useDisclosure()
   const { onClose: onIQClose, onOpen: onIQOpen, isOpen: isIQOpen } = useDisclosure()
@@ -99,7 +100,6 @@ const Editor: React.FC = () => {
   }
 
   const { id } = quiz
-  const selectedQuestion = questions?.find((q: any) => q.id === selectedId)
   const { answers, options, type, time, image_url } = selectedQuestion || {}
 
   const updateSelectedQuestion = (values: any) => {
@@ -143,7 +143,7 @@ const Editor: React.FC = () => {
         rest.type = question.type === 'mcq' ? 'MCQ' : 'Short Answer'
         return rest
       }))
-      setSelectedId(updatedQuestions[currQnIndex]?.id || quiz?.questions[0]?.id)
+      setSelectedId(null)
     } else {
       toast.error("Save failed", "Your quiz could not be saved. Please try again later.")
     }
